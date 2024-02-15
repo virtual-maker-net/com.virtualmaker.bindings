@@ -11,6 +11,10 @@ namespace VirtualMaker.Bindings
         private List<Action> _unsubscribe = new List<Action>();
         private VisualElement _root;
 
+        public Bindings()
+        {
+        }
+
         public Bindings(VisualElement root)
         {
             _root = root;
