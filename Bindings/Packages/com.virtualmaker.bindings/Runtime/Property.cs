@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VirtualMaker.Bindings
@@ -8,23 +9,24 @@ namespace VirtualMaker.Bindings
         void NotifyChanged();
     }
 
-    public interface IProperty<T>
+    public interface IProperty<TValue>
     {
-        T Value { get; }
-        event Action<T> OnChange;
+        TValue Value { get; }
+        event Action<TValue> OnChange;
     }
 
     [Serializable]
-    public class Property<T> : IProperty<T>, IPropertyNotify
+    public class Property<TValue> : IProperty<TValue>, IPropertyNotify
     {
         [SerializeField]
-        private T _value;
-        public T Value
+        private TValue _value;
+
+        public TValue Value
         {
             get => _value;
             set
             {
-                if (_value == null || _value.Equals(value))
+                if (EqualityComparer<TValue>.Default.Equals(_value, value))
                 {
                     return;
                 }
@@ -34,7 +36,21 @@ namespace VirtualMaker.Bindings
             }
         }
 
-        public static implicit operator T(Property<T> property)
+        public Property()
+        {
+        }
+
+        public Property(TValue value)
+        {
+            _value = value;
+        }
+
+        public void SetValueWithoutNotify(TValue value)
+        {
+            _value = value;
+        }
+
+        public static implicit operator TValue(Property<TValue> property)
         {
             if (property != null)
             {
@@ -44,22 +60,22 @@ namespace VirtualMaker.Bindings
             return default;
         }
 
-        public event Action<T> OnChange;
+        public event Action<TValue> OnChange;
 
-        public void NotifyChanged()
-        {
-            OnChange?.Invoke(Value);
-        }
+        public void NotifyChanged() => OnChange?.Invoke(Value);
     }
 
-    public class Derived<W, T> : IProperty<T>
+    public class Derived<TValue, TDerived> : IProperty<TDerived>
     {
-        private IProperty<W> _property;
-        private Func<W, T> _getter;
+        private IProperty<TValue> _property;
+        private Func<TValue, TDerived> _func;
 
-        public T Value => _getter(_property.Value);
+        private TDerived _value;
+        public TDerived Value => _value;
 
-        public static implicit operator T(Derived<W, T> derived)
+        public event Action<TDerived> OnChange;
+
+        public static implicit operator TDerived(Derived<TValue, TDerived> derived)
         {
             if (derived != null)
             {
@@ -69,13 +85,37 @@ namespace VirtualMaker.Bindings
             return default;
         }
 
-        public Derived(IProperty<W> property, Func<W, T> getter)
+        public Derived(IProperty<TValue> property, Func<TValue, TDerived> func)
         {
-            _getter = getter;
             _property = property;
-            _property.OnChange += (value) => OnChange?.Invoke(Value);
+            _func = func;
+            _property.OnChange += UpdateValue;
+            UpdateValue(_property.Value);
         }
 
-        public event Action<T> OnChange;
+        private void UpdateValue(TValue fromValue)
+        {
+            var newValue = _func(fromValue);
+            if (EqualityComparer<TDerived>.Default.Equals(newValue, Value))
+            {
+                return;
+            }
+
+            _value = newValue;
+            OnChange?.Invoke(newValue);
+        }
+    }
+
+    public static class Derived
+    {
+        public static Derived<TProperty, TValue> From<TProperty, TValue>(IProperty<TProperty> property, Func<TProperty, TValue> getter)
+        {
+            return new Derived<TProperty, TValue>(property, getter);
+        }
+
+        public static Derived<bool, bool> Inverted(this IProperty<bool> property)
+        {
+            return new Derived<bool, bool>(property, value => !value);
+        }
     }
 }
