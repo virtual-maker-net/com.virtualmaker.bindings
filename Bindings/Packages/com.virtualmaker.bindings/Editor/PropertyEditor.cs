@@ -5,14 +5,20 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace VirtualMaker.Bindings
+namespace VirtualMaker.Bindings.Editor
 {
     [CustomPropertyDrawer(typeof(Property<>), true)]
     public class PropertyEditor : PropertyDrawer
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("_value"), label, true);
+            var value = property?.FindPropertyRelative("_value");
+            if (value == null)
+            {
+                return EditorGUIUtility.singleLineHeight;
+            }
+
+            return EditorGUI.GetPropertyHeight(value, label, true);
         }
 
         // https://discussions.unity.com/t/get-the-instance-the-serializedproperty-belongs-to-in-a-custompropertydrawer/66954
@@ -75,7 +81,13 @@ namespace VirtualMaker.Bindings
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            EditorGUI.PropertyField(position, property.FindPropertyRelative("_value"), label, true);
+            var value = property?.FindPropertyRelative("_value");
+            if (value == null)
+            {
+                return;
+            }
+
+            EditorGUI.PropertyField(position, value, label, true);
 
             if (property.serializedObject.ApplyModifiedProperties())
             {

@@ -1,12 +1,8 @@
 {
-    "name": "Bindings.Editor",
+    "name": "VirtualMaker.Bindings",
     "rootNamespace": "",
-    "references": [
-        "Bindings"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "references": [],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": true,

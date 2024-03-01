@@ -65,17 +65,17 @@ namespace VirtualMaker.Bindings
         public void NotifyChanged() => OnChange?.Invoke(Value);
     }
 
-    public class Derived<TValue, TDerived> : IProperty<TDerived>
+    public class Derived<TDerived> : IProperty<TDerived>
     {
-        private IProperty<TValue> _property;
-        private Func<TValue, TDerived> _func;
+        private Property<TDerived> _property = new();
+        public TDerived Value => _property.Value;
+        public event Action<TDerived> OnChange
+        {
+            add => _property.OnChange += value;
+            remove => _property.OnChange -= value;
+        }
 
-        private TDerived _value;
-        public TDerived Value => _value;
-
-        public event Action<TDerived> OnChange;
-
-        public static implicit operator TDerived(Derived<TValue, TDerived> derived)
+        public static implicit operator TDerived(Derived<TDerived> derived)
         {
             if (derived != null)
             {
@@ -85,37 +85,54 @@ namespace VirtualMaker.Bindings
             return default;
         }
 
-        public Derived(IProperty<TValue> property, Func<TValue, TDerived> func)
+        private Derived() { }
+
+        public static Derived<TDerived> From<TValue>(IProperty<TValue> property, Func<TValue, TDerived> func)
         {
-            _property = property;
-            _func = func;
-            _property.OnChange += UpdateValue;
-            UpdateValue(_property.Value);
+            var derived = new Derived<TDerived>();
+            Action update = () => derived._property.Value = func(property.Value);
+            property.OnChange += _ => update();
+            update();
+            return derived;
         }
 
-        private void UpdateValue(TValue fromValue)
+        public static Derived<TDerived> From<TValue1, TValue2>(IProperty<TValue1> property1, IProperty<TValue2> property2, Func<TValue1, TValue2, TDerived> func)
         {
-            var newValue = _func(fromValue);
-            if (EqualityComparer<TDerived>.Default.Equals(newValue, Value))
-            {
-                return;
-            }
+            var derived = new Derived<TDerived>();
+            Action update = () => derived._property.Value = func(property1.Value, property2.Value);
+            property1.OnChange += _ => update();
+            property2.OnChange += _ => update();
+            update();
+            return derived;
+        }
 
-            _value = newValue;
-            OnChange?.Invoke(newValue);
+        public static Derived<TDerived> From<TValue1, TValue2, TValue3>(IProperty<TValue1> property1, IProperty<TValue2> property2, IProperty<TValue3> property3, Func<TValue1, TValue2, TValue3, TDerived> func)
+        {
+            var derived = new Derived<TDerived>();
+            Action update = () => derived._property.Value = func(property1.Value, property2.Value, property3.Value);
+            property1.OnChange += _ => update();
+            property2.OnChange += _ => update();
+            property3.OnChange += _ => update();
+            update();
+            return derived;
         }
     }
 
     public static class Derived
     {
-        public static Derived<TProperty, TValue> From<TProperty, TValue>(IProperty<TProperty> property, Func<TProperty, TValue> getter)
+        public static Derived<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, TDerived> func)
         {
-            return new Derived<TProperty, TValue>(property, getter);
+            return Derived<TDerived>.From(property, func);
         }
 
-        public static Derived<bool, bool> Inverted(this IProperty<bool> property)
+        public static Derived<TDerived> From<TValue1, TValue2, TDerived>(IProperty<TValue1> property1, IProperty<TValue2> property2, Func<TValue1, TValue2, TDerived> func)
         {
-            return new Derived<bool, bool>(property, value => !value);
+            return Derived<TDerived>.From(property1, property2, func);
+        }
+
+        public static Derived<TDerived> From<TValue1, TValue2, TValue3, TDerived>(IProperty<TValue1> property1, IProperty<TValue2> property2, IProperty<TValue3> property3, Func<TValue1, TValue2, TValue3, TDerived> func)
+        {
+            return Derived<TDerived>.From(property1, property2, property3, func);
         }
     }
 }
