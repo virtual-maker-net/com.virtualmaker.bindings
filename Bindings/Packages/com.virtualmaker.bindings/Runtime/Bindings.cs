@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace VirtualMaker.Bindings
 {
@@ -34,6 +35,18 @@ namespace VirtualMaker.Bindings
             var wrapper = new Action<T>(_ => action());
             prop.OnChange += wrapper;
             _unsubscribe.Add(() => prop.OnChange -= wrapper);
+        }
+
+        public void On(UnityEvent evt, UnityAction action)
+        {
+            evt.AddListener(() => action());
+            _unsubscribe.Add(() => evt.RemoveListener(() => action()));
+        }
+
+        public void On<T>(UnityEvent<T> evt, UnityAction<T> action)
+        {
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
         }
 
         public void AddUnsubscriber(Action unsubscribe)
