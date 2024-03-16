@@ -50,16 +50,6 @@ namespace VirtualMaker.Bindings
             _value = value;
         }
 
-        public static implicit operator TValue(Property<TValue> property)
-        {
-            if (property != null)
-            {
-                return property.Value;
-            }
-
-            return default;
-        }
-
         public event Action<TValue> OnChange;
 
         public void NotifyChanged() => OnChange?.Invoke(Value);
@@ -73,16 +63,6 @@ namespace VirtualMaker.Bindings
         {
             add => _property.OnChange += value;
             remove => _property.OnChange -= value;
-        }
-
-        public static implicit operator TDerived(Derived<TDerived> derived)
-        {
-            if (derived != null)
-            {
-                return derived.Value;
-            }
-
-            return default;
         }
 
         private Derived() { }
