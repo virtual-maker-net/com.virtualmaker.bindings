@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Button = UnityEngine.UIElements.Button;
-using Image = UnityEngine.UIElements.Image;
 
 namespace VirtualMaker.Bindings
 {
@@ -23,7 +21,15 @@ namespace VirtualMaker.Bindings
 
         public void BindText<T>(string name, IProperty<T> prop)
         {
-            Bind<Label, T>(name, prop, (element, value) => element.text = value?.ToString());
+            if (TryGetElement<TextElement>(name, out var element))
+            {
+                BindText(element, prop);
+            }
+        }
+
+        public void BindText<T>(TextElement element, IProperty<T> prop)
+        {
+            Bind(element, prop, (element, value) => SetText(element, value));
         }
 
         public void BindText<T, W>(string name, IProperty<T> prop, Func<T, W> transform)
@@ -31,22 +37,22 @@ namespace VirtualMaker.Bindings
             BindText(name, Derived.From(prop, transform));
         }
 
-        public void BindButtonText<T>(string name, IProperty<T> prop)
+        public void BindText<T, W>(TextElement element, IProperty<T> prop, Func<T, W> transform)
         {
-            Bind<Button, T>(name, prop, (element, value) => element.text = value?.ToString());
-        }
-
-        public void BindButtonText<TValue, TTransform>(string name, IProperty<TValue> prop, Func<TValue, TTransform> transform)
-        {
-            BindButtonText(name, Derived.From(prop, transform));
+            BindText(element, Derived.From(prop, transform));
         }
 
         public void SetText<T>(string name, T value)
         {
             if (TryGetElement<Label>(name, out var element))
             {
-                element.text = value?.ToString();
+                SetText(element, value);
             }
+        }
+
+        public void SetText<T>(TextElement element, T value)
+        {
+            element.text = value?.ToString();
         }
 
         public void SetLineHeight(string name, int lineHeight)
@@ -272,53 +278,43 @@ namespace VirtualMaker.Bindings
             Bind<VisualElement, Texture2D>(name, prop, SetBackgroundImage);
         }
 
-        public void BindTextField<T>(string name, IProperty<T> sourceProp, Property<string> inputTextProp, Func<T, string> transform, Func<ChangeEvent<string>, bool> validate = null, Property<bool> validateProp = null)
+        public void BindTextField(string name, Property<string> prop, bool twoWay)
         {
             if (TryGetElement<TextField>(name, out var element))
             {
-                BindTextField(element, inputTextProp, validate, validateProp);
-                Bind(sourceProp, value => inputTextProp.Value = transform.Invoke(value));
+                BindTextField(element, prop, twoWay);
             }
         }
 
-        public void BindTextField(string name, Property<string> prop, Func<ChangeEvent<string>, bool> validate = null, Property<bool> validateProp = null)
-        {
-            if (TryGetElement<TextField>(name, out var element))
-            {
-                BindTextField(element, prop, validate, validateProp);
-            }
-        }
-
-        private void BindTextField(TextField textField, Property<string> property, Func<ChangeEvent<string>, bool> validate, Property<bool> validateProp = null)
+        private void BindTextField(TextField textField, Property<string> property, bool twoWay)
         {
             Bind(property, value => textField.value = value);
 
-            var inputCallback = new EventCallback<ChangeEvent<string>>(e =>
+            if (twoWay)
             {
-                if (validate != null)
-                {
-                    var isValid = validate(e);
-
-                    if (isValid)
-                    {
-                        textField.RemoveFromClassList("invalid-input");
-                    }
-                    else
-                    {
-                        textField.AddToClassList("invalid-input");
-                    }
-
-                    if (validateProp != null)
-                    {
-                        validateProp.Value = isValid;
-                    }
-                }
-
-                property.Value = e.newValue;
-            });
-
-            On(textField, inputCallback);
+                On<ChangeEvent<string>>(textField, e => property.Value = e.newValue);
+            }
         }
+
+#if UNITY_2022_1_OR_NEWER
+        public void BindIntegerField(string name, Property<int> prop, bool twoWay)
+        {
+            if (TryGetElement<IntegerField>(name, out var element))
+            {
+                BindIntegerField(element, prop, twoWay);
+            }
+        }
+
+        private void BindIntegerField(IntegerField intField, Property<int> property, bool twoWay)
+        {
+            Bind(property, value => intField.value = value);
+
+            if (twoWay)
+            {
+                On<ChangeEvent<int>>(intField, e => property.Value = e.newValue);
+            }
+        }
+#endif
 
         public void SetClass(VisualElement element, string className, bool value)
         {
@@ -484,6 +480,12 @@ namespace VirtualMaker.Bindings
             {
                 Bind(prop, v => action(element, v));
             }
+        }
+
+        public void Bind<TElement, T>(TElement element, IProperty<T> prop, Action<TElement, T> action)
+            where TElement : VisualElement
+        {
+            Bind(prop, v => action(element, v));
         }
 
         public void Set<T>(string name, Action<T> action) where T : VisualElement

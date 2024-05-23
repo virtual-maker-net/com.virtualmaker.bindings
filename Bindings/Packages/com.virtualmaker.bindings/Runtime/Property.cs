@@ -259,18 +259,4 @@ namespace VirtualMaker.Bindings
             return DerivedProperty<TDerived>.From<TValue>(property, func);
         }
     }
-
-    public class PropertyConverter<T> : Newtonsoft.Json.JsonConverter<Property<T>>
-    {
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, Property<T> value, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value.Value);
-        }
-
-        public override Property<T> ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, Property<T> existingValue, bool hasExistingValue, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            T value = serializer.Deserialize<T>(reader);
-            return new Property<T> { Value = value };
-        }
-    }
 }
