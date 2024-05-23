@@ -87,6 +87,8 @@ namespace VirtualMaker.Bindings.Editor
                 return;
             }
 
+            property.serializedObject.Update();
+
             EditorGUI.PropertyField(position, value, label, true);
 
             if (property.serializedObject.ApplyModifiedProperties())
