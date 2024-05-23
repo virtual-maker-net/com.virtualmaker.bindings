@@ -28,7 +28,7 @@ namespace VirtualMaker.Bindings
 
         public void BindText<T, W>(string name, IProperty<T> prop, Func<T, W> transform)
         {
-            BindText(name, new Derived<T, W>(prop, transform));
+            BindText(name, Derived.From(prop, transform));
         }
 
         public void BindButtonText<T>(string name, IProperty<T> prop)
@@ -38,7 +38,7 @@ namespace VirtualMaker.Bindings
 
         public void BindButtonText<TValue, TTransform>(string name, IProperty<TValue> prop, Func<TValue, TTransform> transform)
         {
-            BindButtonText(name, new Derived<TValue, TTransform>(prop, transform));
+            BindButtonText(name, Derived.From(prop, transform));
         }
 
         public void SetText<T>(string name, T value)
@@ -72,7 +72,7 @@ namespace VirtualMaker.Bindings
 
         public void BindWidth<T>(string name, IProperty<T> prop, Func<T, StyleLength> transform)
         {
-            BindWidth(name, new Derived<T, StyleLength>(prop, transform));
+            BindWidth(name, Derived.From(prop, transform));
         }
 
         public void SetWidth(string name, StyleLength value)
@@ -133,7 +133,7 @@ namespace VirtualMaker.Bindings
 
         public void BindDisplay<T>(string name, bool fade, IProperty<T> prop, Func<T, bool> transform)
         {
-            BindDisplay(name, fade, new Derived<T, bool>(prop, transform));
+            BindDisplay(name, fade, Derived.From(prop, transform));
         }
 
         private void SetImage(Image element, VectorImage vectorImage)
@@ -229,7 +229,7 @@ namespace VirtualMaker.Bindings
 
         public void BindImage<T>(string name, IProperty<T> prop, Func<T, string> transform)
         {
-            BindImage(name, new Derived<T, string>(prop, transform));
+            BindImage(name, Derived.From(prop, transform));
         }
 
         public void BindImage(string name, IProperty<string> prop)
@@ -254,7 +254,7 @@ namespace VirtualMaker.Bindings
 
         public void BindBackgroundImage<T>(string name, IProperty<T> prop, Func<T, string> transform)
         {
-            BindBackgroundImage(name, new Derived<T, string>(prop, transform));
+            BindBackgroundImage(name, Derived.From(prop, transform));
         }
 
         public void BindBackgroundImage(string name, IProperty<string> prop)
@@ -347,7 +347,7 @@ namespace VirtualMaker.Bindings
 
         public void BindClass<T>(string name, string className, IProperty<T> prop, Func<T, bool> transform)
         {
-            BindClass(name, className, new Derived<T, bool>(prop, transform));
+            BindClass(name, className, Derived.From(prop, transform));
         }
 
         public void BindEnabled(string name, IProperty<bool> prop)
@@ -360,7 +360,7 @@ namespace VirtualMaker.Bindings
 
         public void BindEnabled<T>(string name, IProperty<T> prop, Func<T, bool> transform)
         {
-            BindEnabled(name, new Derived<T, bool>(prop, transform));
+            BindEnabled(name, Derived.From(prop, transform));
         }
 
         public void BindEnabled(string name, params IProperty<bool>[] props)
@@ -504,7 +504,7 @@ namespace VirtualMaker.Bindings
 
         public void OnClick<T>(string name, Action action, IProperty<T> canExecuteProp, Func<T, bool> transform)
         {
-            OnClick(name, action, new Derived<T, bool>(canExecuteProp, transform));
+            OnClick(name, action, Derived.From(canExecuteProp, transform));
         }
 
         public void OnClick(string name, Action action, IProperty<bool> canExecute)
