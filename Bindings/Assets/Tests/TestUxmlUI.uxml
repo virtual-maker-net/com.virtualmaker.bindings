@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="root">
+        <ui:Label name="label" text="Hello, World!" />
+        <ui:Button name="button" text="Click Me" />
+        <ui:IntegerField name="integerField" />
+        <ui:TextField name="textField" />
+    </ui:VisualElement>
+</ui:UXML>
