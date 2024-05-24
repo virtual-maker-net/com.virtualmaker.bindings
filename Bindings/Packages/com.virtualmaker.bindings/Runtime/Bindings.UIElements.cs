@@ -297,24 +297,6 @@ namespace VirtualMaker.Bindings
         }
 
 #if UNITY_2022_1_OR_NEWER
-        public void BindIntegerField(string name, Property<int> prop, bool twoWay)
-        {
-            if (TryGetElement<IntegerField>(name, out var element))
-            {
-                BindIntegerField(element, prop, twoWay);
-            }
-        }
-
-        private void BindIntegerField(IntegerField intField, Property<int> property, bool twoWay)
-        {
-            Bind(property, value => intField.value = value);
-
-            if (twoWay)
-            {
-                On<ChangeEvent<int>>(intField, e => property.Value = e.newValue);
-            }
-        }
-
         public void BindField<T>(string name, Property<T> property, bool twoWay)
         {
             if (TryGetElement<BaseField<T>>(name, out var element))
