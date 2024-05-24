@@ -314,6 +314,24 @@ namespace VirtualMaker.Bindings
                 On<ChangeEvent<int>>(intField, e => property.Value = e.newValue);
             }
         }
+
+        public void BindField<T>(string name, Property<T> property, bool twoWay)
+        {
+            if (TryGetElement<BaseField<T>>(name, out var element))
+            {
+                BindField<T>(element, property, twoWay);
+            }
+        }
+
+        public void BindField<T>(BaseField<T> baseField, Property<T> property, bool twoWay)
+        {
+            Bind(property, value => baseField.value = value);
+
+            if (twoWay)
+            {
+                On<ChangeEvent<T>>(baseField, e => property.Value = e.newValue);
+            }
+        }
 #endif
 
         public void SetClass(VisualElement element, string className, bool value)
