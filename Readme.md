@@ -6,7 +6,7 @@ UI binding is the act of taking a data source and applying it a user interface. 
 
 ## Installing
 
-Requires Unity 2021.3 LTS or higher.
+Requires Unity 2020.3 LTS or higher.
 
 The recommended installation method is though the unity package manager and [OpenUPM](https://openupm.com/packages/com.virtualmaker.bindings).
 
