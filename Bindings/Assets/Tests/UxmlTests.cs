@@ -36,7 +36,7 @@ public class UxmlTests
     public void IntegerFieldTests()
     {
         _intProperty.Value = 42;
-        _bindings.BindIntegerField("integerField", _intProperty, true);
+        _bindings.BindField("integerField", _intProperty, true);
         Assert.AreEqual(42, _integerField.value);
 
         _intProperty.Value = 100;
@@ -51,7 +51,7 @@ public class UxmlTests
     public void TextFieldTests()
     {
         _stringProperty.Value = "Hello";
-        _bindings.BindTextField("textField", _stringProperty, true);
+        _bindings.BindField("textField", _stringProperty, true);
         Assert.AreEqual("Hello", _textField.value);
 
         _stringProperty.Value = "World";
