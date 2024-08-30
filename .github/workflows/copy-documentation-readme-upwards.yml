@@ -20,10 +20,10 @@ jobs:
         $readmeDir = Get-Item -Path "**/Packages/com.*/Documentation~" | Select-Object -ExpandProperty FullName
         $readmeDir = $readmeDir.replace('${{ github.workspace }}/','')
         $readmeDir
-	      $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
-	      $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
-	      sc README.md $readme
-	      gc ./README.md
+        $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
+        $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
+        sc README.md $readme
+        gc ./README.md
         git add ./README.md
         git commit -m 'Copied repo README from package README'
       working-directory: ${{ github.workspace }}
