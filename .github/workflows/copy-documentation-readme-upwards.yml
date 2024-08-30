@@ -3,7 +3,8 @@ name: copy-documentation-readme-upwards
 on:
   push:
     branches:
-      - *
+      - main
+      - dev/upm-readiness
 
 jobs:
   copy-documentation-readme-upwards:
