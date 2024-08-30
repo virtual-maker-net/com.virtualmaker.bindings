@@ -24,7 +24,7 @@ jobs:
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
         $targetContent = gc README.md -Raw
         echo $targetContent
-        echo (if($readmeContent -eq $targetContent) {"eq"} else {"ne"})
+        if ($readmeContent -eq $targetContent) {echo "eq"} else {echo "ne"}
       # Set-Content ./README.md $readme
       #  git add ./README.md
       #  git commit -m 'Copied repo README from package README'
