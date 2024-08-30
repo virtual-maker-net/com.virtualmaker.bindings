@@ -1,0 +1,29 @@
+name: copy-documentation-readme-upwards
+
+on:
+  push:
+    branches:
+      - *
+
+jobs:
+  copy-documentation-readme-upwards:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: copy documentation readme upwards
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        $readmeDir = Get-Item -Path "**/Packages/com.*/Documentation~" | Select-Object -ExpandProperty FullName
+        $readmeDir = $readmeDir.replace('${{ github.workspace }}/','')
+        $readmeDir
+	      $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
+	      $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
+	      sc README.md $readme
+	      gc ./README.md
+        git add ./README.md
+        git commit -m 'Copied repo README from package README'
+      working-directory: ${{ github.workspace }}
+      shell: pwsh
