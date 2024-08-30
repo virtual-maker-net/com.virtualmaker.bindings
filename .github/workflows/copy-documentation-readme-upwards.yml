@@ -18,7 +18,7 @@ jobs:
         git config user.name github-actions
         git config user.email github-actions@github.com
         $readmeDir = Get-Item -Path "**/Packages/com.*/Documentation~" | Select-Object -ExpandProperty FullName
-        $readmeDir = $readmeDir.replace('${{ github.workspace }}/','')
+        $readmeDir = $readmeDir.replace('${{ github.workspace }}','')
         echo $readmeDir
         $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
