@@ -22,7 +22,7 @@ jobs:
         $readmeDir
         $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
-        sc README.md $readme
+        Set-Content ./README.md $readme
         gc ./README.md
         git add ./README.md
         git commit -m 'Copied repo README from package README'
