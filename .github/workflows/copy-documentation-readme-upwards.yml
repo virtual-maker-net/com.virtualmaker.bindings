@@ -19,12 +19,12 @@ jobs:
         git config user.email github-actions@github.com
         $readmeDir = Get-Item -Path "**/Packages/com.*/Documentation~" | Select-Object -ExpandProperty FullName
         $readmeDir = $readmeDir.replace('${{ github.workspace }}/','')
-        $readmeDir
+        echo $readmeDir
         $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
-        Set-Content ./README.md $readme
-        gc ./README.md
-        git add ./README.md
-        git commit -m 'Copied repo README from package README'
+        echo (gc ./README.md -Raw)
+      # Set-Content ./README.md $readme
+      #  git add ./README.md
+      #  git commit -m 'Copied repo README from package README'
       working-directory: ${{ github.workspace }}
       shell: pwsh
