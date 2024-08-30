@@ -22,6 +22,8 @@ jobs:
         echo $readmeDir
         $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'$2)')
+        echo $readmeContent
+        echo "v.s."
         $targetContent = gc README.md -Raw
         echo $targetContent
         if ($readmeContent -eq $targetContent) {echo "eq"} else {echo "ne"}
