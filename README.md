@@ -15,6 +15,7 @@ The recommended installation method is though the unity package manager and [Ope
 - Open your Unity project settings
 - Select the `Package Manager`
 ![scoped-registries](Bindings/Packages/com.virtualmaker.bindings/Documentation~/images/package-manager-scopes.png)
+![scoped-registries](Bindings/Packages/com.virtualmaker.bindings/Documentation~/images/package-manager-scopes.png)
 - Add the OpenUPM package registry:
   - Name: `OpenUPM`
   - URL: `https://package.openupm.com`
