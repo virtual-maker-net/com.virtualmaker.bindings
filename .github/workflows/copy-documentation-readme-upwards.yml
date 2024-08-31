@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - dev/upm-readiness
+    paths:
+      - '**/Packages/com.*/Documentation~/README.md'
 
 jobs:
   copy-documentation-readme-upwards:
@@ -19,18 +21,11 @@ jobs:
         git config user.email github-actions@github.com
         $readmeDir = Get-Item -Path "**/Packages/com.*/Documentation~" | Select-Object -ExpandProperty FullName
         $readmeDir = $readmeDir.replace('${{ github.workspace }}/','')
-        echo $readmeDir
         $readmeContent = gc (Get-Item -Path "**/Packages/com.*/Documentation~/README.md") -Raw
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'/$2)')
-        echo $readmeContent
-        echo "v.s."
         Set-Content README.md $readmeContent
-        $targetContent = gc README.md -Raw
-        echo $targetContent
-        echo Compare-Object ($readmeContent | out-string) ($targetContent | out-string)
-        if (-not Compare-Object ($readmeContent | out-string) ($targetContent | out-string)) {echo "eq"} else {echo "ne"}
-      # Set-Content ./README.md $readmeContent
-      #  git add ./README.md
-      #  git commit -m 'Copied repo README from package README'
+        git add README.md
+        git commit -m 'Copied repo README from package README'
+        git push
       working-directory: ${{ github.workspace }}
       shell: pwsh
