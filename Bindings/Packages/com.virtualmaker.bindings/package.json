@@ -1,8 +1,28 @@
 {
+    "name": "com.virtualmaker.bindings",
     "displayName": "Bindings",
     "description": "Bindable Property class and Bindings utility class.",
-    "name": "com.virtualmaker.bindings",
-    "unity": "2020.3",
+    "keywords": [],
     "version": "1.0.0",
-    "category": "utilities"
+    "unity": "2020.3",
+    "category": "utilities",
+    "documentationUrl": "https://github.com/virtual-maker-net/com.virtualmaker.bindings#documentation",
+    "changelogUrl": "https://github.com/virtual-maker-net/com.virtualmaker.bindings/releases",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "repository": "https://github.com/virtual-maker-net/com.virtualmaker.bindings.git"
+    },
+    "author": {
+        "name": "VirtualMaker",
+        "url": "https://www.virtualmaker.dev/"
+    },
+    "dependencies": {
+        "com.unity.modules.uielements": "1.0.0",
+        "com.unity.modules.unitywebrequesttexture": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+    },
+    "publishConfig": {
+        "registry": "https://package.openupm.com"
+    }
 }
