@@ -27,6 +27,7 @@ jobs:
         Set-Content README.md $readmeContent
         $targetContent = gc README.md -Raw
         echo $targetContent
+        echo Compare-Object ($readmeContent | out-string) ($targetContent | out-string)
         if (-not Compare-Object ($readmeContent | out-string) ($targetContent | out-string)) {echo "eq"} else {echo "ne"}
       # Set-Content ./README.md $readmeContent
       #  git add ./README.md
