@@ -24,7 +24,7 @@ jobs:
         $readmeContent = $readmeContent -replace '(\[.*\])\(((?!https?:\/\/).+)\)',('$1('+$readmeDir+'/$2)')
         echo $readmeContent
         echo "v.s."
-        Set-Content ./README.md $readmeContent
+        Set-Content README.md $readmeContent
         $targetContent = gc README.md -Raw
         echo $targetContent
         if ($readmeContent -eq $targetContent) {echo "eq"} else {echo "ne"}
