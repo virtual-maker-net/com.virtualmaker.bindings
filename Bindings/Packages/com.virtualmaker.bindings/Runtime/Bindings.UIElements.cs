@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace VirtualMaker.Bindings
@@ -315,22 +316,12 @@ namespace VirtualMaker.Bindings
             }
         }
 
-        public void BindField<T>(string name, Func<T> getter)
+        public void BindField<T>(string name, T value, Action<T> onChange)
         {
-            if (TryGetElement<BaseField<T>>(name, out var element))
+            if (TryGetElement<BaseField<T>>(name, out var baseField))
             {
-                var property = new Property<T>(getter());
-                BindField<T>(element, property, false);
-            }
-        }
-
-        public void BindField<T>(string name, Func<T> getter, Action<T> setter)
-        {
-            if (TryGetElement<BaseField<T>>(name, out var element))
-            {
-                var property = new Property<T>(getter());
-                BindField<T>(element, property, true);
-                Bind(property, setter);
+                baseField.value = value;
+                On<ChangeEvent<T>>(baseField, e => onChange(e.newValue));
             }
         }
 #endif
