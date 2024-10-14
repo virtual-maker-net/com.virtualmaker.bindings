@@ -45,7 +45,7 @@ namespace VirtualMaker.Bindings
 
         public void SetText<T>(string name, T value)
         {
-            if (TryGetElement<Label>(name, out var element))
+            if (TryGetElement<TextElement>(name, out var element))
             {
                 SetText(element, value);
             }
@@ -61,14 +61,6 @@ namespace VirtualMaker.Bindings
             if (TryGetElement<Label>(name, out var element))
             {
                 element.text = $"<line-height={lineHeight}px>{element.text}";
-            }
-        }
-
-        public void SetButtonText<T>(string name, T value)
-        {
-            if (TryGetElement<Button>(name, out var element))
-            {
-                element.text = value?.ToString();
             }
         }
 
