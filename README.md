@@ -8,7 +8,7 @@ To install the VirtualMaker Bindings library, add the following line to your `ma
 
 ```json
 "dependencies": {
-    "com.virtualmaker.bindings": "https://github.com/VirtualMaker/Bindings.git#main"
+    "com.virtualmaker.bindings": "https://github.com/virtual-maker-net/com.virtualmaker.bindings.git?path=/Bindings/Packages/com.virtualmaker.bindings#main"
 }
 ```
 
@@ -19,7 +19,7 @@ To create a property, simply instantiate the `Property<T>` class with the desire
 ```cs
 using VirtualMaker.Bindings;
 
-public class ExampleComponent : MonoBehaviour
+public class Ex ampleComponent : MonoBehaviour
 {
     [SerializeField]
     private Property<int> _intProperty = new();
