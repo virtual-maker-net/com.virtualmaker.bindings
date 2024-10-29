@@ -36,7 +36,7 @@ public class UxmlTests
     public void IntegerFieldTests()
     {
         _intProperty.Value = 42;
-        _bindings.BindIntegerField("integerField", _intProperty, true);
+        _bindings.BindField("integerField", _intProperty, true);
         Assert.AreEqual(42, _integerField.value);
 
         _intProperty.Value = 100;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace VirtualMaker.Bindings
@@ -44,7 +45,7 @@ namespace VirtualMaker.Bindings
 
         public void SetText<T>(string name, T value)
         {
-            if (TryGetElement<Label>(name, out var element))
+            if (TryGetElement<TextElement>(name, out var element))
             {
                 SetText(element, value);
             }
@@ -60,14 +61,6 @@ namespace VirtualMaker.Bindings
             if (TryGetElement<Label>(name, out var element))
             {
                 element.text = $"<line-height={lineHeight}px>{element.text}";
-            }
-        }
-
-        public void SetButtonText<T>(string name, T value)
-        {
-            if (TryGetElement<Button>(name, out var element))
-            {
-                element.text = value?.ToString();
             }
         }
 
@@ -312,6 +305,15 @@ namespace VirtualMaker.Bindings
             if (twoWay)
             {
                 On<ChangeEvent<T>>(baseField, e => property.Value = e.newValue);
+            }
+        }
+
+        public void BindField<T>(string name, T value, Action<T> onChange)
+        {
+            if (TryGetElement<BaseField<T>>(name, out var baseField))
+            {
+                baseField.value = value;
+                On<ChangeEvent<T>>(baseField, e => onChange(e.newValue));
             }
         }
 #endif
