@@ -4,7 +4,7 @@ The VirtualMaker Bindings library provides a robust system for creating and mana
 
 ## Installation
 
-To install the VirtualMaker Bindings library, add the following line to your `manifest.json` file in the `dependencies` section:
+To install the VirtualMaker Bindings library, add the following line to your `Packages/manifest.json` file in the `dependencies` section:
 
 ```json
 "dependencies": {
