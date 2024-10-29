@@ -1,8 +1,16 @@
 # VirtualMaker Bindings
 
-## Overview
-
 The VirtualMaker Bindings library provides a robust system for creating and managing properties in Unity. It allows for easy data binding between properties and UI elements, supports derived properties, and integrates seamlessly with both UGUI and UI Toolkit.
+
+## Installation
+
+To install the VirtualMaker Bindings library, add the following line to your `manifest.json` file in the `dependencies` section:
+
+```json
+"dependencies": {
+    "com.virtualmaker.bindings": "https://github.com/VirtualMaker/Bindings.git#main"
+}
+```
 
 ## Creating a `Property<T>`
 
