@@ -175,3 +175,4 @@ public class EditTimeBindingsExample : MonoBehaviour
 ```
 
 Now, changing the value of `_textProperty` in the editor will automatically update the bound UI element.
+
