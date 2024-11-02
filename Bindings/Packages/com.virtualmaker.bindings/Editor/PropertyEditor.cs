@@ -10,16 +10,19 @@ namespace VirtualMaker.Bindings.Editor
     [CustomPropertyDrawer(typeof(Property<>), true)]
     public class PropertyEditor : PropertyDrawer
     {
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        public sealed override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var value = property?.FindPropertyRelative("_value");
-            if (value == null)
+            if (value == null || !fieldInfo.FieldType.IsSubclassOf(typeof(Property<>)))
             {
                 return EditorGUIUtility.singleLineHeight;
             }
 
-            return EditorGUI.GetPropertyHeight(value, label, true);
+            return GetValueHeight(value, label);
         }
+
+        protected virtual float GetValueHeight(SerializedProperty value, GUIContent label)
+          => EditorGUI.GetPropertyHeight(value, label, true);
 
         // https://discussions.unity.com/t/get-the-instance-the-serializedproperty-belongs-to-in-a-custompropertydrawer/66954
         private static object GetParent(SerializedProperty prop)
@@ -79,17 +82,17 @@ namespace VirtualMaker.Bindings.Editor
             return enm.Current;
         }
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        public sealed override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             var value = property?.FindPropertyRelative("_value");
-            if (value == null)
+            if (value == null || fieldInfo.FieldType.GetGenericTypeDefinition() != typeof(Property<>))
             {
                 return;
             }
 
             property.serializedObject.Update();
 
-            EditorGUI.PropertyField(position, value, label, true);
+            OnGUIValue(position, value, label);
 
             if (property.serializedObject.ApplyModifiedProperties())
             {
@@ -101,5 +104,8 @@ namespace VirtualMaker.Bindings.Editor
                 }
             }
         }
+
+        protected virtual void OnGUIValue(Rect position, SerializedProperty value, GUIContent label)
+            => EditorGUI.PropertyField(position, value, label, true);
     }
 }
