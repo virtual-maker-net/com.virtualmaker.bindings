@@ -6,13 +6,28 @@ The VirtualMaker Bindings library provides a robust system for creating and mana
 
 ## Installation
 
-To install the VirtualMaker Bindings library, add the following line to your `Packages/manifest.json` file in the `dependencies` section:
+Requires Unity 2020.3 LTS or higher.
 
-```json
-"dependencies": {
-    "com.virtualmaker.bindings": "https://github.com/virtual-maker-net/com.virtualmaker.bindings.git?path=/Bindings/Packages/com.virtualmaker.bindings#main"
-}
-```
+Once submitted and approved, the recommended installation method will be though the unity package manager and [OpenUPM](https://openupm.com/packages/com.virtualmaker.bindings), but through the Unity Package Manager and Git url will suffice in the meantime.
+
+### Via Unity Package Manager and Git url
+
+- Open your Unity Package Manager
+- Add package from git url: `https://github.com/virtual-maker-net/com.virtualmaker.bindings.git#upm`
+
+### Via Unity Package Manager and OpenUPM
+
+- Open your Unity project settings
+- Select the `Package Manager`
+![scoped-registries](images/package-manager-scopes.png)
+- Add the OpenUPM package registry:
+  - Name: `OpenUPM`
+  - URL: `https://package.openupm.com`
+  - Scope(s):
+    - `com.virtualmaker`
+- Open the Unity Package Manager window
+- Change the Registry from Unity to `My Registries`
+- Add the `Bindings` package
 
 ## Creating a `Property<T>`
 
@@ -21,7 +36,7 @@ To create a property, simply instantiate the `Property<T>` class with the desire
 ```cs
 using VirtualMaker.Bindings;
 
-public class Ex ampleComponent : MonoBehaviour
+public class ExampleComponent : MonoBehaviour
 {
     [SerializeField]
     private Property<int> _intProperty = new();
