@@ -1,12 +1,7 @@
 name: copy-documentation-readme-upwards
 
 on:
-  push:
-    branches:
-      - '**'
-      - '!upm'
-    paths:
-      - '**/Packages/com.*/Documentation~/README.md'
+  workflow_dispatch
 
 jobs:
   copy-documentation-readme-upwards:
