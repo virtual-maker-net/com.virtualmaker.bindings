@@ -1,4 +1,6 @@
-# VirtualMaker Bindings
+# com.virtualmaker.bindings
+
+[![Discord](https://img.shields.io/discord/855294214065487932.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/xQgMW9ufN4) [![openupm](https://img.shields.io/npm/v/com.virtualmaker.bindings?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.virtualmaker.bindings/) [![openupm](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=downloads&query=%24.downloads&suffix=%2Fmonth&url=https%3A%2F%2Fpackage.openupm.com%2Fdownloads%2Fpoint%2Flast-month%2Fcom.virtualmaker.bindings)](https://openupm.com/packages/com.virtualmaker.bindings/)
 
 The VirtualMaker Bindings library provides a robust system for creating and managing properties in Unity. It allows for easy data binding between properties and UI elements, supports derived properties, and integrates seamlessly with both UGUI and UI Toolkit.
 
