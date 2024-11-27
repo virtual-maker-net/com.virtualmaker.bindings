@@ -38,6 +38,16 @@ namespace VirtualMaker.Bindings
         {
             Bind(prop, value => image.color = transformer(value));
         }
+
+        public void BindImageFill(Image image, IProperty<float> prop)
+        {
+            Bind(prop, value => image.fillAmount = value);
+        }
+
+        public void BindImageFill<T>(Image image, IProperty<T> prop, Func<T, float> transformer)
+        {
+            Bind(prop, value => image.fillAmount = transformer(value));
+        }
     }
 }
 
