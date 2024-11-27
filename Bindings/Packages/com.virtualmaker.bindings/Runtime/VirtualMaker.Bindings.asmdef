@@ -33,7 +33,7 @@
             "name": "com.unity.ugui",
             "expression": "2.0.0",
             "define": "UNITY_TMPRO"
-        },
+        }
     ],
     "noEngineReferences": false
 }
