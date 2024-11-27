@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace VirtualMaker.Bindings
@@ -145,6 +144,7 @@ namespace VirtualMaker.Bindings
             element.image = texture;
         }
 
+#if BINDINGS_WEB_REQUEST && BINDINGS_WEB_REQUEST_TEXTURE
         private async void SetImage(Image element, string url)
         {
             element.image = null;
@@ -163,6 +163,7 @@ namespace VirtualMaker.Bindings
                 SetImage(element, url);
             }
         }
+#endif
 
         public void SetImage(string name, Texture2D value)
         {
@@ -190,6 +191,7 @@ namespace VirtualMaker.Bindings
             element.style.backgroundImage = Background.FromTexture2D(texture);
         }
 
+#if BINDINGS_WEB_REQUEST && BINDINGS_WEB_REQUEST_TEXTURE
         private async void SetBackgroundImage(VisualElement element, string url)
         {
             element.style.backgroundImage = null;
@@ -209,6 +211,7 @@ namespace VirtualMaker.Bindings
                 SetBackgroundImage(element, url);
             }
         }
+#endif
 
         public void SetBackgroundImage(string name, VectorImage value)
         {
@@ -226,6 +229,7 @@ namespace VirtualMaker.Bindings
             }
         }
 
+#if BINDINGS_WEB_REQUEST && BINDINGS_WEB_REQUEST_TEXTURE
         public void BindImage<T>(string name, IProperty<T> prop, Func<T, string> transform)
         {
             BindImage(name, Derived.From(prop, transform));
@@ -235,6 +239,7 @@ namespace VirtualMaker.Bindings
         {
             Bind<Image, string>(name, prop, SetImage);
         }
+#endif
 
         public void BindImage(string name, IProperty<VectorImage> prop)
         {
@@ -251,6 +256,7 @@ namespace VirtualMaker.Bindings
             Bind<Image, Texture>(name, prop, SetImage);
         }
 
+#if BINDINGS_WEB_REQUEST && BINDINGS_WEB_REQUEST_TEXTURE
         public void BindBackgroundImage<T>(string name, IProperty<T> prop, Func<T, string> transform)
         {
             BindBackgroundImage(name, Derived.From(prop, transform));
@@ -260,6 +266,7 @@ namespace VirtualMaker.Bindings
         {
             Bind<VisualElement, string>(name, prop, SetBackgroundImage);
         }
+#endif
 
         public void BindBackgroundImage(string name, IProperty<VectorImage> prop)
         {

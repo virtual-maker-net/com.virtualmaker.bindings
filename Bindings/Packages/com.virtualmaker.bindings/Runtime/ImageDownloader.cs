@@ -1,3 +1,5 @@
+#if BINDINGS_WEB_REQUEST && BINDINGS_WEB_REQUEST_TEXTURE
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -68,3 +70,5 @@ namespace VirtualMaker.Bindings
         }
     }
 }
+
+#endif

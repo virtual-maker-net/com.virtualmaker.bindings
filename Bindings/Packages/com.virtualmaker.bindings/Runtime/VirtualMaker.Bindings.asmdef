@@ -2,7 +2,9 @@
     "name": "VirtualMaker.Bindings",
     "rootNamespace": "",
     "references": [
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.ResourceManager",
+        "Utilities.Extensions.Addressables"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -11,6 +13,42 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.ugui",
+            "expression": "",
+            "define": "BINDINGS_UGUI"
+        },
+        {
+            "name": "com.unity.modules.uielements",
+            "expression": "",
+            "define": "BINDINGS_UI_ELEMENTS"
+        },
+        {
+            "name": "com.unity.modules.unitywebrequesttexture",
+            "expression": "",
+            "define": "BINDINGS_WEB_REQUEST_TEXTURE"
+        },
+        {
+            "name": "com.unity.modules.unitywebrequest",
+            "expression": "",
+            "define": "BINDINGS_WEB_REQUEST"
+        },
+        {
+            "name": "com.unity.addressables",
+            "expression": "",
+            "define": "BINDINGS_ADDRESSABLES"
+        },
+        {
+            "name": "com.utilities.extensions",
+            "expression": "",
+            "define": "BINDINGS_UTIL_EXTENSIONS"
+        },
+        {
+            "name": "com.utilities.async",
+            "expression": "",
+            "define": "BINDINGS_UTIL_ASYNC"
+        }
+    ],
     "noEngineReferences": false
 }
