@@ -1,7 +1,9 @@
 #if BINDINGS_UGUI
 
 using System;
+#if UNITY_TMPRO
 using TMPro;
+#endif // UNITY_TMPRO
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +11,7 @@ namespace VirtualMaker.Bindings
 {
     public partial class Bindings
     {
+#if UNITY_TMPRO
         public void BindText(TMP_Text text, IProperty<string> prop)
         {
             Bind(prop, value => text.text = value);
@@ -28,6 +31,8 @@ namespace VirtualMaker.Bindings
         {
             Bind(prop, value => text.color = transformer(value));
         }
+#endif // UNITY_TMPRO
+
 
         public void BindImageColor(Image image, IProperty<Color> prop)
         {
@@ -51,4 +56,4 @@ namespace VirtualMaker.Bindings
     }
 }
 
-#endif
+#endif // BINDINGS_UGUI

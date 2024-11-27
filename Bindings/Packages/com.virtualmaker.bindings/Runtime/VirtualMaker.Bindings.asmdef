@@ -25,30 +25,15 @@
             "define": "BINDINGS_UI_ELEMENTS"
         },
         {
-            "name": "com.unity.modules.unitywebrequesttexture",
+            "name": "com.unity.textmeshpro",
             "expression": "",
-            "define": "BINDINGS_WEB_REQUEST_TEXTURE"
+            "define": "UNITY_TMPRO"
         },
         {
-            "name": "com.unity.modules.unitywebrequest",
-            "expression": "",
-            "define": "BINDINGS_WEB_REQUEST"
+            "name": "com.unity.ugui",
+            "expression": "2.0.0",
+            "define": "UNITY_TMPRO"
         },
-        {
-            "name": "com.unity.addressables",
-            "expression": "",
-            "define": "BINDINGS_ADDRESSABLES"
-        },
-        {
-            "name": "com.utilities.extensions",
-            "expression": "",
-            "define": "BINDINGS_UTIL_EXTENSIONS"
-        },
-        {
-            "name": "com.utilities.async",
-            "expression": "",
-            "define": "BINDINGS_UTIL_ASYNC"
-        }
     ],
     "noEngineReferences": false
 }

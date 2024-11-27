@@ -4,5 +4,9 @@
     "name": "com.virtualmaker.bindings",
     "unity": "2020.3",
     "version": "1.0.0",
-    "category": "utilities"
+    "category": "utilities",
+    "dependencies": {
+        "com.unity.modules.unitywebrequesttexture": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+    }
 }
