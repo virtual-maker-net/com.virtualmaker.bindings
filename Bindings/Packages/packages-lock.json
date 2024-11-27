@@ -197,12 +197,7 @@
       "version": "file:com.virtualmaker.bindings",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {
-        "com.unity.modules.uielements": "1.0.0",
-        "com.unity.modules.unitywebrequesttexture": "1.0.0",
-        "com.utilities.async": "2.2.1",
-        "com.unity.modules.unitywebrequest": "1.0.0"
-      }
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
