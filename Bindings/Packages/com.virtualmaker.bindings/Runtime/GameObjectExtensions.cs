@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace VirtualMaker.Bindings
 {
-    public static class GameObjectExtensions
+    internal static class GameObjectExtensions
     {
-        public static void Destroy(this GameObject gameObject)
+        internal static void Destroy(this GameObject gameObject)
         {
             if (Application.isPlaying)
             {
