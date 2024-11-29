@@ -57,9 +57,9 @@ namespace VirtualMaker.Bindings.Editor
             {
                 var p = type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 if (p == null)
-            {
+                {
                     return null;
-            }
+                }
 
                 return p.GetValue(source, null);
             }
