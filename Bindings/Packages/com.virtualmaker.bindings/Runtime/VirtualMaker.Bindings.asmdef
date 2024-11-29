@@ -14,17 +14,17 @@
     "versionDefines": [
         {
             "name": "com.unity.ugui",
-            "expression": "",
+            "expression": "1.0.0",
             "define": "UNITY_UGUI"
         },
         {
             "name": "com.unity.modules.uielements",
-            "expression": "",
+            "expression": "1.0.0",
             "define": "UNITY_UI_ELEMENTS"
         },
         {
             "name": "com.unity.textmeshpro",
-            "expression": "",
+            "expression": "1.0.26",
             "define": "UNITY_TMPRO"
         },
         {
