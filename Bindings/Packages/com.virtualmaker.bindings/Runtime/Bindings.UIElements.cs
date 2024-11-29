@@ -1,11 +1,10 @@
-#if BINDINGS_UI_ELEMENTS
+#if UNITY_UI_ELEMENTS
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace VirtualMaker.Bindings
@@ -316,7 +315,7 @@ namespace VirtualMaker.Bindings
                 On<ChangeEvent<T>>(baseField, e => onChange(e.newValue));
             }
         }
-#endif
+#endif // UNITY_2022_1_OR_NEWER
 
         public void SetClass(VisualElement element, string className, bool value)
         {
@@ -646,4 +645,4 @@ namespace VirtualMaker.Bindings
     }
 }
 
-#endif
+#endif // UNITY_UI_ELEMENTS
