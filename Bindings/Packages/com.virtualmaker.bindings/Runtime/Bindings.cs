@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace VirtualMaker.Bindings
@@ -39,14 +41,50 @@ namespace VirtualMaker.Bindings
 
         public void On(UnityEvent evt, UnityAction action)
         {
-            evt.AddListener(() => action());
-            _unsubscribe.Add(() => evt.RemoveListener(() => action()));
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
         }
 
         public void On<T>(UnityEvent<T> evt, UnityAction<T> action)
         {
             evt.AddListener(action);
             _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On(UnityEvent evt, Func<Task> action)
+        {
+            UnityAction actionCatcher = async () =>
+            {
+                try
+                {
+                    await action();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            };
+
+            evt.AddListener(actionCatcher);
+            _unsubscribe.Add(() => evt.RemoveListener(actionCatcher));
+        }
+
+        public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
+        {
+            UnityAction<T> actionCatcher = async (value) =>
+            {
+                try
+                {
+                    await action(value);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogException(e);
+                }
+            };
+
+            evt.AddListener(actionCatcher);
+            _unsubscribe.Add(() => evt.RemoveListener(actionCatcher));
         }
 
         public void AddUnsubscriber(Action unsubscribe)
