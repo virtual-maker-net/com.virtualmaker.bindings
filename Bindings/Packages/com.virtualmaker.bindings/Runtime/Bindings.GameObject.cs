@@ -26,18 +26,18 @@ namespace VirtualMaker.Bindings
             Bind(prop, value => component.gameObject.SetActive(transformer(value)));
         }
 
-        public void BindList<FromType, ToType>(Transform parent, ToType prefab, IProperty<List<FromType>> prop, Action<FromType, ToType> onPrefabAdded) where ToType : Component
+        public void BindList<TItem, TComponent>(Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded) where TComponent : Component
         {
-            var childItems = new Dictionary<FromType, ToType>();
+            var childItems = new Dictionary<TItem, TComponent>();
 
-            Action<List<FromType>> update = list =>
+            Action<List<TItem>> update = list =>
             {
                 // Remove items that are no longer in the list.
-                var removed = new List<FromType>();
+                var removed = new List<TItem>();
 
                 foreach (var (fromItem, toItem) in childItems)
                 {
-                    // In edit mode remove everything so we can test data changes
+                    // In edit mode remove everything, so we can test data changes
                     if (!list.Contains(fromItem) || !Application.isPlaying)
                     {
                         toItem.gameObject.Destroy();
@@ -56,7 +56,7 @@ namespace VirtualMaker.Bindings
                     var item = list[i];
                     if (!childItems.TryGetValue(item, out var toItem))
                     {
-                        toItem = GameObject.Instantiate(prefab, parent);
+                        toItem = UnityEngine.Object.Instantiate(prefab, parent);
                         childItems.Add(item, toItem);
                         onPrefabAdded(item, toItem);
                     }

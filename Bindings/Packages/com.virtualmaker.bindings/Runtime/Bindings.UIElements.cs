@@ -29,7 +29,7 @@ namespace VirtualMaker.Bindings
 
         public void BindText<T>(TextElement element, IProperty<T> prop)
         {
-            Bind(element, prop, (element, value) => SetText(element, value));
+            Bind(element, prop, SetText);
         }
 
         public void BindText<T, W>(string name, IProperty<T> prop, Func<T, W> transform)
@@ -83,36 +83,43 @@ namespace VirtualMaker.Bindings
 
         private async void SetDisplay(VisualElement element, bool value, bool fade)
         {
-            if (element.style.opacity == 0 && !value)
+            try
             {
-                return;
+                if (element.style.opacity == 0 && !value)
+                {
+                    return;
+                }
+
+                if (element.style.opacity == 1 && value)
+                {
+                    return;
+                }
+
+                if (fade)
+                {
+                    element.AddToClassList("fade-transition");
+                }
+
+                element.style.opacity = value ? 1 : 0;
+
+                if (value)
+                {
+                    element.style.display = DisplayStyle.Flex;
+                }
+
+                if (fade)
+                {
+                    await Task.Delay(200).ConfigureAwait(true);
+                }
+
+                if (!value && element.style.opacity == 0)
+                {
+                    element.style.display = DisplayStyle.None;
+                }
             }
-
-            if (element.style.opacity == 1 && value)
+            catch (Exception e)
             {
-                return;
-            }
-
-            if (fade)
-            {
-                element.AddToClassList("fade-transition");
-            }
-
-            element.style.opacity = value ? 1 : 0;
-
-            if (value)
-            {
-                element.style.display = DisplayStyle.Flex;
-            }
-
-            if (fade)
-            {
-                await Task.Delay(200).ConfigureAwait(true);
-            }
-
-            if (!value && element.style.opacity == 0)
-            {
-                element.style.display = DisplayStyle.None;
+                Debug.LogException(e);
             }
         }
 
@@ -146,12 +153,19 @@ namespace VirtualMaker.Bindings
 
         private async void SetImage(Image element, string url)
         {
-            element.image = null;
-
-            if (!string.IsNullOrWhiteSpace(url) &&
-                url.StartsWith("https://"))
+            try
             {
-                element.image = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
+                element.image = null;
+
+                if (!string.IsNullOrWhiteSpace(url) &&
+                    url.StartsWith("https://"))
+                {
+                    element.image = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
         }
 
@@ -191,13 +205,20 @@ namespace VirtualMaker.Bindings
 
         private async void SetBackgroundImage(VisualElement element, string url)
         {
-            element.style.backgroundImage = null;
-
-            if (!string.IsNullOrWhiteSpace(url) &&
-                url.StartsWith("https://"))
+            try
             {
-                var texture = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
-                element.style.backgroundImage = Background.FromTexture2D(texture);
+                element.style.backgroundImage = null;
+
+                if (!string.IsNullOrWhiteSpace(url) &&
+                    url.StartsWith("https://"))
+                {
+                    var texture = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
+                    element.style.backgroundImage = Background.FromTexture2D(texture);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
         }
 
@@ -384,15 +405,16 @@ namespace VirtualMaker.Bindings
                 return;
             }
 
-            // Flip property to false when clicking outside of popup.
+            // Flip property to false when clicking outside the popup.
             var clickToDismiss = new EventCallback<ClickEvent>(evt =>
             {
                 if (element.worldBound.Contains(evt.position))
                 {
                     return;
                 }
-
+#if !UNITY_6000_0_OR_NEWER
                 evt.PreventDefault();
+#endif // UNITY_6000_0_OR_NEWER
                 evt.StopImmediatePropagation();
                 prop.Value = false;
             });
@@ -429,7 +451,7 @@ namespace VirtualMaker.Bindings
 
                 foreach (var (item, bindings) in childItems)
                 {
-                    // In edit mode remove everything so we can test data changes
+                    // In edit mode remove everything, so we can test data changes
                     if (!list.Contains(item) || !Application.isPlaying)
                     {
                         bindings.Reset();

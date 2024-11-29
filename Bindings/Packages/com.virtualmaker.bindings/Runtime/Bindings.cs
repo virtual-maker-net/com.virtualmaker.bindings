@@ -10,9 +10,7 @@ namespace VirtualMaker.Bindings
     {
         private List<Action> _unsubscribe = new List<Action>();
 
-        public Bindings()
-        {
-        }
+        public Bindings() { }
 
         public void Bind<T>(IProperty<T> prop, Action<T> action)
         {
@@ -53,7 +51,7 @@ namespace VirtualMaker.Bindings
 
         public void On(UnityEvent evt, Func<Task> action)
         {
-            UnityAction actionCatcher = async () =>
+            async void Invoke()
             {
                 try
                 {
@@ -63,14 +61,14 @@ namespace VirtualMaker.Bindings
                 {
                     Debug.LogException(e);
                 }
-            };
+            }
 
-            On(evt, actionCatcher);
+            On(evt, Invoke);
         }
 
         public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
         {
-            UnityAction<T> actionCatcher = async (value) =>
+            async void Invoke(T value)
             {
                 try
                 {
@@ -80,9 +78,9 @@ namespace VirtualMaker.Bindings
                 {
                     Debug.LogException(e);
                 }
-            };
+            }
 
-            On(evt, actionCatcher);
+            On(evt, Invoke);
         }
 
         public void AddUnsubscriber(Action unsubscribe)
