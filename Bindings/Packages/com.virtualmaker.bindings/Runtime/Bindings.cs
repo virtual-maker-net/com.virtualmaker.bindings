@@ -65,8 +65,7 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            evt.AddListener(actionCatcher);
-            _unsubscribe.Add(() => evt.RemoveListener(actionCatcher));
+            On(evt, actionCatcher);
         }
 
         public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
@@ -83,8 +82,7 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            evt.AddListener(actionCatcher);
-            _unsubscribe.Add(() => evt.RemoveListener(actionCatcher));
+            On(evt, actionCatcher);
         }
 
         public void AddUnsubscriber(Action unsubscribe)
