@@ -40,7 +40,7 @@ namespace VirtualMaker.Bindings
                     // In edit mode remove everything so we can test data changes
                     if (!list.Contains(fromItem) || !Application.isPlaying)
                     {
-                        GameObject.Destroy(toItem.gameObject);
+                        toItem.gameObject.Destroy();
                         removed.Add(fromItem);
                     }
                 }
@@ -73,14 +73,7 @@ namespace VirtualMaker.Bindings
 
                 foreach (var (_, toItem) in childItems)
                 {
-                    if (Application.isPlaying)
-                    {
-                        GameObject.Destroy(toItem.gameObject);
-                    }
-                    else
-                    {
-                        GameObject.DestroyImmediate(toItem.gameObject);
-                    }
+                    toItem.gameObject.Destroy();
                 }
             });
 
