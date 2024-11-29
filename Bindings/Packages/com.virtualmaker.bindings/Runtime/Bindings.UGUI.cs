@@ -1,4 +1,4 @@
-#if BINDINGS_UGUI
+#if UNITY_UGUI
 
 using System;
 #if UNITY_TMPRO
@@ -56,4 +56,4 @@ namespace VirtualMaker.Bindings
     }
 }
 
-#endif // BINDINGS_UGUI
+#endif // UNITY_UGUI

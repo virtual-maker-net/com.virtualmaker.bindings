@@ -17,12 +17,12 @@
         {
             "name": "com.unity.ugui",
             "expression": "",
-            "define": "BINDINGS_UGUI"
+            "define": "UNITY_UGUI"
         },
         {
             "name": "com.unity.modules.uielements",
             "expression": "",
-            "define": "BINDINGS_UI_ELEMENTS"
+            "define": "UNITY_UI_ELEMENTS"
         },
         {
             "name": "com.unity.textmeshpro",

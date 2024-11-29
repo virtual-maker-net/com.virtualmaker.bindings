@@ -1,4 +1,4 @@
-#if BINDINGS_UI_ELEMENTS
+#if UNITY_UI_ELEMENTS
 
 using System;
 using System.Collections.Generic;
@@ -645,4 +645,4 @@ namespace VirtualMaker.Bindings
     }
 }
 
-#endif // BINDINGS_UI_ELEMENTS
+#endif // UNITY_UI_ELEMENTS
