@@ -1,6 +1,6 @@
 {
     "name": "VirtualMaker.Bindings",
-    "rootNamespace": "",
+    "rootNamespace": "VirtualMaker.Bindings",
     "references": [
         "Unity.TextMeshPro"
     ],

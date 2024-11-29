@@ -1,6 +1,6 @@
 {
     "name": "VirtualMaker.Bindings.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "VirtualMaker.Bindings.Editor",
     "references": [
         "VirtualMaker.Bindings"
     ],
