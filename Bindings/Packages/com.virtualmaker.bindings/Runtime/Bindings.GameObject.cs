@@ -86,6 +86,5 @@ namespace VirtualMaker.Bindings
 
             update(prop.Value);
         }
-
     }
 }
