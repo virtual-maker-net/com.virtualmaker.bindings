@@ -26,7 +26,7 @@ namespace VirtualMaker.Bindings
             Bind(prop, value => component.gameObject.SetActive(transformer(value)));
         }
 
-        public void BindList<FromType, ToType>(Transform parent, ToType prefab, IProperty<List<FromType>> prop, Action<FromType, ToType> onTemplateAdded) where ToType : Component
+        public void BindList<FromType, ToType>(Transform parent, ToType prefab, IProperty<List<FromType>> prop, Action<FromType, ToType> onPrefabAdded) where ToType : Component
         {
             var childItems = new Dictionary<FromType, ToType>();
 
@@ -58,7 +58,7 @@ namespace VirtualMaker.Bindings
                     {
                         toItem = GameObject.Instantiate(prefab, parent);
                         childItems.Add(item, toItem);
-                        onTemplateAdded(item, toItem);
+                        onPrefabAdded(item, toItem);
                     }
 
                     toItem.transform.SetSiblingIndex(i);
