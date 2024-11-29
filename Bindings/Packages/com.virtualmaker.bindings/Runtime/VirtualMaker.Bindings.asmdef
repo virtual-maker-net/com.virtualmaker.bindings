@@ -2,9 +2,7 @@
     "name": "VirtualMaker.Bindings",
     "rootNamespace": "",
     "references": [
-        "Unity.TextMeshPro",
-        "Unity.ResourceManager",
-        "Utilities.Extensions.Addressables"
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
