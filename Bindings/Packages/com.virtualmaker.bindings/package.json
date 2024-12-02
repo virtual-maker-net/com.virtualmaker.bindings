@@ -3,7 +3,7 @@
   "description": "Bindable Property class and Bindings utility class.",
   "name": "com.virtualmaker.bindings",
   "author": {
-    "name": "VirtualMaker"
+    "name": "Virtual Maker"
   },
   "unity": "2020.3",
   "version": "1.0.0",
