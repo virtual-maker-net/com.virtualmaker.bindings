@@ -1,6 +1,6 @@
 {
     "name": "VirtualMaker.Bindings",
-    "rootNamespace": "",
+    "rootNamespace": "VirtualMaker.Bindings",
     "references": [
         "Unity.TextMeshPro"
     ],
@@ -11,6 +11,27 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.ugui",
+            "expression": "1.0.0",
+            "define": "UNITY_UGUI"
+        },
+        {
+            "name": "com.unity.modules.uielements",
+            "expression": "1.0.0",
+            "define": "UNITY_UI_ELEMENTS"
+        },
+        {
+            "name": "com.unity.textmeshpro",
+            "expression": "1.0.26",
+            "define": "UNITY_TMPRO"
+        },
+        {
+            "name": "com.unity.ugui",
+            "expression": "2.0.0",
+            "define": "UNITY_TMPRO"
+        }
+    ],
     "noEngineReferences": false
 }
