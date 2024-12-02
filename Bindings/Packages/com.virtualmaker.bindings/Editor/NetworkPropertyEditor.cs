@@ -7,7 +7,7 @@ namespace VirtualMaker.Bindings.Editor
     [CustomPropertyDrawer(typeof(NetworkProperty<>), true)]
     public class NetworkPropertyEditor : PropertyEditor
     {
-        private const string m_InternalValue = "m_InternalValue";
+        private const string m_InternalValue = nameof(m_InternalValue);
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
@@ -19,9 +19,7 @@ namespace VirtualMaker.Bindings.Editor
         {
             var value = property?.FindPropertyRelative(nameof(m_InternalValue));
             if (value == null) { return; }
-
             property.serializedObject.Update();
-
             EditorGUI.PropertyField(position, value, label, true);
 
             if (property.serializedObject.ApplyModifiedProperties())
