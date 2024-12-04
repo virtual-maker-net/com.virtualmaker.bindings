@@ -2,7 +2,8 @@
     "name": "VirtualMaker.Bindings",
     "rootNamespace": "VirtualMaker.Bindings",
     "references": [
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "Unity.Netcode.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -31,6 +32,11 @@
             "name": "com.unity.ugui",
             "expression": "2.0.0",
             "define": "UNITY_TMPRO"
+        },
+        {
+            "name": "com.unity.netcode.gameobjects",
+            "expression": "1.0.0",
+            "define": "UNITY_NETCODE_GAMEOBJECTS"
         }
     ],
     "noEngineReferences": false

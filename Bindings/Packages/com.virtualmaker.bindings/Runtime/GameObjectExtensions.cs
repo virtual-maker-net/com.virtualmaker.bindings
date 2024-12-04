@@ -6,13 +6,14 @@ namespace VirtualMaker.Bindings
     {
         internal static void Destroy(this GameObject gameObject)
         {
+            if (gameObject == null) { return; }
             if (Application.isPlaying)
             {
-                GameObject.Destroy(gameObject);
+                Object.Destroy(gameObject);
             }
             else
             {
-                GameObject.DestroyImmediate(gameObject);
+                Object.DestroyImmediate(gameObject);
             }
         }
     }

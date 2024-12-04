@@ -22,7 +22,7 @@ namespace VirtualMaker.Bindings.Editor
         }
 
         // https://discussions.unity.com/t/get-the-instance-the-serializedproperty-belongs-to-in-a-custompropertydrawer/66954
-        private static object GetParent(SerializedProperty prop)
+        protected static object GetParent(SerializedProperty prop)
         {
             var path = prop.propertyPath.Replace(".Array.data[", "[");
             object obj = prop.serializedObject.targetObject;
