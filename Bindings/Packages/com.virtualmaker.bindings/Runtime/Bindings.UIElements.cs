@@ -146,13 +146,13 @@ namespace VirtualMaker.Bindings
 
         private async void SetImage(Image element, string url)
         {
-                element.image = null;
+            element.image = null;
 
-                if (!string.IsNullOrWhiteSpace(url) &&
-                    url.StartsWith("https://"))
-                {
-                    element.image = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
-                }
+            if (!string.IsNullOrWhiteSpace(url) &&
+                url.StartsWith("https://"))
+            {
+                element.image = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
+            }
         }
 
         public void SetImage(string name, string url)
