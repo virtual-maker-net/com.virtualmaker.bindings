@@ -191,20 +191,13 @@ namespace VirtualMaker.Bindings
 
         private async void SetBackgroundImage(VisualElement element, string url)
         {
-            try
-            {
-                element.style.backgroundImage = null;
+            element.style.backgroundImage = null;
 
-                if (!string.IsNullOrWhiteSpace(url) &&
-                    url.StartsWith("https://"))
-                {
-                    var texture = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
-                    element.style.backgroundImage = Background.FromTexture2D(texture);
-                }
-            }
-            catch (Exception e)
+            if (!string.IsNullOrWhiteSpace(url) &&
+                url.StartsWith("https://"))
             {
-                Debug.LogException(e);
+                var texture = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
+                element.style.backgroundImage = Background.FromTexture2D(texture);
             }
         }
 
