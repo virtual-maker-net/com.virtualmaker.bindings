@@ -20,7 +20,7 @@ namespace VirtualMaker.Bindings
                 _instance = FindObjectOfType<ImageDownloader>();
 #else
                 _instance = FindFirstObjectByType<ImageDownloader>();
-#endif // UNITY_6000_0_OR_NEWER
+#endif // !UNITY_6000_0_OR_NEWER
                 if (_instance == null)
                 {
                     var go = new GameObject("ImageDownloader");

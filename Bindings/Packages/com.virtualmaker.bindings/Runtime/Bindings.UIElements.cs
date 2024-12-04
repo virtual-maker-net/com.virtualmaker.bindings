@@ -83,43 +83,36 @@ namespace VirtualMaker.Bindings
 
         private async void SetDisplay(VisualElement element, bool value, bool fade)
         {
-            try
+            if (element.style.opacity == 0 && !value)
             {
-                if (element.style.opacity == 0 && !value)
-                {
-                    return;
-                }
-
-                if (element.style.opacity == 1 && value)
-                {
-                    return;
-                }
-
-                if (fade)
-                {
-                    element.AddToClassList("fade-transition");
-                }
-
-                element.style.opacity = value ? 1 : 0;
-
-                if (value)
-                {
-                    element.style.display = DisplayStyle.Flex;
-                }
-
-                if (fade)
-                {
-                    await Task.Delay(200).ConfigureAwait(true);
-                }
-
-                if (!value && element.style.opacity == 0)
-                {
-                    element.style.display = DisplayStyle.None;
-                }
+                return;
             }
-            catch (Exception e)
+
+            if (element.style.opacity == 1 && value)
             {
-                Debug.LogException(e);
+                return;
+            }
+
+            if (fade)
+            {
+                element.AddToClassList("fade-transition");
+            }
+
+            element.style.opacity = value ? 1 : 0;
+
+            if (value)
+            {
+                element.style.display = DisplayStyle.Flex;
+            }
+
+            if (fade)
+            {
+                await Task.Delay(200).ConfigureAwait(true);
+            }
+
+            if (!value && element.style.opacity == 0)
+            {
+                element.style.display = DisplayStyle.None;
             }
         }
 
@@ -153,8 +146,6 @@ namespace VirtualMaker.Bindings
 
         private async void SetImage(Image element, string url)
         {
-            try
-            {
                 element.image = null;
 
                 if (!string.IsNullOrWhiteSpace(url) &&
@@ -162,11 +153,6 @@ namespace VirtualMaker.Bindings
                 {
                     element.image = await ImageDownloader.GetOrCreate().DownloadImageAsync(url);
                 }
-            }
-            catch (Exception e)
-            {
-                Debug.LogException(e);
-            }
         }
 
         public void SetImage(string name, string url)
@@ -414,7 +400,7 @@ namespace VirtualMaker.Bindings
                 }
 #if !UNITY_6000_0_OR_NEWER
                 evt.PreventDefault();
-#endif // UNITY_6000_0_OR_NEWER
+#endif // !UNITY_6000_0_OR_NEWER
                 evt.StopImmediatePropagation();
                 prop.Value = false;
             });
