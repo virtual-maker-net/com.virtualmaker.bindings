@@ -29,7 +29,7 @@ namespace VirtualMaker.Bindings
 
         public void BindText<T>(TextElement element, IProperty<T> prop)
         {
-            Bind(element, prop, (element, value) => SetText(element, value));
+            Bind(element, prop, SetText);
         }
 
         public void BindText<T, W>(string name, IProperty<T> prop, Func<T, W> transform)
@@ -384,15 +384,16 @@ namespace VirtualMaker.Bindings
                 return;
             }
 
-            // Flip property to false when clicking outside of popup.
+            // Flip property to false when clicking outside the popup.
             var clickToDismiss = new EventCallback<ClickEvent>(evt =>
             {
                 if (element.worldBound.Contains(evt.position))
                 {
                     return;
                 }
-
+#if !UNITY_6000_0_OR_NEWER
                 evt.PreventDefault();
+#endif // !UNITY_6000_0_OR_NEWER
                 evt.StopImmediatePropagation();
                 prop.Value = false;
             });
@@ -429,7 +430,7 @@ namespace VirtualMaker.Bindings
 
                 foreach (var (item, bindings) in childItems)
                 {
-                    // In edit mode remove everything so we can test data changes
+                    // In edit mode remove everything, so we can test data changes
                     if (!list.Contains(item) || !Application.isPlaying)
                     {
                         bindings.Reset();
