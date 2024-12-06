@@ -82,10 +82,10 @@ namespace VirtualMaker.Bindings
             On<T>(inputActionReference, Performed, Started, Canceled);
         }
 
-        public void On(InputActionReference inputActionReference, Action onPerformed, Action onStarted = null, Action onCanceled = null)
+        public void On(InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null)
             => On(inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
 
-        public void On<T>(InputActionReference inputActionReference, Action<T> onPerformed, Action<T> onStarted = null, Action<T> onCancelled = null)
+        public void On<T>(InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCancelled = null)
             where T : struct
         {
             var inputAction = inputActionReference.GetAndCloneAction();
@@ -130,7 +130,10 @@ namespace VirtualMaker.Bindings
             void OnActionCanceled(InputAction.CallbackContext ctx) => onCancelled(ctx.ReadValue<T>());
         }
 
-        public void On(InputActionReference inputActionReference, Action<InputAction.CallbackContext> onPerformed, Action<InputAction.CallbackContext> onStarted = null, Action<InputAction.CallbackContext> onCanceled = null)
+        public void On(InputActionReference inputActionReference,
+            Action<InputAction.CallbackContext> onPerformed = null,
+            Action<InputAction.CallbackContext> onStarted = null,
+            Action<InputAction.CallbackContext> onCanceled = null)
         {
             var inputAction = inputActionReference.GetAndCloneAction();
             inputAction.Enable();
