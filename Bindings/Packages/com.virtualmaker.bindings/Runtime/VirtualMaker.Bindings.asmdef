@@ -43,6 +43,11 @@
             "name": "com.unity.inputsystem",
             "expression": "1.0.0",
             "define": "UNITY_INPUT_SYSTEM"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.8.0",
+            "define": "UNITY_INPUT_SYSTEM_1_8_OR_HIGHER"
         }
     ],
     "noEngineReferences": false

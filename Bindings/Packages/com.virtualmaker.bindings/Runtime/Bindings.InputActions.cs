@@ -1,5 +1,6 @@
 #if UNITY_INPUT_SYSTEM
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -176,11 +177,14 @@ namespace VirtualMaker.Bindings
     {
         public static InputAction GetAndCloneAction(this InputActionReference reference)
         {
+#if UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             var action = InputSystem.actions.FindAction(reference.action.id);
-
+#else
+            var action = reference.ToInputAction();
+#endif
             if (action == null)
             {
-                throw new MissingReferenceException($"Failed to find input action for {reference.name}");
+                throw new MissingReferenceException($"Failed to find input action for input action: [{reference.action.id}] {reference.name}");
             }
 
             return action.Clone();
