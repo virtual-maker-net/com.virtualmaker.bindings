@@ -3,7 +3,8 @@
     "rootNamespace": "VirtualMaker.Bindings",
     "references": [
         "Unity.TextMeshPro",
-        "Unity.Netcode.Runtime"
+        "Unity.Netcode.Runtime",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -37,6 +38,11 @@
             "name": "com.unity.netcode.gameobjects",
             "expression": "1.0.0",
             "define": "UNITY_NETCODE_GAMEOBJECTS"
+        },
+        {
+            "name": "com.unity.inputsystem",
+            "expression": "1.0.0",
+            "define": "UNITY_INPUT_SYSTEM"
         }
     ],
     "noEngineReferences": false
