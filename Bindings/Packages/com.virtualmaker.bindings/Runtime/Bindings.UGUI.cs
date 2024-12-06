@@ -65,6 +65,7 @@ namespace VirtualMaker.Bindings
         public void BindToggle(Toggle toggle, Property<bool> prop, bool twoWay)
         {
             Bind(prop, value => toggle.isOn = value);
+
             if (twoWay)
             {
                 On(toggle.onValueChanged, value => prop.Value = value);
