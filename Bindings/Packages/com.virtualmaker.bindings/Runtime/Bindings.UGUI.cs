@@ -56,6 +56,7 @@ namespace VirtualMaker.Bindings
         public void BindSlider(Slider slider, Property<float> prop, bool twoWay)
         {
             Bind(prop, value => slider.value = value);
+
             if (twoWay)
             {
                 On(slider.onValueChanged, value => prop.Value = value);
