@@ -35,7 +35,7 @@ namespace VirtualMaker.Bindings
         }
 
         public void BindDeferred<T>(InputActionReference inputActionReference,
-            Property<T> performedProp, Action<T> onPerformed = null,
+            Property<T> performedProp = null, Action<T> onPerformed = null,
             Property<T> startedProp = null, Action<T> onStarted = null,
             Property<T> canceledProp = null, Action<T> onCanceled = null)
             where T : struct
