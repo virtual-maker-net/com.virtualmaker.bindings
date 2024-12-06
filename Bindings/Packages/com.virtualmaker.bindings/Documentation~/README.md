@@ -19,7 +19,7 @@ Once submitted and approved, the recommended installation method will be though 
 
 - Open your Unity project settings
 - Select the `Package Manager`
-![scoped-registries](Bindings/Packages/com.virtualmaker.bindings/Documentation~/images/package-manager-scopes.png)
+![scoped-registries](images/package-manager-scopes.png)
 - Add the OpenUPM package registry:
   - Name: `OpenUPM`
   - URL: `https://package.openupm.com`
@@ -103,6 +103,8 @@ The library provides extensions for both UGUI and UI Toolkit to facilitate bindi
 
 ### UGUI Example
 
+To use UGUI extensions, add the **BINDINGS_UGUI** define symbol to your project settings.
+
 ```cs
 using UnityEngine;
 using TMPro;
@@ -126,6 +128,8 @@ public class UGUIExample : MonoBehaviour
 ```
 
 ### UI Toolkit Example
+
+To use UI Toolkit extensions, add the **BINDINGS_UI_ELEMENTS** define symbol to your project settings.
 
 ```cs
 using UnityEngine.UIElements;

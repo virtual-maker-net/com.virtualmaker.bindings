@@ -51,7 +51,7 @@ public class UxmlTests
     public void TextFieldTests()
     {
         _stringProperty.Value = "Hello";
-        _bindings.BindTextField("textField", _stringProperty, true);
+        _bindings.BindField("textField", _stringProperty, true);
         Assert.AreEqual("Hello", _textField.value);
 
         _stringProperty.Value = "World";
