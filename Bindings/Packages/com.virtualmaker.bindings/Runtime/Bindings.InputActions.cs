@@ -9,32 +9,32 @@ namespace VirtualMaker.Bindings
     {
         public void Bind<T>(InputActionReference inputActionReference,
             Property<T> performedProp, Property<T> startedProp = null, Property<T> canceledProp = null,
-            Action<T> performedCb = null, Action<T> startedCb = null, Action<T> canceledCb = null)
+            Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCanceled = null)
             where T : struct
         {
             if (performedProp != null)
             {
-                performedCb?.Invoke(performedProp.Value);
+                onPerformed?.Invoke(performedProp.Value);
             }
 
             if (startedProp != null)
             {
-                startedCb?.Invoke(startedProp.Value);
+                onStarted?.Invoke(startedProp.Value);
             }
 
             if (canceledProp != null)
             {
-                canceledCb?.Invoke(canceledProp.Value);
+                onCanceled?.Invoke(canceledProp.Value);
             }
 
             BindDeferred(inputActionReference,
                 performedProp, startedProp, canceledProp,
-                performedCb, startedCb, canceledCb);
+                onPerformed, onStarted, onCanceled);
         }
 
         public void BindDeferred<T>(InputActionReference inputActionReference,
             Property<T> performedProp, Property<T> startedProp = null, Property<T> canceledProp = null,
-            Action<T> performedCb = null, Action<T> startedCb = null, Action<T> canceledCb = null)
+            Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCanceled = null)
             where T : struct
         {
             void Performed(T value)
@@ -42,11 +42,11 @@ namespace VirtualMaker.Bindings
                 if (performedProp != null)
                 {
                     performedProp.Value = value;
-                    performedCb?.Invoke(performedProp.Value);
+                    onPerformed?.Invoke(performedProp.Value);
                 }
                 else
                 {
-                    performedCb?.Invoke(value);
+                    onPerformed?.Invoke(value);
                 }
             }
 
@@ -55,11 +55,11 @@ namespace VirtualMaker.Bindings
                 if (startedProp != null)
                 {
                     startedProp.Value = value;
-                    startedCb?.Invoke(startedProp.Value);
+                    onStarted?.Invoke(startedProp.Value);
                 }
                 else
                 {
-                    startedCb?.Invoke(value);
+                    onStarted?.Invoke(value);
                 }
             }
 
@@ -68,21 +68,21 @@ namespace VirtualMaker.Bindings
                 if (canceledProp != null)
                 {
                     canceledProp.Value = value;
-                    canceledCb?.Invoke(canceledProp.Value);
+                    onCanceled?.Invoke(canceledProp.Value);
                 }
                 else
                 {
-                    canceledCb?.Invoke(value);
+                    onCanceled?.Invoke(value);
                 }
             }
 
             On<T>(inputActionReference, Performed, Started, Canceled);
         }
 
-        public void On(InputActionReference inputActionReference, Action performed, Action started = null, Action canceled = null)
-            => On(inputActionReference, _ => performed?.Invoke(), _ => started?.Invoke(), _ => canceled?.Invoke());
+        public void On(InputActionReference inputActionReference, Action onPerformed, Action onStarted = null, Action onCanceled = null)
+            => On(inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
 
-        public void On<T>(InputActionReference inputActionReference, Action<T> performed, Action<T> started = null, Action<T> canceled = null)
+        public void On<T>(InputActionReference inputActionReference, Action<T> onPerformed, Action<T> onStarted = null, Action<T> onCancelled = null)
             where T : struct
         {
             var inputAction = inputActionReference.GetAndCloneAction();
@@ -92,18 +92,18 @@ namespace VirtualMaker.Bindings
             // before unsubscribing to callback events.
             AddUnsubscriber(() => inputAction.Disable());
 
-            if (performed != null)
+            if (onPerformed != null)
             {
                 inputAction.performed += OnActionPerformed;
             }
 
-            if (started != null)
+            if (onStarted != null)
             {
                 inputAction.started += OnActionStarted;
                 AddUnsubscriber(() => inputAction.started -= OnActionStarted);
             }
 
-            if (canceled != null)
+            if (onCancelled != null)
             {
                 inputAction.canceled += OnActionCanceled;
                 AddUnsubscriber(() => inputAction.canceled -= OnActionCanceled);
@@ -113,7 +113,7 @@ namespace VirtualMaker.Bindings
             // before disposing of the input action.
             AddUnsubscriber(() =>
             {
-                if (performed != null)
+                if (onPerformed != null)
                 {
                     inputAction.performed -= OnActionPerformed;
                 }
@@ -122,12 +122,12 @@ namespace VirtualMaker.Bindings
             });
 
             return;
-            void OnActionPerformed(InputAction.CallbackContext ctx) => performed(ctx.ReadValue<T>());
-            void OnActionStarted(InputAction.CallbackContext ctx) => started(ctx.ReadValue<T>());
-            void OnActionCanceled(InputAction.CallbackContext ctx) => canceled(ctx.ReadValue<T>());
+            void OnActionPerformed(InputAction.CallbackContext ctx) => onPerformed(ctx.ReadValue<T>());
+            void OnActionStarted(InputAction.CallbackContext ctx) => onStarted(ctx.ReadValue<T>());
+            void OnActionCanceled(InputAction.CallbackContext ctx) => onCancelled(ctx.ReadValue<T>());
         }
 
-        public void On(InputActionReference inputActionReference, Action<InputAction.CallbackContext> performed, Action<InputAction.CallbackContext> started = null, Action<InputAction.CallbackContext> canceled = null)
+        public void On(InputActionReference inputActionReference, Action<InputAction.CallbackContext> onPerformed, Action<InputAction.CallbackContext> onStarted = null, Action<InputAction.CallbackContext> onCanceled = null)
         {
             var inputAction = inputActionReference.GetAndCloneAction();
             inputAction.Enable();
@@ -136,18 +136,18 @@ namespace VirtualMaker.Bindings
             // before unsubscribing to callback events.
             AddUnsubscriber(() => inputAction.Disable());
 
-            if (performed != null)
+            if (onPerformed != null)
             {
                 inputAction.performed += OnActionPerformed;
             }
 
-            if (started != null)
+            if (onStarted != null)
             {
                 inputAction.started += OnActionStarted;
                 AddUnsubscriber(() => inputAction.started -= OnActionStarted);
             }
 
-            if (canceled != null)
+            if (onCanceled != null)
             {
                 inputAction.canceled += OnActionCanceled;
                 AddUnsubscriber(() => inputAction.canceled -= OnActionCanceled);
@@ -157,7 +157,7 @@ namespace VirtualMaker.Bindings
             // before disposing of the input action.
             AddUnsubscriber(() =>
             {
-                if (performed != null)
+                if (onPerformed != null)
                 {
                     inputAction.performed -= OnActionPerformed;
                 }
@@ -166,9 +166,9 @@ namespace VirtualMaker.Bindings
             });
 
             return;
-            void OnActionPerformed(InputAction.CallbackContext ctx) => performed(ctx);
-            void OnActionStarted(InputAction.CallbackContext ctx) => started(ctx);
-            void OnActionCanceled(InputAction.CallbackContext ctx) => canceled(ctx);
+            void OnActionPerformed(InputAction.CallbackContext ctx) => onPerformed(ctx);
+            void OnActionStarted(InputAction.CallbackContext ctx) => onStarted(ctx);
+            void OnActionCanceled(InputAction.CallbackContext ctx) => onCanceled(ctx);
         }
     }
 
