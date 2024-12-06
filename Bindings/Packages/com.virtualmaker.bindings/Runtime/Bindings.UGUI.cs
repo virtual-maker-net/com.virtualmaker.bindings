@@ -33,7 +33,6 @@ namespace VirtualMaker.Bindings
         }
 #endif // UNITY_TMPRO
 
-
         public void BindImageColor(Image image, IProperty<Color> prop)
         {
             Bind(prop, value => image.color = value);
@@ -52,6 +51,26 @@ namespace VirtualMaker.Bindings
         public void BindImageFill<T>(Image image, IProperty<T> prop, Func<T, float> transformer)
         {
             Bind(prop, value => image.fillAmount = transformer(value));
+        }
+
+        public void BindSlider(Slider slider, Property<float> prop, bool twoWay)
+        {
+            Bind(prop, value => slider.value = value);
+
+            if (twoWay)
+            {
+                On(slider.onValueChanged, value => prop.Value = value);
+            }
+        }
+
+        public void BindToggle(Toggle toggle, Property<bool> prop, bool twoWay)
+        {
+            Bind(prop, value => toggle.isOn = value);
+
+            if (twoWay)
+            {
+                On(toggle.onValueChanged, value => prop.Value = value);
+            }
         }
     }
 }

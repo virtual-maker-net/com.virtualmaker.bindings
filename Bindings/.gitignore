@@ -79,3 +79,4 @@ _site
 docfx/api
 
 /Assets/External/
+_ReSharper.Caches/
