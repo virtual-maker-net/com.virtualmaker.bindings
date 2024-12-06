@@ -8,8 +8,9 @@ namespace VirtualMaker.Bindings
     public partial class Bindings
     {
         public void Bind<T>(InputActionReference inputActionReference,
-            Property<T> performedProp, Property<T> startedProp = null, Property<T> canceledProp = null,
-            Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCanceled = null)
+            Property<T> performedProp = null, Action<T> onPerformed = null,
+            Property<T> startedProp = null, Action<T> onStarted = null,
+            Property<T> canceledProp = null, Action<T> onCanceled = null)
             where T : struct
         {
             if (performedProp != null)
@@ -28,13 +29,15 @@ namespace VirtualMaker.Bindings
             }
 
             BindDeferred(inputActionReference,
-                performedProp, startedProp, canceledProp,
-                onPerformed, onStarted, onCanceled);
+                performedProp, onPerformed,
+                startedProp, onStarted,
+                canceledProp, onCanceled);
         }
 
         public void BindDeferred<T>(InputActionReference inputActionReference,
-            Property<T> performedProp, Property<T> startedProp = null, Property<T> canceledProp = null,
-            Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCanceled = null)
+            Property<T> performedProp, Action<T> onPerformed = null,
+            Property<T> startedProp = null, Action<T> onStarted = null,
+            Property<T> canceledProp = null, Action<T> onCanceled = null)
             where T : struct
         {
             void Performed(T value)
