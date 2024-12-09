@@ -4,6 +4,11 @@ namespace VirtualMaker.Bindings
 {
     public partial class Bindings
     {
+        /// <summary> Binds player pref to property. </summary>
+        /// <param name="key"> Key used by <c>PlayerPrefs</c> to get and set the value. </param>
+        /// <param name="prop"> Property that sets the value. </param>
+        /// <param name="getFromPref"> Whether to try setting <c>prop.Value</c> to the value already inside the <c>PlayerPrefs</c>. </param>
+        /// <param name="defaultValue"> Value to set <c>prop.Value</c> to if <c>getFromPref</c> is <c>true</c> but there isn't a value already inside the <c>PlayerPref</c>. </param>
         public void BindPlayerPref(string key, Property<float> prop, bool getFromPref, float? defaultValue = null)
         {
             if (getFromPref)
