@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace VirtualMaker.Bindings
@@ -257,6 +259,28 @@ namespace VirtualMaker.Bindings
         public static DerivedProperty<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, IProperty<TDerived>> func)
         {
             return DerivedProperty<TDerived>.From<TValue>(property, func);
+        }
+    }
+
+    public static class IPropertyAwaitingExtensions
+    {
+        public static async Task WaitUntilAsync<T>(this IProperty<T> prop, Func<T, bool> predicate, CancellationToken cancellationToken = default)
+        {
+            var tcs = new TaskCompletionSource<object>();
+
+            prop.OnChange += CheckForDone;
+            CheckForDone(prop.Value);
+
+            await tcs.Task;
+
+            void CheckForDone(T value)
+            {
+                if (predicate(value))
+                {
+                    prop.OnChange -= CheckForDone;
+                    tcs.SetResult(null);
+                }
+            }
         }
     }
 }
