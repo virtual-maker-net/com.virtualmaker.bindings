@@ -271,7 +271,7 @@ namespace VirtualMaker.Bindings
             prop.OnChange += CheckForDone;
             CheckForDone(prop.Value);
 
-            await tcs.Task;
+            await tcs.Task.ConfigureAwait(true);
 
             void CheckForDone(T value)
             {
