@@ -8,7 +8,11 @@ namespace VirtualMaker.Bindings
 {
     public partial class Bindings
     {
-        private List<Action> _unsubscribe = new List<Action>();
+        public Bindings() { }
+
+        ~Bindings() => Reset();
+
+        private readonly List<Action> _unsubscribe = new List<Action>();
 
         public Bindings() { }
 
