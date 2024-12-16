@@ -14,8 +14,6 @@ namespace VirtualMaker.Bindings
 
         private readonly List<Action> _unsubscribe = new List<Action>();
 
-        public Bindings() { }
-
         public void Bind<T>(IProperty<T> prop, Action<T> action)
         {
             BindDeferred(prop, action);
