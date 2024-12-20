@@ -24,7 +24,6 @@ namespace VirtualMaker.Bindings
         public void BindPlayerPref(string key, IProperty<float> prop)
         {
             Bind(prop, value => PlayerPrefs.SetFloat(key, value));
-            SavePrefsOnReset();
         }
 
         /// <summary> Binds player pref to property. </summary>
@@ -47,7 +46,6 @@ namespace VirtualMaker.Bindings
         public void BindPlayerPref(string key, IProperty<int> prop)
         {
             Bind(prop, value => PlayerPrefs.SetInt(key, value));
-            SavePrefsOnReset();
         }
 
         /// <summary> Binds player pref to property. </summary>
@@ -83,15 +81,6 @@ namespace VirtualMaker.Bindings
         public void BindPlayerPref(string key, IProperty<string> prop)
         {
             Bind(prop, value => PlayerPrefs.SetString(key, value));
-            SavePrefsOnReset();
-        }
-
-        private void SavePrefsOnReset()
-        {
-            if (!_unsubscribe.Contains(PlayerPrefs.Save))
-            {
-                AddUnsubscriber(PlayerPrefs.Save);
-            }
         }
     }
 }
