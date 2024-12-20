@@ -17,7 +17,7 @@ namespace VirtualMaker.Bindings
             BindPlayerPref(key, prop);
         }
 
-        /// <summary> Binds player pref to property. </summary>
+        /// <summary> Binds player pref to be set by an <c>IProperty</c>. </summary>
         /// <param name="key"> Key used by <c>PlayerPrefs</c> to set the value. </param>
         /// <param name="prop"> <c>IProperty</c> that sets the value. </param>
         public void BindPlayerPref(string key, IProperty<float> prop)
@@ -38,7 +38,7 @@ namespace VirtualMaker.Bindings
             BindPlayerPref(key, prop);
         }
 
-        /// <summary> Binds player pref to property. </summary>
+        /// <summary> Binds player pref to be set by an <c>IProperty</c>. </summary>
         /// <param name="key"> Key used by <c>PlayerPrefs</c> to set the value. </param>
         /// <param name="prop"> <c>IProperty</c> that sets the value. </param>
         public void BindPlayerPref(string key, IProperty<int> prop)
@@ -59,7 +59,7 @@ namespace VirtualMaker.Bindings
             BindPlayerPref(key, prop);
         }
 
-        /// <summary> Binds player pref to property. </summary>
+        /// <summary> Binds player pref to be set by an <c>IProperty</c>. </summary>
         /// <param name="key"> Key used by <c>PlayerPrefs</c> to set the value. </param>
         /// <param name="prop"> <c>IProperty</c> that sets the value. </param>
         public void BindPlayerPref(string key, IProperty<string> prop)
