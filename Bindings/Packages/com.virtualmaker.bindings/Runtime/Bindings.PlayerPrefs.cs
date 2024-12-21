@@ -10,10 +10,7 @@ namespace VirtualMaker.Bindings
         /// <param name="defaultValue"> Value to set <c>prop.Value</c> to if a value isn't found. </param>
         public void BindPlayerPref(string key, Property<float> prop, float defaultValue)
         {
-            if (getFromPref)
-            {
-                prop.Value = PlayerPrefs.GetFloat(key, defaultValue);
-            }
+            prop.Value = PlayerPrefs.GetFloat(key, defaultValue);
             BindPlayerPref(key, prop);
         }
 
@@ -31,10 +28,7 @@ namespace VirtualMaker.Bindings
         /// <param name="defaultValue"> Value to set <c>prop.Value</c> to if a value isn't found. </param>
         public void BindPlayerPref(string key, Property<int> prop, int defaultValue)
         {
-            if (getFromPref)
-            {
-                prop.Value = PlayerPrefs.GetInt(key, defaultValue);
-            }
+            prop.Value = PlayerPrefs.GetInt(key, defaultValue);
             BindPlayerPref(key, prop);
         }
 
@@ -52,10 +46,7 @@ namespace VirtualMaker.Bindings
         /// <param name="defaultValue"> Value to set <c>prop.Value</c> to if a value isn't found. </param>
         public void BindPlayerPref(string key, Property<string> prop, string defaultValue)
         {
-            if (getFromPref)
-            {
-                prop.Value = PlayerPrefs.GetString(key, defaultValue);
-            }
+            prop.Value = PlayerPrefs.GetString(key, defaultValue);
             BindPlayerPref(key, prop);
         }
 
