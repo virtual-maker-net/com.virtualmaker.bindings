@@ -5,7 +5,6 @@ namespace VirtualMaker.Bindings
 {
     public partial class Bindings
     {
-
         private void On(EventTrigger evtTrigger, EventTriggerType evtType, UnityAction action)
             => On(evtTrigger, evtType, (BaseEventData evtData) => action());
 
