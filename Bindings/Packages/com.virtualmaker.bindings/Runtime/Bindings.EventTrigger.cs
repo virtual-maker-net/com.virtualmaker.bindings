@@ -5,10 +5,11 @@ namespace VirtualMaker.Bindings
 {
     public partial class Bindings
     {
-        public void On(EventTrigger evtTrigger, EventTriggerType evtType, UnityAction action)
-            => On(evtTrigger, evtType, _ => action());
 
-        public void On(EventTrigger evtTrigger, EventTriggerType evtType, UnityAction<BaseEventData> action)
+        private void On(EventTrigger evtTrigger, EventTriggerType evtType, UnityAction action)
+            => On(evtTrigger, evtType, (BaseEventData evtData) => action());
+
+        private void On<T>(EventTrigger evtTrigger, EventTriggerType evtType, UnityAction<T> action) where T : BaseEventData
         {
             var entry = new EventTrigger.Entry()
             {
@@ -16,7 +17,7 @@ namespace VirtualMaker.Bindings
             };
             evtTrigger.triggers.Add(entry);
 
-            On(entry.callback, action);
+            On(entry.callback, data => action((T)data));
             AddUnsubscriber(() => evtTrigger.triggers.Remove(entry));
         }
 
@@ -121,17 +122,5 @@ namespace VirtualMaker.Bindings
 
         public void OnUpdateSelected(EventTrigger evtTrigger, UnityAction<BaseEventData> action)
             => On(evtTrigger, EventTriggerType.UpdateSelected, action);
-
-        private void On<T>(EventTrigger evtTrigger, EventTriggerType evtType, UnityAction<T> action) where T : BaseEventData
-        {
-            var entry = new EventTrigger.Entry()
-            {
-                eventID = evtType
-            };
-            evtTrigger.triggers.Add(entry);
-
-            On(entry.callback, data => action((T)data));
-            AddUnsubscriber(() => evtTrigger.triggers.Remove(entry));
-        }
     }
 }
