@@ -1,3 +1,5 @@
+#if UNITY_UGUI
+
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -123,3 +125,5 @@ namespace VirtualMaker.Bindings
             => On(evtTrigger, EventTriggerType.UpdateSelected, action);
     }
 }
+
+#endif // UNITY_UGUI
