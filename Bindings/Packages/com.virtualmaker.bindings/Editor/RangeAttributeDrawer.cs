@@ -10,7 +10,7 @@ namespace VirtualMaker.Bindings.Editor
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             if (attribute is not RangeAttribute rangeAttribute) { return; }
-            var valueProperty = property.FindPropertyRelative("_value") ?? property;
+            var valueProperty = property.FindPropertyRelative("_value") ?? property.FindPropertyRelative("m_InternalValue") ?? property;
 
             switch (valueProperty.propertyType)
             {
@@ -33,7 +33,7 @@ namespace VirtualMaker.Bindings.Editor
                 return base.CreatePropertyGUI(property);
             }
 
-            var valueProperty = property.FindPropertyRelative("_value") ?? property;
+            var valueProperty = property.FindPropertyRelative("_value") ?? property.FindPropertyRelative("m_InternalValue") ?? property;
 
             switch (valueProperty.propertyType)
             {
