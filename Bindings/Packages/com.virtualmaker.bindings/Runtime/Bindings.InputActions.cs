@@ -1,5 +1,6 @@
 #if UNITY_INPUT_SYSTEM
 using System;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -79,13 +80,24 @@ namespace VirtualMaker.Bindings
                 }
             }
 
-            On<T>(inputActionReference, Performed, Started, Canceled);
+            OnInputAction<T>(inputActionReference, Performed, Started, Canceled);
         }
 
+        [Obsolete("Use 'OnInputAction' instead.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void On(InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null)
-            => On(inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
+            => OnInputAction(inputActionReference, onPerformed, onStarted, onCanceled);
 
+        public void OnInputAction(InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null)
+            => OnInputAction(inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
+
+        [Obsolete("Use 'OnInputAction' instead.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void On<T>(InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCancelled = null)
+            where T : struct
+            => OnInputAction<T>(inputActionReference, onPerformed, onStarted, onCancelled);
+
+        public void OnInputAction<T>(InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCancelled = null)
             where T : struct
         {
             var inputAction = inputActionReference.GetAndCloneAction();
@@ -130,7 +142,15 @@ namespace VirtualMaker.Bindings
             void OnActionCanceled(InputAction.CallbackContext ctx) => onCancelled(ctx.ReadValue<T>());
         }
 
+        [Obsolete("Use 'OnInputAction' instead.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void On(InputActionReference inputActionReference,
+            Action<InputAction.CallbackContext> onPerformed = null,
+            Action<InputAction.CallbackContext> onStarted = null,
+            Action<InputAction.CallbackContext> onCanceled = null)
+            => OnInputAction(inputActionReference, onPerformed, onStarted, onCanceled);
+
+        public void OnInputAction(InputActionReference inputActionReference,
             Action<InputAction.CallbackContext> onPerformed = null,
             Action<InputAction.CallbackContext> onStarted = null,
             Action<InputAction.CallbackContext> onCanceled = null)
@@ -184,9 +204,9 @@ namespace VirtualMaker.Bindings
         {
 #if UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             var action = InputSystem.actions.FindAction(reference.action.id);
-#else
+#else // UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             var action = reference.ToInputAction();
-#endif
+#endif // UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             if (action == null)
             {
                 throw new MissingReferenceException($"Failed to find input action for input action: [{reference.action.id}] {reference.name}");
