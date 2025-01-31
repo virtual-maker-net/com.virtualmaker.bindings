@@ -39,10 +39,24 @@ namespace VirtualMaker.Bindings
             _unsubscribe.Add(() => prop.OnChange -= wrapper);
         }
 
+        public void On(UnityEvent evt, Func<Task> action)
+        {
+            var wrapper = new UnityAction(async () => await action());
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
         public void On(UnityEvent evt, UnityAction action)
         {
             evt.AddListener(action);
             _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
+        {
+            var wrapper = new UnityAction<T>(async v => await action(v));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
         }
 
         public void On<T>(UnityEvent<T> evt, UnityAction<T> action)

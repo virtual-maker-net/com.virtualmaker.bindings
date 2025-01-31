@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
+using UnityEngine;
 using VirtualMaker.Bindings;
 using VirtualMaker.Bindings.Reflection;
 
@@ -46,5 +48,27 @@ public class BindingsTests
         pokeable.Poke();
 
         Assert.AreEqual(3, pokeCount);
+    }
+
+    private static async Task DoSomethingAsync(Action action)
+    {
+        await Task.Delay(100);
+        action();
+    }
+
+    [Test]
+    public async void AsyncTest()
+    {
+        var go = new GameObject();
+        var button = go.AddComponent<UnityEngine.UI.Button>();
+
+        bool thingHappened = false;
+
+        _bindings.On(button.onClick, () => DoSomethingAsync(() => thingHappened = true));
+
+        button.onClick.Invoke();
+
+        await Task.Delay(200);
+        Assert.IsTrue(thingHappened);
     }
 }
