@@ -3,7 +3,6 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using VirtualMaker.Bindings;
-using VirtualMaker.Bindings.Reflection;
 
 public class BindingsTests
 {
