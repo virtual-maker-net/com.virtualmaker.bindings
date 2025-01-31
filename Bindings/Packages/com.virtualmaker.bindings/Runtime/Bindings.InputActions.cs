@@ -1,5 +1,6 @@
 #if UNITY_INPUT_SYSTEM
 using System;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -83,6 +84,7 @@ namespace VirtualMaker.Bindings
         }
 
         [Obsolete("Use 'OnInputAction' instead.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void On(InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null)
             => OnInputAction(inputActionReference, onPerformed, onStarted, onCanceled);
 
@@ -90,6 +92,7 @@ namespace VirtualMaker.Bindings
             => OnInputAction(inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
 
         [Obsolete("Use 'OnInputAction' instead.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void On<T>(InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCancelled = null)
             where T : struct
             => OnInputAction<T>(inputActionReference, onPerformed, onStarted, onCancelled);
@@ -140,6 +143,7 @@ namespace VirtualMaker.Bindings
         }
 
         [Obsolete("Use 'OnInputAction' instead.", false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public void On(InputActionReference inputActionReference,
             Action<InputAction.CallbackContext> onPerformed = null,
             Action<InputAction.CallbackContext> onStarted = null,
