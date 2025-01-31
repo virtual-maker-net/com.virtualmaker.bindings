@@ -31,7 +31,7 @@ public class BindingsTests
     }
 
     [Test]
-    public void Test1()
+    public void TestEventMemberSubscribing()
     {
         var pokeable = new Pokeable();
         var pokeCount = 0;
@@ -56,7 +56,7 @@ public class BindingsTests
     }
 
     [Test]
-    public async void AsyncTest()
+    public async void TestAsyncTaskFuncs()
     {
         var go = new GameObject();
         var button = go.AddComponent<UnityEngine.UI.Button>();
