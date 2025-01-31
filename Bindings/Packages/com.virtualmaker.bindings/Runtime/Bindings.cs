@@ -51,38 +51,42 @@ namespace VirtualMaker.Bindings
             _unsubscribe.Add(() => evt.RemoveListener(action));
         }
 
-        public void On(UnityEvent evt, Func<Task> action)
+        public void On<TObj>(TObj obj, string eventName, Action action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T>(TObj obj, string eventName, Action<T> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T1, T2>(TObj obj, string eventName, Action<T1, T2> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T1, T2, T3>(TObj obj, string eventName, Action<T1, T2, T3> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void OnDelegate<TObj>(TObj obj, string eventName, Delegate action) where TObj : class
         {
-            async void Invoke()
+            var evtInfo = typeof(TObj).GetEvent(eventName);
+            if (evtInfo == null)
             {
-                try
-                {
-                    await action();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
+                throw new($"Event \"{eventName}\" not found in {obj.GetType()}");
             }
 
-            On(evt, Invoke);
-        }
-
-        public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
-        {
-            async void Invoke(T value)
+            var addInfo = evtInfo.GetAddMethod();
+            if (addInfo == null)
             {
-                try
-                {
-                    await action(value);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
+                throw new($"No add method found for event \"{eventName}\"");
             }
 
-            On(evt, Invoke);
+            var removeInfo = evtInfo.GetRemoveMethod();
+            if (removeInfo == null)
+            {
+                throw new($"No remove method found for event \"{eventName}\"");
+            }
+
+            var args = new object[] { action };
+            addInfo.Invoke(obj, args);
+
+            AddUnsubscriber(() => removeInfo.Invoke(obj, args));
         }
 
         public void AddUnsubscriber(Action unsubscribe)

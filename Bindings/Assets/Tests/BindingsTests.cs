@@ -3,7 +3,7 @@ using System;
 using VirtualMaker.Bindings;
 using VirtualMaker.Bindings.Reflection;
 
-public class ReflectionTests
+public class BindingsTests
 {
     private class Pokeable
     {
@@ -35,7 +35,7 @@ public class ReflectionTests
         var pokeable = new Pokeable();
         var pokeCount = 0;
 
-        _bindings.OnEventMember<Action>(pokeable, nameof(Pokeable.OnPoked), () => pokeCount++);
+        _bindings.On(pokeable, nameof(Pokeable.OnPoked), () => pokeCount++);
 
         pokeable.Poke();
         pokeable.Poke();
