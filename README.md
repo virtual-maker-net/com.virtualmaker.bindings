@@ -19,7 +19,7 @@ To create a property, simply instantiate the `Property<T>` class with the desire
 ```cs
 using VirtualMaker.Bindings;
 
-public class Ex ampleComponent : MonoBehaviour
+public class ExampleComponent : MonoBehaviour
 {
     [SerializeField]
     private Property<int> _intProperty = new();
