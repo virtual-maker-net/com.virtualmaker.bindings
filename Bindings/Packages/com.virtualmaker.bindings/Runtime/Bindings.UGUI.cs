@@ -72,6 +72,11 @@ namespace VirtualMaker.Bindings
                 On(toggle.onValueChanged, value => prop.Value = value);
             }
         }
+
+        public void BindInteractable(Selectable selectable, IProperty<bool> prop)
+        {
+            Bind(prop, value => selectable.interactable = value);
+        }
     }
 }
 
