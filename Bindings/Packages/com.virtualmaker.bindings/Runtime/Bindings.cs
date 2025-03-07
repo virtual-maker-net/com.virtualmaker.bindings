@@ -92,6 +92,7 @@ namespace VirtualMaker.Bindings
             }
 
             var removeInfo = evtInfo.GetRemoveMethod();
+
             if (removeInfo == null)
             {
                 throw new($"No remove method found for event \"{eventName}\"");
