@@ -85,6 +85,7 @@ namespace VirtualMaker.Bindings
             }
 
             var addInfo = evtInfo.GetAddMethod();
+
             if (addInfo == null)
             {
                 throw new($"No add method found for event \"{eventName}\"");
