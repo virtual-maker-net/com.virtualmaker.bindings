@@ -64,6 +64,45 @@ namespace VirtualMaker.Bindings
             _unsubscribe.Add(() => evt.RemoveListener(action));
         }
 
+        public void On<T0, T1>(UnityEvent<T0, T1> evt, Func<T0, T1, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1>(async (v0, v1) => await action(v0, v1));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void On<T0, T1>(UnityEvent<T0, T1> evt, UnityAction<T0, T1> action)
+        {
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<T0, T1, T2>(UnityEvent<T0, T1, T2> evt, Func<T0, T1, T2, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1, T2>(async (v0, v1, v2) => await action(v0, v1, v2));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void On<T0, T1, T2>(UnityEvent<T0, T1, T2> evt, UnityAction<T0, T1, T2> action)
+        {
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<T0, T1, T2, T3>(UnityEvent<T0, T1, T2, T3> evt, Func<T0, T1, T2, T3, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1, T2, T3>(async (v0, v1, v2, v3) => await action(v0, v1, v2, v3));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void On<T0, T1, T2, T3>(UnityEvent<T0, T1, T2, T3> evt, UnityAction<T0, T1, T2, T3> action)
+        {
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
         public void On<TObj>(TObj obj, string eventName, Action action) where TObj : class
             => OnDelegate(obj, eventName, action);
 
