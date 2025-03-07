@@ -109,15 +109,19 @@ namespace VirtualMaker.Bindings
         public void On<TObj, T>(TObj obj, string eventName, Action<T> action) where TObj : class
             => OnDelegate(obj, eventName, action);
 
-        public void On<TObj, T1, T2>(TObj obj, string eventName, Action<T1, T2> action) where TObj : class
+        public void On<TObj, T0, T1>(TObj obj, string eventName, Action<T0, T1> action) where TObj : class
             => OnDelegate(obj, eventName, action);
 
-        public void On<TObj, T1, T2, T3>(TObj obj, string eventName, Action<T1, T2, T3> action) where TObj : class
+        public void On<TObj, T0, T1, T2>(TObj obj, string eventName, Action<T0, T1, T2> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T0, T1, T2, T3>(TObj obj, string eventName, Action<T0, T1, T2, T3> action) where TObj : class
             => OnDelegate(obj, eventName, action);
 
         public void OnDelegate<TObj>(TObj obj, string eventName, Delegate action) where TObj : class
         {
             var evtInfo = typeof(TObj).GetEvent(eventName);
+
             if (evtInfo == null)
             {
                 throw new($"Event \"{eventName}\" not found in {obj.GetType()}");
