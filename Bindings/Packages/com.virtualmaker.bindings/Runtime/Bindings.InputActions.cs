@@ -184,9 +184,9 @@ namespace VirtualMaker.Bindings
         {
 #if UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             var action = InputSystem.actions.FindAction(reference.action.id);
-#else
+#else // UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             var action = reference.ToInputAction();
-#endif
+#endif // UNITY_INPUT_SYSTEM_1_8_OR_HIGHER
             if (action == null)
             {
                 throw new MissingReferenceException($"Failed to find input action for input action: [{reference.action.id}] {reference.name}");

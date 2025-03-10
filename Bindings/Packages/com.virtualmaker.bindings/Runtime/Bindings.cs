@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace VirtualMaker.Bindings
@@ -39,10 +38,24 @@ namespace VirtualMaker.Bindings
             _unsubscribe.Add(() => prop.OnChange -= wrapper);
         }
 
+        public void On(UnityEvent evt, Func<Task> action)
+        {
+            var wrapper = new UnityAction(async () => await action());
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
         public void On(UnityEvent evt, UnityAction action)
         {
             evt.AddListener(action);
             _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
+        {
+            var wrapper = new UnityAction<T>(async v => await action(v));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
         }
 
         public void On<T>(UnityEvent<T> evt, UnityAction<T> action)
@@ -51,38 +64,87 @@ namespace VirtualMaker.Bindings
             _unsubscribe.Add(() => evt.RemoveListener(action));
         }
 
-        public void On(UnityEvent evt, Func<Task> action)
+        public void On<T0, T1>(UnityEvent<T0, T1> evt, Func<T0, T1, Task> action)
         {
-            async void Invoke()
-            {
-                try
-                {
-                    await action();
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
-            }
-
-            On(evt, Invoke);
+            var wrapper = new UnityAction<T0, T1>(async (v0, v1) => await action(v0, v1));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
         }
 
-        public void On<T>(UnityEvent<T> evt, Func<T, Task> action)
+        public void On<T0, T1>(UnityEvent<T0, T1> evt, UnityAction<T0, T1> action)
         {
-            async void Invoke(T value)
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<T0, T1, T2>(UnityEvent<T0, T1, T2> evt, Func<T0, T1, T2, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1, T2>(async (v0, v1, v2) => await action(v0, v1, v2));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void On<T0, T1, T2>(UnityEvent<T0, T1, T2> evt, UnityAction<T0, T1, T2> action)
+        {
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<T0, T1, T2, T3>(UnityEvent<T0, T1, T2, T3> evt, Func<T0, T1, T2, T3, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1, T2, T3>(async (v0, v1, v2, v3) => await action(v0, v1, v2, v3));
+            evt.AddListener(wrapper);
+            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void On<T0, T1, T2, T3>(UnityEvent<T0, T1, T2, T3> evt, UnityAction<T0, T1, T2, T3> action)
+        {
+            evt.AddListener(action);
+            _unsubscribe.Add(() => evt.RemoveListener(action));
+        }
+
+        public void On<TObj>(TObj obj, string eventName, Action action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T>(TObj obj, string eventName, Action<T> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T0, T1>(TObj obj, string eventName, Action<T0, T1> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T0, T1, T2>(TObj obj, string eventName, Action<T0, T1, T2> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void On<TObj, T0, T1, T2, T3>(TObj obj, string eventName, Action<T0, T1, T2, T3> action) where TObj : class
+            => OnDelegate(obj, eventName, action);
+
+        public void OnDelegate<TObj>(TObj obj, string eventName, Delegate action) where TObj : class
+        {
+            var evtInfo = typeof(TObj).GetEvent(eventName);
+
+            if (evtInfo == null)
             {
-                try
-                {
-                    await action(value);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                }
+                throw new InvalidOperationException($"Event \"{eventName}\" not found in {obj.GetType()}");
             }
 
-            On(evt, Invoke);
+            var addInfo = evtInfo.GetAddMethod();
+
+            if (addInfo == null)
+            {
+                throw new InvalidOperationException($"No add method found for event \"{eventName}\"");
+            }
+
+            var removeInfo = evtInfo.GetRemoveMethod();
+
+            if (removeInfo == null)
+            {
+                throw new InvalidOperationException($"No remove method found for event \"{eventName}\"");
+            }
+
+            var args = new object[] { action };
+            addInfo.Invoke(obj, args);
+
+            AddUnsubscriber(() => removeInfo.Invoke(obj, args));
         }
 
         public void AddUnsubscriber(Action unsubscribe)
