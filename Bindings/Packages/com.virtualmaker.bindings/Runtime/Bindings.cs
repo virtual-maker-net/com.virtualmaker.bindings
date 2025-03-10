@@ -124,21 +124,21 @@ namespace VirtualMaker.Bindings
 
             if (evtInfo == null)
             {
-                throw new($"Event \"{eventName}\" not found in {obj.GetType()}");
+                throw new InvalidOperationException($"Event \"{eventName}\" not found in {obj.GetType()}");
             }
 
             var addInfo = evtInfo.GetAddMethod();
 
             if (addInfo == null)
             {
-                throw new($"No add method found for event \"{eventName}\"");
+                throw new InvalidOperationException($"No add method found for event \"{eventName}\"");
             }
 
             var removeInfo = evtInfo.GetRemoveMethod();
 
             if (removeInfo == null)
             {
-                throw new($"No remove method found for event \"{eventName}\"");
+                throw new InvalidOperationException($"No remove method found for event \"{eventName}\"");
             }
 
             var args = new object[] { action };
