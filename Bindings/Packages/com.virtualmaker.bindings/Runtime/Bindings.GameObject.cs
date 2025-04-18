@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VirtualMaker.Bindings.Extensions;
 
 namespace VirtualMaker.Bindings
 {
@@ -40,7 +41,11 @@ namespace VirtualMaker.Bindings
                     // In edit mode remove everything, so we can test data changes
                     if (!list.Contains(fromItem) || !Application.isPlaying)
                     {
-                        toItem.gameObject.Destroy();
+                        if (toItem && toItem.transform.parent == parent)
+                        {
+                            toItem.gameObject.Destroy();
+                        }
+
                         removed.Add(fromItem);
                     }
                 }

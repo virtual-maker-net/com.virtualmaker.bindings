@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace VirtualMaker.Bindings
+namespace VirtualMaker.Bindings.Extensions
 {
     internal static class GameObjectExtensions
     {
