@@ -414,14 +414,14 @@ namespace VirtualMaker.Bindings
             BindDisplay(name, true, prop);
         }
 
-        public void BindList<T>(string containerName, VisualTreeAsset template, IProperty<List<T>> prop, Action<T, Bindings> onTemplateAdded)
+        public IReadOnlyDictionary<T, Bindings> BindList<T>(string containerName, VisualTreeAsset template, IProperty<List<T>> prop, Action<T, Bindings> onTemplateAdded)
         {
+            var childItems = new Dictionary<T, Bindings>();
+
             if (!TryGetElement<VisualElement>(containerName, out var container))
             {
-                return;
+                return childItems;
             }
-
-            var childItems = new Dictionary<T, Bindings>();
 
             Action<List<T>> update = list =>
             {
@@ -473,6 +473,68 @@ namespace VirtualMaker.Bindings
             });
 
             update(prop.Value);
+            return childItems;
+        }
+
+        public IReadOnlyDictionary<K, Bindings> BindDictionary<K, V>(string containerName, VisualTreeAsset template, IProperty<Dictionary<K, V>> prop, Action<K, V, Bindings> onTemplateAdded)
+        {
+            var childItems = new Dictionary<K, Bindings>();
+
+            if (!TryGetElement<VisualElement>(containerName, out var container))
+            {
+                return childItems;
+            }
+
+            Action<Dictionary<K, V>> update = dict =>
+            {
+                // Remove items that are no longer in the dict.
+                var removed = new List<K>();
+
+                foreach (var (key, bindings) in childItems)
+                {
+                    // In edit mode remove everything, so we can test data changes
+                    if (!dict.ContainsKey(key) || !Application.isPlaying)
+                    {
+                        bindings.Reset();
+                        bindings._root.RemoveFromHierarchy();
+                        removed.Add(key);
+                    }
+                }
+
+                foreach (var item in removed)
+                {
+                    childItems.Remove(item);
+                }
+
+                // Add items that are new to the list.
+                foreach (var (key, value) in dict)
+                {
+                    if (!childItems.TryGetValue(key, out var bindings))
+                    {
+                        var newItem = template.CloneTree();
+                        bindings = new Bindings(newItem);
+                        childItems.Add(key, bindings);
+                        onTemplateAdded(key, value, bindings);
+                    }
+
+                    container.Add(bindings._root);
+                }
+            };
+
+            prop.OnChange += update;
+
+            _unsubscribe.Add(() =>
+            {
+                foreach (var (_, bindings) in childItems)
+                {
+                    bindings.Reset();
+                }
+
+                prop.OnChange -= update;
+            });
+
+            update(prop.Value);
+            return childItems;
         }
 
         public void Bind<TElement, T>(string name, IProperty<T> prop, Action<TElement, T> action)

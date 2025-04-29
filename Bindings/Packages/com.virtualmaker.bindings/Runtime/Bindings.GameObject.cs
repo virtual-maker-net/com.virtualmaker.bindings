@@ -27,7 +27,7 @@ namespace VirtualMaker.Bindings
             Bind(prop, value => component.gameObject.SetActive(transformer(value)));
         }
 
-        public void BindList<TItem, TComponent>(Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded) where TComponent : Component
+        public IReadOnlyDictionary<TItem, TComponent> BindList<TItem, TComponent>(Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded) where TComponent : Component
         {
             var childItems = new Dictionary<TItem, TComponent>();
 
@@ -41,11 +41,7 @@ namespace VirtualMaker.Bindings
                     // In edit mode remove everything, so we can test data changes
                     if (!list.Contains(fromItem) || !Application.isPlaying)
                     {
-                        if (toItem && toItem.transform.parent == parent)
-                        {
-                            toItem.gameObject.Destroy();
-                        }
-
+                        toItem.gameObject.Destroy();
                         removed.Add(fromItem);
                     }
                 }
@@ -83,6 +79,61 @@ namespace VirtualMaker.Bindings
             });
 
             update(prop.Value);
+            return childItems;
+        }
+
+        public IReadOnlyDictionary<TKey, TComponent> BindDictionary<TKey, TValue, TComponent>(
+            Transform parent, TComponent prefab, IProperty<Dictionary<TKey, TValue>> prop,
+            Action<TKey, TValue, TComponent> onPrefabAdded) where TComponent : Component
+        {
+            var childItems = new Dictionary<TKey, TComponent>();
+
+            Action<Dictionary<TKey, TValue>> update = dict =>
+            {
+                // Remove items that are no longer in the list.
+                var removed = new List<TKey>();
+
+                foreach (var (fromItem, toItem) in childItems)
+                {
+                    // In edit mode remove everything, so we can test data changes
+                    if (!dict.ContainsKey(fromItem) || !Application.isPlaying)
+                    {
+                        toItem.gameObject.Destroy();
+                        removed.Add(fromItem);
+                    }
+                }
+
+                foreach (var item in removed)
+                {
+                    childItems.Remove(item);
+                }
+
+                // Add items that are new to the list.
+                foreach (var (key, value) in dict)
+                {
+                    if (!childItems.TryGetValue(key, out var toItem))
+                    {
+                        toItem = UnityEngine.Object.Instantiate(prefab, parent);
+                        childItems.Add(key, toItem);
+                        onPrefabAdded(key, value, toItem);
+                    }
+                }
+            };
+
+            prop.OnChange += update;
+
+            _unsubscribe.Add(() =>
+            {
+                prop.OnChange -= update;
+
+                foreach (var (_, toItem) in childItems)
+                {
+                    toItem.gameObject.Destroy();
+                }
+            });
+
+            update(prop.Value);
+            return childItems;
         }
     }
 }
