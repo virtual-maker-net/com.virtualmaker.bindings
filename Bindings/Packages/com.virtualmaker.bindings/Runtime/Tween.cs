@@ -53,23 +53,27 @@ namespace VirtualMaker.Bindings
 
         private async Awaitable PerformTween()
         {
-            while (!_done)
+            try
             {
-                var t = (Time.time - _startTime) / _duration;
-
-                if (t >= 1)
+                while (!_done)
                 {
-                    _done = true;
-                    _current.Value = _target;
-                    OnComplete?.Invoke();
-                }
-                else
-                {
-                    _current.Value = _lerp(_source, _target, _curve.Evaluate(t));
-                }
+                    var t = (Time.time - _startTime) / _duration;
 
-                await Awaitable.NextFrameAsync();
+                    if (t >= 1)
+                    {
+                        _done = true;
+                        _current.Value = _target;
+                        OnComplete?.Invoke();
+                    }
+                    else
+                    {
+                        _current.Value = _lerp(_source, _target, _curve.Evaluate(t));
+                    }
+
+                    await Awaitable.NextFrameAsync();
+                }
             }
+            catch (OperationCanceledException) {}
         }
 
         public void GoTo(T value)
@@ -87,7 +91,10 @@ namespace VirtualMaker.Bindings
         public void GoFromTo(T from, T to, float duration)
             => GoFromTo(from, to, duration, AnimationCurve.Linear(0, 0, 1, 1));
 
-        public void GoFromTo(T from, T to, float duration, AnimationCurve curve)
+        public async void GoFromTo(T from, T to, float duration, AnimationCurve curve)
+            => await GoFromToAsync(from, to, duration, curve);
+
+        public async Awaitable GoFromToAsync(T from, T to, float duration, AnimationCurve curve)
         {
             if (_tweeningAction != null && !_tweeningAction.IsCompleted)
             {
@@ -101,6 +108,7 @@ namespace VirtualMaker.Bindings
             _target = to;
             _done = false;
             _tweeningAction = PerformTween();
+            await _tweeningAction;
         }
     }
 
