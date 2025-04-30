@@ -1,3 +1,5 @@
+#if UNITY_6000_0_OR_NEWER
+
 using System;
 using UnityEngine;
 
@@ -26,7 +28,7 @@ namespace VirtualMaker.Bindings
         private float _duration = 1;
         private float _startTime;
         private AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
-        private Awaitable _awaitable;
+        private bool _cancelled;
         private Lerp _lerp;
         private bool _done;
 
@@ -38,12 +40,7 @@ namespace VirtualMaker.Bindings
 
         public void Reset()
         {
-            if (_awaitable != null && !_awaitable.IsCompleted)
-            {
-                _awaitable.Cancel();
-            }
-
-            _awaitable = null;
+            _cancelled = true;
         }
 
         ~Tween()
@@ -51,30 +48,26 @@ namespace VirtualMaker.Bindings
             Reset();
         }
 
-        private async Awaitable PerformTween()
+        private async void PerformTween()
         {
-            try
+            while (!_cancelled && !_done)
             {
-                while (!_done)
+                var t = (Time.time - _startTime) / _duration;
+
+                if (t >= 1)
                 {
-                    var t = (Time.time - _startTime) / _duration;
-
-                    if (t >= 1)
-                    {
-                        _done = true;
-                        _current.Value = _target;
-                        OnComplete?.Invoke();
-                        return;
-                    }
-                    else
-                    {
-                        _current.Value = _lerp(_source, _target, _curve.Evaluate(t));
-                    }
-
-                    await Awaitable.NextFrameAsync();
+                    _done = true;
+                    _current.Value = _target;
+                    OnComplete?.Invoke();
+                    return;
                 }
+                else
+                {
+                    _current.Value = _lerp(_source, _target, _curve.Evaluate(t));
+                }
+
+                await Awaitable.NextFrameAsync();
             }
-            catch (OperationCanceledException) {}
         }
 
         public void GoTo(T value)
@@ -92,18 +85,9 @@ namespace VirtualMaker.Bindings
         public void GoFromTo(T from, T to, float duration)
             => GoFromTo(from, to, duration, AnimationCurve.Linear(0, 0, 1, 1));
 
-        public async Awaitable GoFromToAsync(T from, T to, float duration)
-            => await GoFromToAsync(from, to, duration, AnimationCurve.Linear(0, 0, 1, 1));
-
-        public async void GoFromTo(T from, T to, float duration, AnimationCurve curve)
-            => await GoFromToAsync(from, to, duration, curve);
-
-        public async Awaitable GoFromToAsync(T from, T to, float duration, AnimationCurve curve)
+        public void GoFromTo(T from, T to, float duration, AnimationCurve curve)
         {
-            if (_awaitable != null && !_awaitable.IsCompleted)
-            {
-                _awaitable.Cancel();
-            }
+            bool wasRunning = !_cancelled && !_done;
 
             _duration = duration;
             _startTime = Time.time;
@@ -111,8 +95,12 @@ namespace VirtualMaker.Bindings
             _source = from;
             _target = to;
             _done = false;
-            _awaitable = PerformTween();
-            await _awaitable;
+            _cancelled = false;
+
+            if (!wasRunning)
+            {
+                PerformTween();
+            }
         }
     }
 
@@ -131,3 +119,5 @@ namespace VirtualMaker.Bindings
         public TweenQuaternion(Quaternion value) : base(value, Quaternion.Slerp) { }
     }
 }
+
+#endif
