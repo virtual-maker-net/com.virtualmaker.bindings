@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace VirtualMaker.Bindings
 {
-    public class PropertyUpdater
+    internal class PropertyUpdater
     {
         private Task _task;
         private Action _updateFunc;
@@ -42,49 +42,51 @@ namespace VirtualMaker.Bindings
 
     public partial class Bindings
     {
-        public PropertyUpdater LinearUpdate(Property<Vector3> property, Vector3 target, float rate)
-        {
-            var updater = new PropertyUpdater(
-                () => property.Value = Vector3.MoveTowards(property.Value, target, rate * Time.smoothDeltaTime),
-                () => property.Value == target);
+        // These functions will update property or value every frame, with an optional exit condition.
 
+        public void BindUpdate(Action updateFunc, Func<bool> doneFunc = null)
+        {
+            var updater = new PropertyUpdater(updateFunc, doneFunc);
             _unsubscribe.Add(() => updater.Reset());
-            return updater;
         }
+
+        public void BindUpdate<T>(Property<T> property, Func<T> valueFunc, Func<bool> doneFunc = null)
+            => BindUpdate(() => property.Value = valueFunc(), doneFunc);
 
         public void BindMoveTowards(Property<Vector3> property, IProperty<Vector3> fromProperty, float rate)
-        {
-            var updater = new PropertyUpdater(
-                () => property.Value = Vector3.MoveTowards(property.Value, fromProperty.Value, rate * Time.smoothDeltaTime));
-
-            _unsubscribe.Add(() => updater.Reset());
-        }
+            => BindUpdate(property, () => Vector3.MoveTowards(property.Value, fromProperty.Value, rate * Time.smoothDeltaTime));
 
         public void BindMoveTowards(Transform transform, IProperty<Vector3> fromProperty, float rate)
-        {
-            var updater = new PropertyUpdater(
+            => BindUpdate(
                 () => transform.position = Vector3.MoveTowards(transform.position, fromProperty.Value, rate * Time.smoothDeltaTime));
 
-            _unsubscribe.Add(() => updater.Reset());
-        }
-
-        public void BindUpdate<T>(Property<T> property, Func<T> func)
-        {
-            var updater = new PropertyUpdater(() => property.Value = func());
-            _unsubscribe.Add(() => updater.Reset());
-        }
-
-        public IProperty<T> CreateUpdateProperty<T>(Func<T> func)
+        public IProperty<T> CreateUpdateProperty<T>(Func<T> updateFunc, Func<bool> doneFunc = null)
         {
             var property = new Property<T>();
-            BindUpdate(property, func);
+            BindUpdate(property, updateFunc, doneFunc);
             return property;
         }
 
-        public void BindUpdate(Action action)
+        // These async functions will update the property or value until an exit condition is met.
+
+        public async Task UpdateAsync(Action updateFunc, Func<bool> doneFunc)
         {
-            var updater = new PropertyUpdater(action);
+            var updater = new PropertyUpdater(updateFunc, doneFunc);
             _unsubscribe.Add(() => updater.Reset());
+            await updater.WaitAsync();
         }
+
+        public async Task UpdateAsync<T>(Property<T> property, Func<T> updateFunc, Func<bool> doneFunc)
+            => await UpdateAsync(() => property.Value = updateFunc(), doneFunc);
+
+        public async Task MoveTowardsAsync(Property<Vector3> property, Vector3 target, float rate)
+            => await UpdateAsync(property,
+                () => Vector3.MoveTowards(property.Value, target, rate * Time.smoothDeltaTime),
+                () => property.Value == target);
+
+        public async Task MoveTowardsAsync(Transform transform, Vector3 target, float rate)
+            => await UpdateAsync(
+                () => transform.position = Vector3.MoveTowards(transform.position, target, rate * Time.smoothDeltaTime),
+                () => transform.position == target);
     }
 }
