@@ -26,7 +26,7 @@ namespace VirtualMaker.Bindings
         private float _duration = 1;
         private float _startTime;
         private AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
-        private Awaitable _tweeningAction;
+        private Awaitable _awaitable;
         private Lerp _lerp;
         private bool _done;
 
@@ -38,12 +38,12 @@ namespace VirtualMaker.Bindings
 
         public void Reset()
         {
-            if (_tweeningAction != null && !_tweeningAction.IsCompleted)
+            if (_awaitable != null && !_awaitable.IsCompleted)
             {
-                _tweeningAction.Cancel();
+                _awaitable.Cancel();
             }
 
-            _tweeningAction = null;
+            _awaitable = null;
         }
 
         ~Tween()
@@ -64,6 +64,7 @@ namespace VirtualMaker.Bindings
                         _done = true;
                         _current.Value = _target;
                         OnComplete?.Invoke();
+                        return;
                     }
                     else
                     {
@@ -91,14 +92,17 @@ namespace VirtualMaker.Bindings
         public void GoFromTo(T from, T to, float duration)
             => GoFromTo(from, to, duration, AnimationCurve.Linear(0, 0, 1, 1));
 
+        public async Awaitable GoFromToAsync(T from, T to, float duration)
+            => await GoFromToAsync(from, to, duration, AnimationCurve.Linear(0, 0, 1, 1));
+
         public async void GoFromTo(T from, T to, float duration, AnimationCurve curve)
             => await GoFromToAsync(from, to, duration, curve);
 
         public async Awaitable GoFromToAsync(T from, T to, float duration, AnimationCurve curve)
         {
-            if (_tweeningAction != null && !_tweeningAction.IsCompleted)
+            if (_awaitable != null && !_awaitable.IsCompleted)
             {
-                _tweeningAction.Cancel();
+                _awaitable.Cancel();
             }
 
             _duration = duration;
@@ -107,8 +111,8 @@ namespace VirtualMaker.Bindings
             _source = from;
             _target = to;
             _done = false;
-            _tweeningAction = PerformTween();
-            await _tweeningAction;
+            _awaitable = PerformTween();
+            await _awaitable;
         }
     }
 

@@ -147,6 +147,26 @@ namespace VirtualMaker.Bindings
             AddUnsubscriber(() => removeInfo.Invoke(obj, args));
         }
 
+        public async Task UntilAsync<T>(IProperty<T> property, Func<T, bool> predicate)
+        {
+            if (predicate(property.Value))
+            {
+                return;
+            }
+
+            var taskCompletionSource = new TaskCompletionSource<bool>();
+            void onChange(T value)
+            {
+                if (predicate(value))
+                {
+                    taskCompletionSource.SetResult(true);
+                    property.OnChange -= onChange;
+                }
+            };
+            property.OnChange += onChange;
+            await taskCompletionSource.Task;
+        }
+
         public void AddUnsubscriber(Action unsubscribe)
         {
             _unsubscribe.Add(unsubscribe);
