@@ -30,7 +30,7 @@ namespace VirtualMaker.Bindings
         private AnimationCurve _curve = AnimationCurve.Linear(0, 0, 1, 1);
         private bool _cancelled;
         private Lerp _lerp;
-        private bool _done;
+        private bool _done = true;
 
         public Tween(T value, Lerp lerp)
         {
