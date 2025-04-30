@@ -6,10 +6,12 @@ namespace VirtualMaker.Bindings
 {
     internal class PropertyUpdater
     {
-        private Task _task;
         private Action _updateFunc;
         private Func<bool> _doneFunc;
         private bool _cancelled;
+
+        private Task _task;
+        public Task Task => _task;
 
         public PropertyUpdater(Action updateFunc, Func<bool> doneFunc = null)
         {
@@ -31,13 +33,6 @@ namespace VirtualMaker.Bindings
                 await Awaitable.NextFrameAsync();
             }
         }
-
-        ~PropertyUpdater()
-        {
-            Reset();
-        }
-
-        public Task WaitAsync() => _task;
     }
 
     public partial class Bindings
@@ -73,7 +68,7 @@ namespace VirtualMaker.Bindings
         {
             var updater = new PropertyUpdater(updateFunc, doneFunc);
             _unsubscribe.Add(() => updater.Reset());
-            await updater.WaitAsync();
+            await updater.Task;
         }
 
         public async Task UpdateAsync<T>(Property<T> property, Func<T> updateFunc, Func<bool> doneFunc)
