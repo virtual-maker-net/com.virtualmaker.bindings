@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace VirtualMaker.Bindings.Editor
+namespace VirtualMaker.Bindings.Netcode.Editor
 {
     [CustomPropertyDrawer(typeof(NetworkProperty<>), true)]
     public class NetworkPropertyEditor : PropertyEditor

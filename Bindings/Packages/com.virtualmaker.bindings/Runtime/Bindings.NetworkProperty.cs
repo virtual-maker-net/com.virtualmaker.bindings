@@ -1,7 +1,7 @@
 #if UNITY_NETCODE_GAMEOBJECTS
 using System;
 
-namespace VirtualMaker.Bindings
+namespace VirtualMaker.Bindings.Netcode
 {
     public partial class Bindings
     {

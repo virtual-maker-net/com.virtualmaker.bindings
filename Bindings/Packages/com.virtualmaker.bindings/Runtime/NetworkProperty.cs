@@ -2,7 +2,7 @@
 using System;
 using Unity.Netcode;
 
-namespace VirtualMaker.Bindings
+namespace VirtualMaker.Bindings.Netcode
 {
     [Serializable]
     public class NetworkProperty<T> : NetworkVariable<T>, IProperty<T>, IPropertyNotify where T : unmanaged
