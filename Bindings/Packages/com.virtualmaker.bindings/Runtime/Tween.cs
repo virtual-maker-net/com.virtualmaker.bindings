@@ -54,7 +54,7 @@ namespace VirtualMaker.Bindings
             {
                 var t = (Time.time - _startTime) / _duration;
 
-                if (t >= 1)
+                if (_duration == 0 || t >= 1)
                 {
                     _done = true;
                     _current.Value = _target;
