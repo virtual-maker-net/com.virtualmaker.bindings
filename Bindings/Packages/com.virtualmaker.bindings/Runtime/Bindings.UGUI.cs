@@ -73,6 +73,26 @@ namespace VirtualMaker.Bindings
             }
         }
 
+        public void BindDropdown(Dropdown dropdown, Property<int> indexProp, bool twoWay)
+        {
+            Bind(indexProp, value => dropdown.value = value);
+
+            if (twoWay)
+            {
+                On(dropdown.onValueChanged, value => indexProp.Value = value);
+            }
+        }
+
+        public void BindDropdown(TMP_Dropdown dropdown, Property<int> indexProp, bool twoWay)
+        {
+            Bind(indexProp, value => dropdown.value = value);
+
+            if (twoWay)
+            {
+                On(dropdown.onValueChanged, value => indexProp.Value = value);
+            }
+        }
+
         public void BindInteractable(Selectable selectable, IProperty<bool> prop)
         {
             Bind(prop, value => selectable.interactable = value);
