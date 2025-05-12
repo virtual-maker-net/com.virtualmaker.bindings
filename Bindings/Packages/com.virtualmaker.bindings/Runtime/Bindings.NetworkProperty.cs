@@ -3,27 +3,27 @@ using System;
 
 namespace VirtualMaker.Bindings.Netcode
 {
-    public partial class Bindings
+    public static class BindingsNetcodeExtensions
     {
-        public void Bind<T>(NetworkProperty<T> networkVariable, Property<T> prop) where T : unmanaged
-            => Bind(networkVariable, value => prop.Value = value);
+        public static void Bind<T>(this Bindings bindings, NetworkProperty<T> networkVariable, Property<T> prop) where T : unmanaged
+            => bindings.Bind(networkVariable, value => prop.Value = value);
 
-        public void Bind<T>(NetworkProperty<T> networkVariable, Action action) where T : unmanaged
+        public static void Bind<T>(this Bindings bindings, NetworkProperty<T> networkVariable, Action action) where T : unmanaged
         {
             action();
-            BindDeferred(networkVariable, action);
+            bindings.BindDeferred(networkVariable, action);
         }
 
-        public void Bind<T>(NetworkProperty<T> networkVariable, Action<T> action) where T : unmanaged
+        public static void Bind<T>(this Bindings bindings, NetworkProperty<T> networkVariable, Action<T> action) where T : unmanaged
         {
             action(networkVariable.Value);
-            BindDeferred(networkVariable, action);
+            bindings.BindDeferred(networkVariable, action);
         }
 
-        public void BindDeferred<T>(NetworkProperty<T> networkVariable, Action<T> action) where T : unmanaged
+        public static void BindDeferred<T>(this Bindings bindings, NetworkProperty<T> networkVariable, Action<T> action) where T : unmanaged
         {
             networkVariable.OnChange += action;
-            AddUnsubscriber(() => networkVariable.OnChange -= action);
+            bindings.AddUnsubscriber(() => networkVariable.OnChange -= action);
         }
     }
 }

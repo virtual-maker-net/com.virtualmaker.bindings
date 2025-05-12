@@ -5,7 +5,7 @@ using UnityEngine;
 namespace VirtualMaker.Bindings.Netcode.Editor
 {
     [CustomPropertyDrawer(typeof(NetworkProperty<>), true)]
-    public class NetworkPropertyEditor : PropertyEditor
+    public class NetworkPropertyEditor : VirtualMaker.Bindings.Editor.PropertyEditor
     {
         private const string m_InternalValue = nameof(m_InternalValue);
 
