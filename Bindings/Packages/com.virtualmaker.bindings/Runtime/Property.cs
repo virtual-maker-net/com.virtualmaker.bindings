@@ -86,8 +86,7 @@ namespace VirtualMaker.Bindings
         public static Derived<TDerived> From<TValue1, TValue2>(
             IProperty<TValue1> property1,
             IProperty<TValue2> property2,
-            Func<TValue1, TValue2, TDerived> func
-        )
+            Func<TValue1, TValue2, TDerived> func)
         {
             var derived = new Derived<TDerived>();
 
@@ -108,8 +107,7 @@ namespace VirtualMaker.Bindings
             IProperty<TValue1> property1,
             IProperty<TValue2> property2,
             IProperty<TValue3> property3,
-            Func<TValue1, TValue2, TValue3, TDerived> func
-        )
+            Func<TValue1, TValue2, TValue3, TDerived> func)
         {
             var derived = new Derived<TDerived>();
 
@@ -132,8 +130,7 @@ namespace VirtualMaker.Bindings
             IProperty<TValue2> property2,
             IProperty<TValue3> property3,
             IProperty<TValue4> property4,
-            Func<TValue1, TValue2, TValue3, TValue4, TDerived> func
-        )
+            Func<TValue1, TValue2, TValue3, TValue4, TDerived> func)
         {
             var derived = new Derived<TDerived>();
 
@@ -163,8 +160,7 @@ namespace VirtualMaker.Bindings
         public static Derived<TDerived> From<TValue1, TValue2, TDerived>(
             IProperty<TValue1> property1,
             IProperty<TValue2> property2,
-            Func<TValue1, TValue2, TDerived> func
-        )
+            Func<TValue1, TValue2, TDerived> func)
         {
             return Derived<TDerived>.From(property1, property2, func);
         }
@@ -173,8 +169,7 @@ namespace VirtualMaker.Bindings
             IProperty<TValue1> property1,
             IProperty<TValue2> property2,
             IProperty<TValue3> property3,
-            Func<TValue1, TValue2, TValue3, TDerived> func
-        )
+            Func<TValue1, TValue2, TValue3, TDerived> func)
         {
             return Derived<TDerived>.From(property1, property2, property3, func);
         }
@@ -184,8 +179,7 @@ namespace VirtualMaker.Bindings
             IProperty<TValue2> property2,
             IProperty<TValue3> property3,
             IProperty<TValue4> property4,
-            Func<TValue1, TValue2, TValue3, TValue4, TDerived> func
-        )
+            Func<TValue1, TValue2, TValue3, TValue4, TDerived> func)
         {
             return Derived<TDerived>.From(property1, property2, property3, property4, func);
         }
