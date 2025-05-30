@@ -31,7 +31,7 @@ namespace VirtualMaker.Bindings
 
             if (twoWay)
             {
-                Bind(prop2, v => prop.Value = v);
+                BindDeferred(prop2, v => prop.Value = v);
             }
         }
 
