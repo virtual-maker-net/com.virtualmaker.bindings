@@ -25,6 +25,16 @@ namespace VirtualMaker.Bindings
             action();
         }
 
+        public void Bind<T>(Property<T> prop, Property<T> prop2, bool twoWay)
+        {
+            Bind(prop, v => prop2.Value = v);
+
+            if (twoWay)
+            {
+                BindDeferred(prop2, v => prop.Value = v);
+            }
+        }
+
         public void BindDeferred<T>(IProperty<T> prop, Action<T> action)
         {
             prop.OnChange += action;
@@ -36,6 +46,16 @@ namespace VirtualMaker.Bindings
             var wrapper = new Action<T>(_ => action());
             prop.OnChange += wrapper;
             _unsubscribe.Add(() => prop.OnChange -= wrapper);
+        }
+
+        public void BindDeferred<T>(Property<T> prop, Property<T> prop2, bool twoWay)
+        {
+            BindDeferred(prop, v => prop2.Value = v);
+
+            if (twoWay)
+            {
+                BindDeferred(prop2, v => prop.Value = v);
+            }
         }
 
         public void On(UnityEvent evt, Func<Task> action)
