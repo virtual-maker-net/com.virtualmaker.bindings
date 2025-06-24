@@ -53,6 +53,22 @@ namespace VirtualMaker.Bindings
             Bind(prop, value => image.fillAmount = transformer(value));
         }
 
+        public async void SetSprite(Image image, string url)
+        {
+            image.sprite = null;
+
+            var sprite = await DownloadSpriteAsync(url);
+            if (sprite != null)
+            {
+                image.sprite = sprite;
+            }
+        }
+
+        public void BindSprite(Image image, Property<string> prop)
+        {
+            Bind(prop, value => SetSprite(image, value));
+        }
+
         public void BindSlider(Slider slider, Property<float> prop, bool twoWay)
         {
             Bind(prop, value => slider.value = value);
