@@ -43,6 +43,8 @@ namespace VirtualMaker.Bindings
 
         public async void SetTexture(Material material, string propertyName, string url)
         {
+            material.SetTexture(propertyName, null);
+
             var texture = await DownloadImageAsync(url);
             if (texture != null)
             {
@@ -57,6 +59,8 @@ namespace VirtualMaker.Bindings
 
         public async void SetTexture(Material material, int propertyId, string url)
         {
+            material.SetTexture(propertyId, null);
+
             var texture = await DownloadImageAsync(url);
             if (texture != null)
             {
@@ -67,6 +71,22 @@ namespace VirtualMaker.Bindings
         public void BindTexture(Material material, int propertyId, IProperty<string> prop)
         {
             Bind(prop, value => SetTexture(material, propertyId, value));
+        }
+
+        public async void SetSprite(SpriteRenderer spriteRenderer, string url)
+        {
+            spriteRenderer.sprite = null;
+
+            var sprite = await DownloadSpriteAsync(url);
+            if (sprite != null)
+            {
+                spriteRenderer.sprite = sprite;
+            }
+        }
+
+        public void BindSprite(SpriteRenderer spriteRenderer, Property<string> prop)
+        {
+            Bind(prop, value => SetSprite(spriteRenderer, value));
         }
     }
 }
