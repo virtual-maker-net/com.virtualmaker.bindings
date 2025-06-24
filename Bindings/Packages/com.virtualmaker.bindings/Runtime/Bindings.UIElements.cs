@@ -151,9 +151,8 @@ namespace VirtualMaker.Bindings
             if (!string.IsNullOrWhiteSpace(url) &&
                 url.StartsWith("https://"))
             {
-                var texture = await ImageDownloader.DownloadImageAsync(url);
+                var texture = await DownloadImageAsync(url);
                 element.image = texture;
-                _unsubscribe.Add(() => ImageDownloader.ReleaseImage(texture));
             }
         }
 
@@ -198,9 +197,8 @@ namespace VirtualMaker.Bindings
             if (!string.IsNullOrWhiteSpace(url) &&
                 url.StartsWith("https://"))
             {
-                var texture = await ImageDownloader.DownloadImageAsync(url);
+                var texture = await DownloadImageAsync(url);
                 element.style.backgroundImage = Background.FromTexture2D(texture);
-                _unsubscribe.Add(() => ImageDownloader.ReleaseImage(texture));
             }
         }
 
