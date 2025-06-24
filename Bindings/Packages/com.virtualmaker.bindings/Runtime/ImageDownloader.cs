@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace VirtualMaker.Bindings
 {
-    public class ImageDownloader
+    public static class ImageDownloader
     {
         private static readonly Dictionary<string, Task<Texture2D>> _downloadTasks = new();
         private static readonly Dictionary<string, Texture2D> _images = new();
