@@ -23,6 +23,24 @@ namespace VirtualMaker.Bindings
             }
         }
 
+        public async Task<Sprite> DownloadSpriteAsync(string url)
+        {
+            bool unsubscribed = false;
+            _unsubscribe.Add(() => unsubscribed = true);
+
+            var sprite = await ImageDownloader.DownloadSpriteAsync(url);
+            if (unsubscribed)
+            {
+                ImageDownloader.ReleaseSprite(sprite);
+                return null;
+            }
+            else
+            {
+                _unsubscribe.Add(() => ImageDownloader.ReleaseSprite(sprite));
+                return sprite;
+            }
+        }
+
         public async void SetTexture(Material material, string propertyName, string url)
         {
             var texture = await DownloadImageAsync(url);
