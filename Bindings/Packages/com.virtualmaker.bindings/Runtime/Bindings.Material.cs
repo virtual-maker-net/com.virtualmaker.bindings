@@ -4,7 +4,7 @@ namespace VirtualMaker.Bindings
 {
     public partial class Bindings
     {
-        private async void SetTexture(Material material, string propertyName, string url)
+        public async void SetTexture(Material material, string propertyName, string url)
         {
             var texture = await ImageDownloader.DownloadImageAsync(url);
             material.SetTexture(propertyName, texture);
@@ -16,7 +16,7 @@ namespace VirtualMaker.Bindings
             Bind(prop, value => SetTexture(material, propertyName, value));
         }
 
-        private async void SetTexture(Material material, int propertyId, string url)
+        public async void SetTexture(Material material, int propertyId, string url)
         {
             var texture = await ImageDownloader.DownloadImageAsync(url);
             material.SetTexture(propertyId, texture);
