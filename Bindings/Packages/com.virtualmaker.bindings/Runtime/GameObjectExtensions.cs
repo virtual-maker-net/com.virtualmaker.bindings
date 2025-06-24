@@ -4,16 +4,16 @@ namespace VirtualMaker.Bindings
 {
     internal static class GameObjectExtensions
     {
-        internal static void Destroy(this GameObject gameObject)
+        internal static void Destroy(this Object unityObject)
         {
-            if (gameObject == null) { return; }
+            if (unityObject == null) { return; }
             if (Application.isPlaying)
             {
-                Object.Destroy(gameObject);
+                Object.Destroy(unityObject);
             }
             else
             {
-                Object.DestroyImmediate(gameObject);
+                Object.DestroyImmediate(unityObject);
             }
         }
     }
