@@ -26,6 +26,9 @@ public class BindingExamples : MonoBehaviour
     [SerializeField]
     private Transform _follower2;
 
+    [SerializeField]
+    private Transform _animated;
+
     private void OnEnable()
     {
         // General binding
@@ -45,11 +48,16 @@ public class BindingExamples : MonoBehaviour
         _mouseFollower.BindPosition(() => Input.mousePosition);
 
         // Bind to do something every X seconds
-        this.BindUpdate(1.0f, () => _number.Value += 1);
+        this.BindInterval(1.0f, () => _number.Value += 1);
 
-        // Shorthand for:
+        // Bind continuous lerp - shorthand for:
         // _follower2.BindPosition(() => Vector3.Lerp(_follower2.position, _mouseFollower.position, 10f * Time.smoothDeltaTime));
-        _follower2.BindLerpPosition(10f, () => _mouseFollower.position);
+        _follower2.BindPositionLerp(10f, () => _mouseFollower.position);
+
+        // Animate between two points with a time curve
+        // Shorthand for:
+        // _animated.Animate(Easing.EaseInOut(5), t => _animated.transform.localPosition = Vector3.Lerp(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), t));
+        _animated.AnimateLocalPosition(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), Easing.EaseInOut(5));
     }
 
     private void OnDisable()
@@ -57,5 +65,7 @@ public class BindingExamples : MonoBehaviour
         this.ResetBindings();
         _text.ResetBindings();
         _mouseFollower.ResetBindings();
+        _follower2.ResetBindings();
+        _animated.ResetBindings();
     }
 }

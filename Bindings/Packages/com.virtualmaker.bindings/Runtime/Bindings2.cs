@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -172,10 +173,19 @@ namespace VirtualMaker.Bindings
             _unsubscribers.Add(() => updater.Reset());
         }
 
-        public void BindUpdate(float seconds, Action updateFunc, Func<bool> doneFunc = null)
+        public void BindInterval(float seconds, Action updateFunc, Func<bool> doneFunc = null)
         {
             var updater = new PropertyUpdater(updateFunc, () => Awaitable.WaitForSecondsAsync(seconds), doneFunc);
             _unsubscribers.Add(() => updater.Reset());
+        }
+
+        public void Animate(AnimationCurve curve, Action<float> action)
+        {
+            var startTime = Time.time;
+            var updater = new PropertyUpdater(
+                () => action(curve.Evaluate(Time.time - startTime)),
+                () => Awaitable.NextFrameAsync(),
+                () => Time.time - startTime >= curve.keys[^1].time);
         }
 
         public void AddUnsubscriber(Action unsubscribe)

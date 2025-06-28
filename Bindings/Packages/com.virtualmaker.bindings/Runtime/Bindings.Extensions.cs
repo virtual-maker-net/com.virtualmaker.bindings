@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
 
@@ -52,7 +53,7 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindDeferred<T>(this UnityEngine.Object context, Property<T> prop1, Property<T> prop2, bool twoWay)
             => GetBindings(context).BindDeferred(prop1, prop2, twoWay);
 
-        // ANIMATIONS
+        // CONTINUOUS UPDATE
 
         public static void BindUpdate(this UnityEngine.Object context, Action action, Func<bool> doneFunc = null)
             => GetBindings(context).BindUpdate(action, doneFunc);
@@ -60,8 +61,13 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindLateUpdate(this UnityEngine.Object context, Action action, Func<bool> doneFunc = null)
             => GetBindings(context).BindLateUpdate(action, doneFunc);
 
-        public static void BindUpdate(this UnityEngine.Object context, float seconds, Action action, Func<bool> doneFunc = null)
-            => GetBindings(context).BindUpdate(seconds, action, doneFunc);
+        public static void BindInterval(this UnityEngine.Object context, float seconds, Action action, Func<bool> doneFunc = null)
+            => GetBindings(context).BindInterval(seconds, action, doneFunc);
+
+        // ANIMATIONS
+
+        public static void Animate(this UnityEngine.Object context, AnimationCurve curve, Action<float> action)
+            => GetBindings(context).Animate(curve, action);
 
         // RESET
 
