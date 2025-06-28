@@ -59,95 +59,6 @@ namespace VirtualMaker.Bindings
             }
         }
 
-        public void Bind<T>(UnityEngine.Object context, IProperty<T> prop, Action<T> action)
-        {
-            BindDeferred(context, prop, action);
-            action(prop.Value);
-        }
-
-        public void Bind<T>(UnityEngine.Object context, IProperty<T> prop, Action action)
-        {
-            BindDeferred(context, prop, action);
-            action();
-        }
-
-        public void Bind<T>(UnityEngine.Object context, Property<T> prop, Property<T> prop2, bool twoWay)
-        {
-            Bind(context, prop, v => prop2.Value = v);
-
-            if (twoWay)
-            {
-                BindDeferred(context, prop2, v => prop.Value = v);
-            }
-        }
-
-        private static bool IsValid(UnityEngine.Object context)
-        {
-            if (!context)
-            {
-                return false;
-            }
-
-            if (context is MonoBehaviour monoBehaviour)
-            {
-                return monoBehaviour.isActiveAndEnabled;
-            }
-
-            if (context is Component component)
-            {
-                return component.gameObject.activeInHierarchy;
-            }
-
-            if (context is GameObject gameObject)
-            {
-                return gameObject.activeInHierarchy;
-            }
-
-            return true;
-        }
-
-        private Action Wrap(UnityEngine.Object context, Action action)
-            => new Action(() => { if (IsValid(context)) { action(); } });
-
-        private Action<T> Wrap<T>(UnityEngine.Object context, Action<T> action)
-            => new Action<T>(v => { if (IsValid(context)) { action(v); } });
-
-        private Action<T> WrapDiscard<T>(UnityEngine.Object context, Action action)
-            => new Action<T>(_ => { if (IsValid(context)) { action(); } });
-
-        private UnityAction Wrap(UnityEngine.Object context, UnityAction action)
-            => new UnityAction(() => { if (IsValid(context)) { action(); } });
-
-        private UnityAction Wrap(UnityEngine.Object context, Func<Task> action)
-            => new UnityAction(async () => { if (IsValid(context)) { await action(); } });
-
-        private UnityAction<T> Wrap<T>(UnityEngine.Object context, UnityAction<T> action)
-            => new UnityAction<T>(v => { if (IsValid(context)) { action(v); } });
-
-        public void BindDeferred<T>(UnityEngine.Object context, IProperty<T> prop, Action<T> action)
-        {
-            var wrapper = Wrap(context, action);
-            prop.OnChange += wrapper;
-            _unsubscribe.Add(() => prop.OnChange -= wrapper);
-        }
-
-        public void BindDeferred<T>(UnityEngine.Object context, IProperty<T> prop, Action action)
-        {
-            var wrapper = new Action<T>(_ => { if (IsValid(context)) { action(); } });
-            prop.OnChange += wrapper;
-            _unsubscribe.Add(() => prop.OnChange -= wrapper);
-        }
-
-        public void BindDeferred<T>(UnityEngine.Object context, Property<T> prop, Property<T> prop2, bool twoWay)
-        {
-            BindDeferred(context, prop, v => prop2.Value = v);
-
-            if (twoWay)
-            {
-                BindDeferred(context, prop2, v => prop.Value = v);
-            }
-        }
-
         public void On(UnityEvent evt, Func<Task> action)
         {
             var wrapper = new UnityAction(async () => await action());
@@ -211,27 +122,6 @@ namespace VirtualMaker.Bindings
         {
             evt.AddListener(action);
             _unsubscribe.Add(() => evt.RemoveListener(action));
-        }
-
-        public void On(UnityEngine.Object context, UnityEvent evt, Func<Task> action)
-        {
-            var wrapper = Wrap(context, action);
-            evt.AddListener(wrapper);
-            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
-        }
-
-        public void On(UnityEngine.Object context, UnityEvent evt, UnityAction action)
-        {
-            var wrapper = Wrap(context, action);
-            evt.AddListener(wrapper);
-            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
-        }
-
-        public void On<T>(UnityEngine.Object context, UnityEvent<T> evt, UnityAction<T> action)
-        {
-            var wrapper = Wrap(context, action);
-            evt.AddListener(wrapper);
-            _unsubscribe.Add(() => evt.RemoveListener(wrapper));
         }
 
         public void On<TObj>(TObj obj, string eventName, Action action) where TObj : class

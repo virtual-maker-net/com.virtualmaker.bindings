@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
@@ -9,57 +8,18 @@ namespace VirtualMaker.Bindings
 {
     public class Bindings2
     {
-        private UnityEngine.Object _context;
+        internal static Bindings2 _scope;
         private readonly List<Action> _unsubscribers = new List<Action>();
 
-        public Bindings2(UnityEngine.Object context) => _context = context;
+        public Bindings2() {}
         ~Bindings2() => Reset();
 
-        public bool IsValid
+        public void Scope(Action bind)
         {
-            get
-            {
-                if (!_context)
-                {
-                    return false;
-                }
-
-                if (_context is MonoBehaviour monoBehaviour)
-                {
-                    return monoBehaviour.isActiveAndEnabled;
-                }
-
-                if (_context is Component component)
-                {
-                    return component.gameObject.activeInHierarchy;
-                }
-
-                if (_context is GameObject gameObject)
-                {
-                    return gameObject.activeInHierarchy;
-                }
-
-                return true;
-            }
+            _scope = this;
+            bind();
+            _scope = null;
         }
-
-        private Action Wrap(Action action)
-            => new Action(() => { if (IsValid) { action(); } });
-
-        private Action<T> Wrap<T>(Action<T> action)
-            => new Action<T>(v => { if (IsValid) { action(v); } });
-
-        private Action<T> WrapDiscard<T>(Action action)
-            => new Action<T>(_ => { if (IsValid) { action(); } });
-
-        private UnityAction Wrap(UnityAction action)
-            => new UnityAction(() => { if (IsValid) { action(); } });
-
-        private UnityAction Wrap(Func<Task> action)
-            => new UnityAction(async () => { if (IsValid) { await action(); } });
-
-        private UnityAction<T> Wrap<T>(UnityAction<T> action)
-            => new UnityAction<T>(v => { if (IsValid) { action(v); } });
 
         public void Bind<T>(IProperty<T> prop, Action<T> action)
         {
@@ -85,14 +45,13 @@ namespace VirtualMaker.Bindings
 
         public void BindDeferred<T>(IProperty<T> prop, Action<T> action)
         {
-            var wrapper = Wrap(action);
-            prop.OnChange += wrapper;
-            _unsubscribers.Add(() => prop.OnChange -= wrapper);
+            prop.OnChange += action;
+            _unsubscribers.Add(() => prop.OnChange -= action);
         }
 
         public void BindDeferred<T>(IProperty<T> prop, Action action)
         {
-            var wrapper = new Action<T>(_ => { if (IsValid) { action(); } });
+            var wrapper = new Action<T>(_ => action());
             prop.OnChange += wrapper;
             _unsubscribers.Add(() => prop.OnChange -= wrapper);
         }
@@ -109,23 +68,67 @@ namespace VirtualMaker.Bindings
 
         public void Bind(UnityEvent evt, Func<Task> action)
         {
-            var wrapper = Wrap(action);
+            var wrapper = new UnityAction(async () => await action());
             evt.AddListener(wrapper);
             _unsubscribers.Add(() => evt.RemoveListener(wrapper));
         }
 
         public void Bind(UnityEvent evt, UnityAction action)
         {
-            var wrapper = Wrap(action);
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
+        }
+
+        public void Bind<T>(UnityEvent<T> evt, Func<T, Task> action)
+        {
+            var wrapper = new UnityAction<T>(async v => await action(v));
             evt.AddListener(wrapper);
             _unsubscribers.Add(() => evt.RemoveListener(wrapper));
         }
 
         public void Bind<T>(UnityEvent<T> evt, UnityAction<T> action)
         {
-            var wrapper = Wrap(action);
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
+        }
+
+        public void Bind<T0, T1>(UnityEvent<T0, T1> evt, Func<T0, T1, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1>(async (v0, v1) => await action(v0, v1));
             evt.AddListener(wrapper);
             _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void Bind<T0, T1>(UnityEvent<T0, T1> evt, UnityAction<T0, T1> action)
+        {
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
+        }
+
+        public void Bind<T0, T1, T2>(UnityEvent<T0, T1, T2> evt, Func<T0, T1, T2, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1, T2>(async (v0, v1, v2) => await action(v0, v1, v2));
+            evt.AddListener(wrapper);
+            _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void Bind<T0, T1, T2>(UnityEvent<T0, T1, T2> evt, UnityAction<T0, T1, T2> action)
+        {
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
+        }
+
+        public void Bind<T0, T1, T2, T3>(UnityEvent<T0, T1, T2, T3> evt, Func<T0, T1, T2, T3, Task> action)
+        {
+            var wrapper = new UnityAction<T0, T1, T2, T3>(async (v0, v1, v2, v3) => await action(v0, v1, v2, v3));
+            evt.AddListener(wrapper);
+            _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void Bind<T0, T1, T2, T3>(UnityEvent<T0, T1, T2, T3> evt, UnityAction<T0, T1, T2, T3> action)
+        {
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
         }
 
         internal class PropertyUpdater
