@@ -50,6 +50,8 @@ namespace VirtualMaker.Bindings
             _value = value;
         }
 
+        public static implicit operator TValue(Property<TValue> prop) => prop._value;
+
         public event Action<TValue> OnChange;
 
         public void NotifyChanged() => OnChange?.Invoke(Value);
