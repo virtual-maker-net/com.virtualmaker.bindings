@@ -50,6 +50,11 @@ namespace VirtualMaker.Bindings
             action();
         }
 
+        public void Bind<T>(IProperty<T> prop, Property<T> prop2)
+        {
+            Bind(prop, v => prop2.Value = v);
+        }
+
         public void Bind<T>(Property<T> prop, Property<T> prop2, bool twoWay)
         {
             Bind(prop, v => prop2.Value = v);
@@ -81,6 +86,11 @@ namespace VirtualMaker.Bindings
             }
 
             action();
+        }
+
+        public void BindDeferred<T>(IProperty<T> prop, Property<T> prop2)
+        {
+            BindDeferred(prop, v => prop2.Value = v);
         }
 
         public void BindDeferred<T>(Property<T> prop, Property<T> prop2, bool twoWay)
@@ -223,18 +233,27 @@ namespace VirtualMaker.Bindings
             _unsubscribers.Add(unsubscribe);
         }
 
-        public async Task UntilAsync(IProperty<bool> prop)
+        public async Task WaitUntilAsync(IProperty<bool> prop)
         {
             var tcs = new TaskCompletionSource<bool>();
 
-            Bind(prop, value =>
+            void Unsubscribe()
+            {
+                prop.OnChangeWithValue -= Update;
+            }
+
+            void Update(bool value)
             {
                 if (value)
                 {
                     tcs.SetResult(true);
+                    prop.OnChangeWithValue -= Update;
+                    _unsubscribers.Remove(Unsubscribe);
                 }
-            });
+            }
 
+            prop.OnChangeWithValue += Update;
+            AddUnsubscriber(Unsubscribe);
             await tcs.Task;
         }
 

@@ -72,11 +72,23 @@ namespace VirtualMaker.Bindings
         public void Bind(Bindings2 bindings, Action action)
             => bindings.Bind(this, action);
 
+        public void Bind(Bindings2 bindings, IProperty<TValue> prop)
+            => bindings.Bind(prop, this);
+
+        public void Bind(Bindings2 bindings, Property<TValue> prop, bool twoWay)
+            => bindings.Bind(prop, this, twoWay);
+
         public void Bind(Action<TValue> action)
             => Bindings2._scope.Bind(this, action);
 
         public void Bind(Action action)
             => Bindings2._scope.Bind(this, action);
+
+        public void Bind(IProperty<TValue> prop)
+            => Bindings2._scope.Bind(prop, this);
+
+        public void Bind(Property<TValue> prop, bool twoWay)
+            => Bindings2._scope.Bind(prop, this, twoWay);
 
         public void BindDeferred(Bindings2 bindings, Action<TValue> action)
             => bindings.BindDeferred(this, action);
@@ -84,11 +96,23 @@ namespace VirtualMaker.Bindings
         public void BindDeferred(Bindings2 bindings, Action action)
             => bindings.BindDeferred(this, action);
 
+        public void BindDeferred(Bindings2 bindings, IProperty<TValue> prop)
+            => bindings.BindDeferred(prop, this);
+
+        public void BindDeferred(Bindings2 bindings, Property<TValue> prop, bool twoWay)
+            => bindings.BindDeferred(prop, this, twoWay);
+
         public void BindDeferred(Action<TValue> action)
             => Bindings2._scope.BindDeferred(this, action);
 
         public void BindDeferred(Action action)
             => Bindings2._scope.BindDeferred(this, action);
+
+        public void BindDeferred(IProperty<TValue> prop)
+            => Bindings2._scope.BindDeferred(prop, this);
+
+        public void BindDeferred(Property<TValue> prop, bool twoWay)
+            => Bindings2._scope.BindDeferred(prop, this, twoWay);
     }
 
     public class Derived<TDerived> : IProperty<TDerived>
@@ -110,6 +134,41 @@ namespace VirtualMaker.Bindings
 
         private Derived() { }
 
+        public static Derived<TDerived> From<TValue>(IProperty<TValue> property, Func<TValue, IProperty<TDerived>> func)
+        {
+            var derived = new Derived<TDerived>();
+
+            IProperty<TDerived> fromProperty = null;
+
+            void Update()
+            {
+                derived._property.Value = fromProperty != null ? fromProperty.Value : default;
+            }
+
+            void Rebind()
+            {
+                if (fromProperty != null)
+                {
+                    fromProperty.OnChange -= Update;
+                }
+
+                fromProperty = property.Value != null ? func(property.Value) : null;
+
+                if (fromProperty != null)
+                {
+                    fromProperty.OnChange += Update;
+                }
+
+                Update();
+            }
+
+            property.OnChange += Rebind;
+
+            Rebind();
+
+            return derived;
+        }
+
         public static Derived<TDerived> From<TValue>(IProperty<TValue> property, Func<TValue, TDerived> func)
         {
             var derived = new Derived<TDerived>();
@@ -119,7 +178,7 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property.Value);
             }
 
-            property.OnChangeWithValue += _ => Update();
+            property.OnChange += Update;
 
             Update();
 
@@ -139,8 +198,8 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property1.Value, property2.Value);
             }
 
-            property1.OnChangeWithValue += _ => Update();
-            property2.OnChangeWithValue += _ => Update();
+            property1.OnChange += Update;
+            property2.OnChange += Update;
 
             Update();
 
@@ -161,9 +220,9 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property1.Value, property2.Value, property3.Value);
             }
 
-            property1.OnChangeWithValue += _ => Update();
-            property2.OnChangeWithValue += _ => Update();
-            property3.OnChangeWithValue += _ => Update();
+            property1.OnChange += Update;
+            property2.OnChange += Update;
+            property3.OnChange += Update;
 
             Update();
 
@@ -185,10 +244,10 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property1.Value, property2.Value, property3.Value, property4.Value);
             }
 
-            property1.OnChangeWithValue += _ => Update();
-            property2.OnChangeWithValue += _ => Update();
-            property3.OnChangeWithValue += _ => Update();
-            property4.OnChangeWithValue += _ => Update();
+            property1.OnChange += Update;
+            property2.OnChange += Update;
+            property3.OnChange += Update;
+            property4.OnChange += Update;
 
             Update();
 
@@ -198,6 +257,11 @@ namespace VirtualMaker.Bindings
 
     public static class Derived
     {
+        public static Derived<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, IProperty<TDerived>> func)
+        {
+            return Derived<TDerived>.From(property, func);
+        }
+
         public static Derived<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, TDerived> func)
         {
             return Derived<TDerived>.From(property, func);
@@ -236,6 +300,16 @@ namespace VirtualMaker.Bindings
         public static Derived<bool> Inverted(this IProperty<bool> property)
         {
             return Derived<bool>.From(property, value => !value);
+        }
+
+        public static Derived<bool> IsNotNull<TValue>(this IProperty<TValue> property) where TValue : class
+        {
+            return Derived<bool>.From(property, value => value != null);
+        }
+
+        public static Derived<bool> IsNull<TValue>(this IProperty<TValue> property) where TValue : class
+        {
+            return Derived<bool>.From(property, value => value == null);
         }
     }
 
