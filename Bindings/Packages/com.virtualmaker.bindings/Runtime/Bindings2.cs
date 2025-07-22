@@ -223,6 +223,21 @@ namespace VirtualMaker.Bindings
             _unsubscribers.Add(unsubscribe);
         }
 
+        public async Task UntilAsync(IProperty<bool> prop)
+        {
+            var tcs = new TaskCompletionSource<bool>();
+
+            Bind(prop, value =>
+            {
+                if (value)
+                {
+                    tcs.SetResult(true);
+                }
+            });
+
+            await tcs.Task;
+        }
+
         public void Clear()
         {
             foreach (var unsubscribe in _unsubscribers)
