@@ -467,7 +467,7 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            prop.OnChange += update;
+            prop.OnChangeWithValue += update;
 
             _unsubscribe.Add(() =>
             {
@@ -476,7 +476,7 @@ namespace VirtualMaker.Bindings
                     bindings.Reset();
                 }
 
-                prop.OnChange -= update;
+                prop.OnChangeWithValue -= update;
             });
 
             update(prop.Value);
@@ -528,7 +528,7 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            prop.OnChange += update;
+            prop.OnChangeWithValue += update;
 
             _unsubscribe.Add(() =>
             {
@@ -537,7 +537,7 @@ namespace VirtualMaker.Bindings
                     bindings.Reset();
                 }
 
-                prop.OnChange -= update;
+                prop.OnChangeWithValue -= update;
             });
 
             update(prop.Value);

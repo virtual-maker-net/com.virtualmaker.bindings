@@ -6,20 +6,31 @@ using UnityEngine.Events;
 
 namespace VirtualMaker.Bindings
 {
+    public class BindingsScope : IDisposable
+    {
+        private Bindings2 _bindings;
+        public BindingsScope(Bindings2 bindings)
+        {
+            _bindings = bindings;
+            Bindings2._scopes.Add(_bindings);
+        }
+
+        public void Dispose()
+        {
+            Bindings2._scopes.Remove(_bindings);
+        }
+    }
+
     public class Bindings2
     {
-        internal static Bindings2 _scope;
+        internal static List<Bindings2> _scopes = new();
+        internal static Bindings2 _scope => _scopes[^1];
         private readonly List<Action> _unsubscribers = new List<Action>();
 
         public Bindings2() {}
-        ~Bindings2() => Reset();
+        ~Bindings2() => Clear();
 
-        public void Scope(Action bind)
-        {
-            _scope = this;
-            bind();
-            _scope = null;
-        }
+        public BindingsScope Scope() => new BindingsScope(this);
 
         public void Bind<T>(IProperty<T> prop, Action<T> action)
         {
@@ -27,9 +38,15 @@ namespace VirtualMaker.Bindings
             action(prop.Value);
         }
 
-        public void Bind<T>(IProperty<T> prop, Action action)
+        public void Bind(IPropertyChange prop, Action action)
         {
             BindDeferred(prop, action);
+            action();
+        }
+
+        public void Bind(Action action, params IPropertyChange[] props)
+        {
+            BindDeferred(action, props);
             action();
         }
 
@@ -45,15 +62,25 @@ namespace VirtualMaker.Bindings
 
         public void BindDeferred<T>(IProperty<T> prop, Action<T> action)
         {
-            prop.OnChange += action;
-            _unsubscribers.Add(() => prop.OnChange -= action);
+            prop.OnChangeWithValue += action;
+            _unsubscribers.Add(() => prop.OnChangeWithValue -= action);
         }
 
-        public void BindDeferred<T>(IProperty<T> prop, Action action)
+        public void BindDeferred(IPropertyChange prop, Action action)
         {
-            var wrapper = new Action<T>(_ => action());
+            var wrapper = new Action(() => action());
             prop.OnChange += wrapper;
             _unsubscribers.Add(() => prop.OnChange -= wrapper);
+        }
+
+        public void BindDeferred(Action action, params IPropertyChange[] props)
+        {
+            foreach (var prop in props)
+            {
+                BindDeferred(prop, action);
+            }
+
+            action();
         }
 
         public void BindDeferred<T>(Property<T> prop, Property<T> prop2, bool twoWay)
@@ -196,7 +223,7 @@ namespace VirtualMaker.Bindings
             _unsubscribers.Add(unsubscribe);
         }
 
-        public void Reset()
+        public void Clear()
         {
             foreach (var unsubscribe in _unsubscribers)
             {

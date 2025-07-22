@@ -9,10 +9,15 @@ namespace VirtualMaker.Bindings
         void NotifyChanged();
     }
 
-    public interface IProperty<out TValue>
+    public interface IPropertyChange
+    {
+        event Action OnChange;
+    }
+
+    public interface IProperty<out TValue> : IPropertyChange
     {
         TValue Value { get; }
-        event Action<TValue> OnChange;
+        event Action<TValue> OnChangeWithValue;
     }
 
     [Serializable]
@@ -32,7 +37,7 @@ namespace VirtualMaker.Bindings
                 }
 
                 _value = value;
-                OnChange?.Invoke(value);
+                NotifyChanged();
             }
         }
 
@@ -52,16 +57,52 @@ namespace VirtualMaker.Bindings
 
         public static implicit operator TValue(Property<TValue> prop) => prop._value;
 
-        public event Action<TValue> OnChange;
+        public event Action<TValue> OnChangeWithValue;
+        public event Action OnChange;
 
-        public void NotifyChanged() => OnChange?.Invoke(Value);
+        public void NotifyChanged()
+        {
+            OnChangeWithValue?.Invoke(Value);
+            OnChange?.Invoke();
+        }
+
+        public void Bind(Bindings2 bindings, Action<TValue> action)
+            => bindings.Bind(this, action);
+
+        public void Bind(Bindings2 bindings, Action action)
+            => bindings.Bind(this, action);
+
+        public void Bind(Action<TValue> action)
+            => Bindings2._scope.Bind(this, action);
+
+        public void Bind(Action action)
+            => Bindings2._scope.Bind(this, action);
+
+        public void BindDeferred(Bindings2 bindings, Action<TValue> action)
+            => bindings.BindDeferred(this, action);
+
+        public void BindDeferred(Bindings2 bindings, Action action)
+            => bindings.BindDeferred(this, action);
+
+        public void BindDeferred(Action<TValue> action)
+            => Bindings2._scope.BindDeferred(this, action);
+
+        public void BindDeferred(Action action)
+            => Bindings2._scope.BindDeferred(this, action);
     }
 
     public class Derived<TDerived> : IProperty<TDerived>
     {
         private Property<TDerived> _property = new();
         public TDerived Value => _property.Value;
-        public event Action<TDerived> OnChange
+
+        public event Action<TDerived> OnChangeWithValue
+        {
+            add => _property.OnChangeWithValue += value;
+            remove => _property.OnChangeWithValue -= value;
+        }
+
+        public event Action OnChange
         {
             add => _property.OnChange += value;
             remove => _property.OnChange -= value;
@@ -78,7 +119,7 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property.Value);
             }
 
-            property.OnChange += _ => Update();
+            property.OnChangeWithValue += _ => Update();
 
             Update();
 
@@ -98,8 +139,8 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property1.Value, property2.Value);
             }
 
-            property1.OnChange += _ => Update();
-            property2.OnChange += _ => Update();
+            property1.OnChangeWithValue += _ => Update();
+            property2.OnChangeWithValue += _ => Update();
 
             Update();
 
@@ -120,9 +161,9 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property1.Value, property2.Value, property3.Value);
             }
 
-            property1.OnChange += _ => Update();
-            property2.OnChange += _ => Update();
-            property3.OnChange += _ => Update();
+            property1.OnChangeWithValue += _ => Update();
+            property2.OnChangeWithValue += _ => Update();
+            property3.OnChangeWithValue += _ => Update();
 
             Update();
 
@@ -144,10 +185,10 @@ namespace VirtualMaker.Bindings
                 derived._property.Value = func(property1.Value, property2.Value, property3.Value, property4.Value);
             }
 
-            property1.OnChange += _ => Update();
-            property2.OnChange += _ => Update();
-            property3.OnChange += _ => Update();
-            property4.OnChange += _ => Update();
+            property1.OnChangeWithValue += _ => Update();
+            property2.OnChangeWithValue += _ => Update();
+            property3.OnChangeWithValue += _ => Update();
+            property4.OnChangeWithValue += _ => Update();
 
             Update();
 
@@ -204,7 +245,14 @@ namespace VirtualMaker.Bindings
 
         private Property<TDerived> _property = new();
         public TDerived Value => _property.Value;
-        public event Action<TDerived> OnChange
+
+        public event Action<TDerived> OnChangeWithValue
+        {
+            add => _property.OnChangeWithValue += value;
+            remove => _property.OnChangeWithValue -= value;
+        }
+
+        public event Action OnChange
         {
             add => _property.OnChange += value;
             remove => _property.OnChange -= value;
@@ -214,14 +262,14 @@ namespace VirtualMaker.Bindings
         {
             if (_derived != null)
             {
-                _derived.OnChange -= OnDerivedChanged;
+                _derived.OnChangeWithValue -= OnDerivedChanged;
             }
 
             _derived = derived;
 
             if (_derived != null)
             {
-                _derived.OnChange += OnDerivedChanged;
+                _derived.OnChangeWithValue += OnDerivedChanged;
                 OnDerivedChanged(_derived.Value);
             }
             else
@@ -246,7 +294,7 @@ namespace VirtualMaker.Bindings
                 derivedProperty.SetDerived(func(property.Value));
             }
 
-            property.OnChange += _ => Update();
+            property.OnChangeWithValue += _ => Update();
 
             Update();
 

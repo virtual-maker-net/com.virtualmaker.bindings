@@ -65,11 +65,11 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            prop.OnChange += update;
+            prop.OnChangeWithValue += update;
 
             _unsubscribe.Add(() =>
             {
-                prop.OnChange -= update;
+                prop.OnChangeWithValue -= update;
 
                 foreach (var (_, toItem) in childItems)
                 {
@@ -119,11 +119,11 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            prop.OnChange += update;
+            prop.OnChangeWithValue += update;
 
             _unsubscribe.Add(() =>
             {
-                prop.OnChange -= update;
+                prop.OnChangeWithValue -= update;
 
                 foreach (var (_, toItem) in childItems)
                 {
