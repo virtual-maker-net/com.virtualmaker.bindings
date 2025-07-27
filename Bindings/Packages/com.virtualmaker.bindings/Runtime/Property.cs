@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,23 +67,23 @@ namespace VirtualMaker.Bindings
             OnChange?.Invoke();
         }
 
-        public void Bind(Bindings2 bindings, Action<TValue> action)
-            => bindings.Bind(this, action);
+        // public void Bind(Bindings2 bindings, Action<TValue> action)
+        //     => bindings.Bind(this, action);
 
-        public void Bind(Bindings2 bindings, Action action)
-            => bindings.Bind(this, action);
+        // public void Bind(Bindings2 bindings, Action action)
+        //     => bindings.Bind(this, action);
 
-        public void Bind(Bindings2 bindings, IProperty<TValue> prop)
-            => bindings.Bind(prop, this);
+        // public void Bind(Bindings2 bindings, IProperty<TValue> prop)
+        //     => bindings.Bind(prop, this);
 
-        public void Bind(Bindings2 bindings, Property<TValue> prop, bool twoWay)
-            => bindings.Bind(prop, this, twoWay);
+        // public void Bind(Bindings2 bindings, Property<TValue> prop, bool twoWay)
+        //     => bindings.Bind(prop, this, twoWay);
 
-        public void Bind(Action<TValue> action)
-            => Bindings2._scope.Bind(this, action);
+        // public void Bind(Action<TValue> action)
+        //     => Bindings2._scope.Bind(this, action);
 
-        public void Bind(Action action)
-            => Bindings2._scope.Bind(this, action);
+        // public void Bind(Action action)
+        //     => Bindings2._scope.Bind(this, action);
 
         public void Bind(IProperty<TValue> prop)
             => Bindings2._scope.Bind(prop, this);
@@ -90,29 +91,35 @@ namespace VirtualMaker.Bindings
         public void Bind(Property<TValue> prop, bool twoWay)
             => Bindings2._scope.Bind(prop, this, twoWay);
 
-        public void BindDeferred(Bindings2 bindings, Action<TValue> action)
-            => bindings.BindDeferred(this, action);
+        public void Bind<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
+            => Bindings2._scope.Bind(Derived.From(prop, transform), this);
 
-        public void BindDeferred(Bindings2 bindings, Action action)
-            => bindings.BindDeferred(this, action);
+        // public void BindDeferred(Bindings2 bindings, Action<TValue> action)
+        //     => bindings.BindDeferred(this, action);
 
-        public void BindDeferred(Bindings2 bindings, IProperty<TValue> prop)
-            => bindings.BindDeferred(prop, this);
+        // public void BindDeferred(Bindings2 bindings, Action action)
+        //     => bindings.BindDeferred(this, action);
 
-        public void BindDeferred(Bindings2 bindings, Property<TValue> prop, bool twoWay)
-            => bindings.BindDeferred(prop, this, twoWay);
+        // public void BindDeferred(Bindings2 bindings, IProperty<TValue> prop)
+        //     => bindings.BindDeferred(prop, this);
 
-        public void BindDeferred(Action<TValue> action)
-            => Bindings2._scope.BindDeferred(this, action);
+        // public void BindDeferred(Bindings2 bindings, Property<TValue> prop, bool twoWay)
+        //     => bindings.BindDeferred(prop, this, twoWay);
 
-        public void BindDeferred(Action action)
-            => Bindings2._scope.BindDeferred(this, action);
+        // public void BindDeferred(Action<TValue> action)
+        //     => Bindings2._scope.BindDeferred(this, action);
+
+        // public void BindDeferred(Action action)
+        //     => Bindings2._scope.BindDeferred(this, action);
 
         public void BindDeferred(IProperty<TValue> prop)
             => Bindings2._scope.BindDeferred(prop, this);
 
         public void BindDeferred(Property<TValue> prop, bool twoWay)
             => Bindings2._scope.BindDeferred(prop, this, twoWay);
+
+        public void BindDeferred<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
+            => Bindings2._scope.BindDeferred(Derived.From(prop, transform), this);
     }
 
     public class Derived<TDerived> : IProperty<TDerived>
@@ -295,6 +302,42 @@ namespace VirtualMaker.Bindings
         )
         {
             return Derived<TDerived>.From(property1, property2, property3, property4, func);
+        }
+
+        public static IProperty<bool> All(params IProperty<bool>[] properties)
+        {
+            var result = new Property<bool>();
+
+            void Update()
+            {
+                result.Value = properties.All(p => p.Value);
+            }
+
+            foreach (var prop in properties)
+            {
+                prop.OnChange += Update;
+            }
+
+            Update();
+            return result;
+        }
+
+        public static IProperty<bool> Any(params IProperty<bool>[] properties)
+        {
+            var result = new Property<bool>();
+
+            void Update()
+            {
+                result.Value = properties.Any(p => p.Value);
+            }
+
+            foreach (var prop in properties)
+            {
+                prop.OnChange += Update;
+            }
+
+            Update();
+            return result;
         }
 
         public static Derived<bool> Inverted(this IProperty<bool> property)

@@ -84,8 +84,6 @@ namespace VirtualMaker.Bindings
             {
                 BindDeferred(prop, action);
             }
-
-            action();
         }
 
         public void BindDeferred<T>(IProperty<T> prop, Property<T> prop2)
