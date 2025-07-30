@@ -55,6 +55,11 @@ namespace VirtualMaker.Bindings
             Bind(prop, v => prop2.Value = v);
         }
 
+        public void Bind<T1, T2>(IProperty<T1> prop, Property<T2> prop2, Func<T1, T2> transform)
+        {
+            Bind(prop, v => prop2.Value = transform(v));
+        }
+
         public void Bind<T>(Property<T> prop, Property<T> prop2, bool twoWay)
         {
             Bind(prop, v => prop2.Value = v);
@@ -89,6 +94,11 @@ namespace VirtualMaker.Bindings
         public void BindDeferred<T>(IProperty<T> prop, Property<T> prop2)
         {
             BindDeferred(prop, v => prop2.Value = v);
+        }
+
+        public void BindDeferred<T1, T2>(IProperty<T1> prop, Property<T2> prop2, Func<T1, T2> transform)
+        {
+            BindDeferred(prop, v => prop2.Value = transform(v));
         }
 
         public void BindDeferred<T>(Property<T> prop, Property<T> prop2, bool twoWay)

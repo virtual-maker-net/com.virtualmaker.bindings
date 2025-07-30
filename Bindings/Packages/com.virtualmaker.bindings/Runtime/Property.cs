@@ -67,24 +67,6 @@ namespace VirtualMaker.Bindings
             OnChange?.Invoke();
         }
 
-        // public void Bind(Bindings2 bindings, Action<TValue> action)
-        //     => bindings.Bind(this, action);
-
-        // public void Bind(Bindings2 bindings, Action action)
-        //     => bindings.Bind(this, action);
-
-        // public void Bind(Bindings2 bindings, IProperty<TValue> prop)
-        //     => bindings.Bind(prop, this);
-
-        // public void Bind(Bindings2 bindings, Property<TValue> prop, bool twoWay)
-        //     => bindings.Bind(prop, this, twoWay);
-
-        // public void Bind(Action<TValue> action)
-        //     => Bindings2._scope.Bind(this, action);
-
-        // public void Bind(Action action)
-        //     => Bindings2._scope.Bind(this, action);
-
         public void Bind(IProperty<TValue> prop)
             => Bindings2._scope.Bind(prop, this);
 
@@ -92,25 +74,7 @@ namespace VirtualMaker.Bindings
             => Bindings2._scope.Bind(prop, this, twoWay);
 
         public void Bind<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
-            => Bindings2._scope.Bind(Derived.From(prop, transform), this);
-
-        // public void BindDeferred(Bindings2 bindings, Action<TValue> action)
-        //     => bindings.BindDeferred(this, action);
-
-        // public void BindDeferred(Bindings2 bindings, Action action)
-        //     => bindings.BindDeferred(this, action);
-
-        // public void BindDeferred(Bindings2 bindings, IProperty<TValue> prop)
-        //     => bindings.BindDeferred(prop, this);
-
-        // public void BindDeferred(Bindings2 bindings, Property<TValue> prop, bool twoWay)
-        //     => bindings.BindDeferred(prop, this, twoWay);
-
-        // public void BindDeferred(Action<TValue> action)
-        //     => Bindings2._scope.BindDeferred(this, action);
-
-        // public void BindDeferred(Action action)
-        //     => Bindings2._scope.BindDeferred(this, action);
+            => Bindings2._scope.Bind(prop, this, transform);
 
         public void BindDeferred(IProperty<TValue> prop)
             => Bindings2._scope.BindDeferred(prop, this);
@@ -119,7 +83,7 @@ namespace VirtualMaker.Bindings
             => Bindings2._scope.BindDeferred(prop, this, twoWay);
 
         public void BindDeferred<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
-            => Bindings2._scope.BindDeferred(Derived.From(prop, transform), this);
+            => Bindings2._scope.BindDeferred(prop, this, transform);
     }
 
     public class Derived<TDerived> : IProperty<TDerived>
@@ -138,6 +102,8 @@ namespace VirtualMaker.Bindings
             add => _property.OnChange += value;
             remove => _property.OnChange -= value;
         }
+
+        public static implicit operator TDerived(Derived<TDerived> derived) => derived.Value;
 
         private Derived() { }
 
@@ -277,8 +243,7 @@ namespace VirtualMaker.Bindings
         public static Derived<TDerived> From<TValue1, TValue2, TDerived>(
             IProperty<TValue1> property1,
             IProperty<TValue2> property2,
-            Func<TValue1, TValue2, TDerived> func
-        )
+            Func<TValue1, TValue2, TDerived> func)
         {
             return Derived<TDerived>.From(property1, property2, func);
         }
@@ -287,8 +252,7 @@ namespace VirtualMaker.Bindings
             IProperty<TValue1> property1,
             IProperty<TValue2> property2,
             IProperty<TValue3> property3,
-            Func<TValue1, TValue2, TValue3, TDerived> func
-        )
+            Func<TValue1, TValue2, TValue3, TDerived> func)
         {
             return Derived<TDerived>.From(property1, property2, property3, func);
         }
@@ -298,8 +262,7 @@ namespace VirtualMaker.Bindings
             IProperty<TValue2> property2,
             IProperty<TValue3> property3,
             IProperty<TValue4> property4,
-            Func<TValue1, TValue2, TValue3, TValue4, TDerived> func
-        )
+            Func<TValue1, TValue2, TValue3, TValue4, TDerived> func)
         {
             return Derived<TDerived>.From(property1, property2, property3, property4, func);
         }

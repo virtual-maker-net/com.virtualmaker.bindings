@@ -116,67 +116,43 @@ namespace VirtualMaker.Bindings
             var generic = isString ? "<T>" : "";
             var propType = isString ? "T" : typeName;
 
-            s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, Bindings2 bindings, IProperty<{propType}> property)" + Environment.NewLine;
-            s += tab +  $"    => bindings.Bind(property, v => obj.{prop} = v{suffix});" + Environment.NewLine;
-
             s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, IProperty<{propType}> property)" + Environment.NewLine;
-            s += tab + $"    => Bind{prettyProp}(obj, Bindings2._scope, property);" + Environment.NewLine;
+            s += tab +  $"    => Bindings2._scope.Bind(property, v => obj.{prop} = v{suffix});" + Environment.NewLine;
 
-            s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, Bindings2 bindings, Func<{propType}> func)" + Environment.NewLine;
-            s += tab +  $"    => bindings.BindUpdate(() => obj.{prop} = func(){suffix});" + Environment.NewLine;
+            s += tab + $"public static void Bind{prettyProp}<T>(this {name} obj, IProperty<T> property, Func<T, {typeName}> transform)" + Environment.NewLine;
+            s += tab +  $"    => Bindings2._scope.Bind(property, v => obj.{prop} = transform(v));" + Environment.NewLine;
 
-            s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, Func<{propType}> func)" + Environment.NewLine;
-            s += tab + $"    => Bind{prettyProp}(obj, Bindings2._scope, func);" + Environment.NewLine;
+            s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, Func<{propType}> transform)" + Environment.NewLine;
+            s += tab +  $"    => Bindings2._scope.BindUpdate(() => obj.{prop} = transform(){suffix});" + Environment.NewLine;
 
-            s += tab + $"public static void Bind{prettyProp}Interval{generic}(this {name} obj, Bindings2 bindings, float seconds, Func<{propType}> func)" + Environment.NewLine;
-            s += tab +  $"    => bindings.BindInterval(seconds, () => obj.{prop} = func(){suffix});" + Environment.NewLine;
-
-            s += tab + $"public static void Bind{prettyProp}Interval{generic}(this {name} obj, float seconds, Func<{propType}> func)" + Environment.NewLine;
-            s += tab + $"    => Bind{prettyProp}Interval(obj, Bindings2._scope, seconds, func);" + Environment.NewLine;
+            s += tab + $"public static void Bind{prettyProp}Interval{generic}(this {name} obj, float seconds, Func<{propType}> transform)" + Environment.NewLine;
+            s += tab +  $"    => Bindings2._scope.BindInterval(seconds, () => obj.{prop} = transform(){suffix});" + Environment.NewLine;
 
             if (typeName == "UnityEngine.Vector3")
             {
                 // Vector3.Lerp
 
-                s += tab + $"public static void Bind{prettyProp}Lerp(this {name} obj, Bindings2 bindings, float speed, Property<{propType}> property)" + Environment.NewLine;
-                s += tab +  $"    => bindings.BindUpdate(() => obj.{prop} = Vector3.Lerp(obj.{prop}, property.Value, speed * Time.smoothDeltaTime));" + Environment.NewLine;
-
                 s += tab + $"public static void Bind{prettyProp}Lerp(this {name} obj, float speed, Property<{propType}> property)" + Environment.NewLine;
-                s += tab + $"    => Bind{prettyProp}Lerp(obj, Bindings2._scope, speed, property);" + Environment.NewLine;
+                s += tab +  $"    => Bindings2._scope.BindUpdate(() => obj.{prop} = Vector3.Lerp(obj.{prop}, property.Value, speed * Time.smoothDeltaTime));" + Environment.NewLine;
 
-                s += tab + $"public static void Bind{prettyProp}Lerp(this {name} obj, Bindings2 bindings, float speed, Func<{propType}> func)" + Environment.NewLine;
-                s += tab +  $"    => bindings.BindUpdate(() => obj.{prop} = Vector3.Lerp(obj.{prop}, func(), speed * Time.smoothDeltaTime));" + Environment.NewLine;
-
-                s += tab + $"public static void Bind{prettyProp}Lerp(this {name} obj, float speed, Func<{propType}> func)" + Environment.NewLine;
-                s += tab + $"    => Bind{prettyProp}Lerp(obj, Bindings2._scope, speed, func);" + Environment.NewLine;
+                s += tab + $"public static void Bind{prettyProp}Lerp(this {name} obj, float speed, Func<{propType}> transform)" + Environment.NewLine;
+                s += tab +  $"    => Bindings2._scope.BindUpdate(() => obj.{prop} = Vector3.Lerp(obj.{prop}, transform(), speed * Time.smoothDeltaTime));" + Environment.NewLine;
 
                 // Vector3.MoveTowards
 
-                s += tab + $"public static void Bind{prettyProp}Towards(this {name} obj, Bindings2 bindings, float speed, Property<{propType}> property)" + Environment.NewLine;
-                s += tab +  $"    => bindings.BindUpdate(() => obj.{prop} = Vector3.MoveTowards(obj.{prop}, property.Value, speed * Time.smoothDeltaTime));" + Environment.NewLine;
-
                 s += tab + $"public static void Bind{prettyProp}Towards(this {name} obj, float speed, Property<{propType}> property)" + Environment.NewLine;
-                s += tab + $"    => Bind{prettyProp}Towards(obj, Bindings2._scope, speed, property);" + Environment.NewLine;
+                s += tab +  $"    => Bindings2._scope.BindUpdate(() => obj.{prop} = Vector3.MoveTowards(obj.{prop}, property.Value, speed * Time.smoothDeltaTime));" + Environment.NewLine;
 
-                s += tab + $"public static void Bind{prettyProp}Towards(this {name} obj, Bindings2 bindings, float speed, Func<{propType}> func)" + Environment.NewLine;
-                s += tab +  $"    => bindings.BindUpdate(() => obj.{prop} = Vector3.MoveTowards(obj.{prop}, func(), speed * Time.smoothDeltaTime));" + Environment.NewLine;
-
-                s += tab + $"public static void Bind{prettyProp}Towards(this {name} obj, float speed, Func<{propType}> func)" + Environment.NewLine;
-                s += tab + $"    => Bind{prettyProp}Towards(obj, Bindings2._scope, speed, func);" + Environment.NewLine;
+                s += tab + $"public static void Bind{prettyProp}Towards(this {name} obj, float speed, Func<{propType}> transform)" + Environment.NewLine;
+                s += tab +  $"    => Bindings2._scope.BindUpdate(() => obj.{prop} = Vector3.MoveTowards(obj.{prop}, transform(), speed * Time.smoothDeltaTime));" + Environment.NewLine;
 
                 // Animation
 
-                s += tab + $"public static void Animate{prettyProp}(this {name} obj, Bindings2 bindings, {propType} start, {propType} end, AnimationCurve curve)" + Environment.NewLine;
-                s += tab +  $"    => bindings.Animate(curve, t => obj.{prop} = Vector3.Lerp(start, end, t));" + Environment.NewLine;
-
                 s += tab + $"public static void Animate{prettyProp}(this {name} obj, {propType} start, {propType} end, AnimationCurve curve)" + Environment.NewLine;
-                s += tab +  $"    => Animate{prettyProp}(obj, Bindings2._scope, start, end, curve);" + Environment.NewLine;
-
-                s += tab + $"public static void Animate{prettyProp}(this {name} obj, Bindings2 bindings, {propType} end, AnimationCurve curve)" + Environment.NewLine;
-                s += tab +  $"    => Animate{prettyProp}(obj, Bindings2._scope, obj.{prop}, end, curve);" + Environment.NewLine;
+                s += tab +  $"    => Bindings2._scope.Animate(curve, t => obj.{prop} = Vector3.Lerp(start, end, t));" + Environment.NewLine;
 
                 s += tab + $"public static void Animate{prettyProp}(this {name} obj, {propType} end, AnimationCurve curve)" + Environment.NewLine;
-                s += tab +  $"    => Animate{prettyProp}(obj, Bindings2._scope, end, curve);" + Environment.NewLine;
+                s += tab +  $"    => Animate{prettyProp}(obj, obj.{prop}, end, curve);" + Environment.NewLine;
             }
 
             if (define != null)
