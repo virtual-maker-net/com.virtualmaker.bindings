@@ -230,6 +230,11 @@ namespace VirtualMaker.Bindings
 
     public static class Derived
     {
+        public static Derived<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, Property<TDerived>> func)
+        {
+            return Derived<TDerived>.From(property, func);
+        }
+
         public static Derived<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, IProperty<TDerived>> func)
         {
             return Derived<TDerived>.From(property, func);

@@ -16,7 +16,7 @@ namespace VirtualMaker.Bindings.Extensions
             => Bindings2._scope.Bind(property, v => obj.SetActive(transform(v)));
 
        public static void BindActiveSelf(this GameObject obj, Func<bool> func)
-              => Bindings2._scope.BindUpdate(() => obj.SetActive(func()));
+            => Bindings2._scope.BindUpdate(() => obj.SetActive(func()));
 
         public static void BindActiveSelfInterval(this GameObject obj, float seconds, Func<bool> func)
             => Bindings2._scope.BindInterval(seconds, () => obj.SetActive(func()));
