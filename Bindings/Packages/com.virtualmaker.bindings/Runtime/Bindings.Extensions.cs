@@ -9,44 +9,31 @@ namespace VirtualMaker.Bindings.Extensions
     {
         /// GAMEOBJECT
 
-        public static void BindActiveSelf(this GameObject obj, Bindings2 bindings, IProperty<bool> property)
-            => bindings.Bind(property, v => obj.SetActive(v));
-
         public static void BindActiveSelf(this GameObject obj, IProperty<bool> property)
-            => BindActiveSelf(obj, Bindings2._scope, property);
+            => Bindings2._scope.Bind(property, v => obj.SetActive(v));
 
-        public static void BindActiveSelf(this GameObject obj, Bindings2 bindings, Func<bool> func)
-            => bindings.BindUpdate(() => obj.SetActive(func()));
+        public static void BindActiveSelf<T>(this GameObject obj, IProperty<T> property, Func<T, bool> transform)
+            => Bindings2._scope.Bind(property, v => obj.SetActive(transform(v)));
 
-        public static void BindActiveSelf(this GameObject obj, Func<bool> func)
-            => BindActiveSelf(obj, Bindings2._scope, func);
-
-        public static void BindActiveSelfInterval(this GameObject obj, Bindings2 bindings, float seconds, Func<bool> func)
-            => bindings.BindInterval(seconds, () => obj.SetActive(func()));
+       public static void BindActiveSelf(this GameObject obj, Func<bool> func)
+              => Bindings2._scope.BindUpdate(() => obj.SetActive(func()));
 
         public static void BindActiveSelfInterval(this GameObject obj, float seconds, Func<bool> func)
-            => BindActiveSelfInterval(obj, Bindings2._scope, seconds, func);
+            => Bindings2._scope.BindInterval(seconds, () => obj.SetActive(func()));
 
         /// COMPONENT
 
-        public static void BindEnabled(this MonoBehaviour component, Bindings2 bindings, IProperty<bool> property)
-            => bindings.Bind(property, v => component.enabled = v);
-
         public static void BindEnabled(this MonoBehaviour component, IProperty<bool> property)
-            => BindEnabled(component, Bindings2._scope, property);
+            => Bindings2._scope.Bind(property, v => component.enabled = v);
 
-        public static void BindEnabled(this MonoBehaviour component, Bindings2 bindings, Func<bool> func)
-            => bindings.BindUpdate(() => component.enabled = func());
+        public static void BindEnabled<T>(this MonoBehaviour component, IProperty<T> property, Func<T, bool> transform)
+            => Bindings2._scope.Bind(property, v => component.enabled = transform(v));
 
         public static void BindEnabled(this MonoBehaviour component, Func<bool> func)
-            => BindEnabled(component, Bindings2._scope, func);
-
-        public static void BindEnabledInterval(this MonoBehaviour component, Bindings2 bindings, float seconds, Func<bool> func)
-            => bindings.BindInterval(seconds, () => component.enabled = func());
+            => Bindings2._scope.BindUpdate(() => component.enabled = func());
 
         public static void BindEnabledInterval(this MonoBehaviour component, float seconds, Func<bool> func)
-            => BindEnabledInterval(component, Bindings2._scope, seconds, func);
-
+            => Bindings2._scope.BindInterval(seconds, () => component.enabled = func());
 
         /// EVENTS
 
