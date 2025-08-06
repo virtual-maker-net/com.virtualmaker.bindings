@@ -64,7 +64,7 @@ namespace VirtualMaker.Bindings
             }
         }
 
-        public void BindSprite(Image image, Property<string> prop)
+        public void BindSprite(Image image, IProperty<string> prop)
         {
             Bind(prop, value => SetSprite(image, value));
         }
