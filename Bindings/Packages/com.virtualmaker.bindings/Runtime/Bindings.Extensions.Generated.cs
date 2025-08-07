@@ -4006,13 +4006,13 @@ namespace VirtualMaker.Bindings.Extensions
             => Bindings2._scope.BindUpdate(() => obj.textComponent = transform());
         public static void BindTextComponentInterval(this UnityEngine.UI.InputField obj, float seconds, Func<UnityEngine.UI.Text> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.textComponent = transform());
-        public static void BindText<T>(this UnityEngine.UI.InputField obj, IProperty<T> property)
+        public static void BindText<T2>(this UnityEngine.UI.InputField obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.text = v.ToString());
-        public static void BindText<T>(this UnityEngine.UI.InputField obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.text = transform(v));
-        public static void BindText<T>(this UnityEngine.UI.InputField obj, Func<T> transform)
+        public static void BindText<T, T2>(this UnityEngine.UI.InputField obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.text = transform(v).ToString());
+        public static void BindText<T2>(this UnityEngine.UI.InputField obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.text = transform().ToString());
-        public static void BindTextInterval<T>(this UnityEngine.UI.InputField obj, float seconds, Func<T> transform)
+        public static void BindTextInterval<T2>(this UnityEngine.UI.InputField obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.text = transform().ToString());
         public static void BindCharacterLimit(this UnityEngine.UI.InputField obj, IProperty<System.Int32> property)
             => Bindings2._scope.Bind(property, v => obj.characterLimit = v);
@@ -7582,37 +7582,37 @@ namespace VirtualMaker.Bindings.Extensions
 
 
         #if UNITY_GUI
-        public static void BindHorizontalAxis<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property)
+        public static void BindHorizontalAxis<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.horizontalAxis = v.ToString());
-        public static void BindHorizontalAxis<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.horizontalAxis = transform(v));
-        public static void BindHorizontalAxis<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T> transform)
+        public static void BindHorizontalAxis<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.horizontalAxis = transform(v).ToString());
+        public static void BindHorizontalAxis<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.horizontalAxis = transform().ToString());
-        public static void BindHorizontalAxisInterval<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T> transform)
+        public static void BindHorizontalAxisInterval<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.horizontalAxis = transform().ToString());
-        public static void BindVerticalAxis<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property)
+        public static void BindVerticalAxis<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.verticalAxis = v.ToString());
-        public static void BindVerticalAxis<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.verticalAxis = transform(v));
-        public static void BindVerticalAxis<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T> transform)
+        public static void BindVerticalAxis<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.verticalAxis = transform(v).ToString());
+        public static void BindVerticalAxis<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.verticalAxis = transform().ToString());
-        public static void BindVerticalAxisInterval<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T> transform)
+        public static void BindVerticalAxisInterval<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.verticalAxis = transform().ToString());
-        public static void BindSubmitButton<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property)
+        public static void BindSubmitButton<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.submitButton = v.ToString());
-        public static void BindSubmitButton<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.submitButton = transform(v));
-        public static void BindSubmitButton<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T> transform)
+        public static void BindSubmitButton<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.submitButton = transform(v).ToString());
+        public static void BindSubmitButton<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.submitButton = transform().ToString());
-        public static void BindSubmitButtonInterval<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T> transform)
+        public static void BindSubmitButtonInterval<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.submitButton = transform().ToString());
-        public static void BindCancelButton<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property)
+        public static void BindCancelButton<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.cancelButton = v.ToString());
-        public static void BindCancelButton<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.cancelButton = transform(v));
-        public static void BindCancelButton<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T> transform)
+        public static void BindCancelButton<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.cancelButton = transform(v).ToString());
+        public static void BindCancelButton<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.cancelButton = transform().ToString());
-        public static void BindCancelButtonInterval<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T> transform)
+        public static void BindCancelButtonInterval<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.cancelButton = transform().ToString());
         public static void BindInputActionsPerSecond(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<System.Single> property)
             => Bindings2._scope.Bind(property, v => obj.inputActionsPerSecond = v);
@@ -7812,13 +7812,13 @@ namespace VirtualMaker.Bindings.Extensions
 
 
         #if UNITY_GUI
-        public static void BindText<T>(this UnityEngine.UI.Text obj, IProperty<T> property)
+        public static void BindText<T2>(this UnityEngine.UI.Text obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.text = v.ToString());
-        public static void BindText<T>(this UnityEngine.UI.Text obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.text = transform(v));
-        public static void BindText<T>(this UnityEngine.UI.Text obj, Func<T> transform)
+        public static void BindText<T, T2>(this UnityEngine.UI.Text obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.text = transform(v).ToString());
+        public static void BindText<T2>(this UnityEngine.UI.Text obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.text = transform().ToString());
-        public static void BindTextInterval<T>(this UnityEngine.UI.Text obj, float seconds, Func<T> transform)
+        public static void BindTextInterval<T2>(this UnityEngine.UI.Text obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.text = transform().ToString());
         public static void BindFont(this UnityEngine.UI.Text obj, IProperty<UnityEngine.Font> property)
             => Bindings2._scope.Bind(property, v => obj.font = v);
@@ -7973,13 +7973,13 @@ namespace VirtualMaker.Bindings.Extensions
         #endif
 
 
-        public static void BindText<T>(this TextMesh obj, IProperty<T> property)
+        public static void BindText<T2>(this TextMesh obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.text = v.ToString());
-        public static void BindText<T>(this TextMesh obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.text = transform(v));
-        public static void BindText<T>(this TextMesh obj, Func<T> transform)
+        public static void BindText<T, T2>(this TextMesh obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.text = transform(v).ToString());
+        public static void BindText<T2>(this TextMesh obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.text = transform().ToString());
-        public static void BindTextInterval<T>(this TextMesh obj, float seconds, Func<T> transform)
+        public static void BindTextInterval<T2>(this TextMesh obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.text = transform().ToString());
         public static void BindOffsetZ(this TextMesh obj, IProperty<System.Single> property)
             => Bindings2._scope.Bind(property, v => obj.offsetZ = v);
@@ -8072,13 +8072,13 @@ namespace VirtualMaker.Bindings.Extensions
 
 
         #if UNITY_TMPRO
-        public static void BindText<T>(this TMPro.TextMeshPro obj, IProperty<T> property)
+        public static void BindText<T2>(this TMPro.TextMeshPro obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.text = v.ToString());
-        public static void BindText<T>(this TMPro.TextMeshPro obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.text = transform(v));
-        public static void BindText<T>(this TMPro.TextMeshPro obj, Func<T> transform)
+        public static void BindText<T, T2>(this TMPro.TextMeshPro obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.text = transform(v).ToString());
+        public static void BindText<T2>(this TMPro.TextMeshPro obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.text = transform().ToString());
-        public static void BindTextInterval<T>(this TMPro.TextMeshPro obj, float seconds, Func<T> transform)
+        public static void BindTextInterval<T2>(this TMPro.TextMeshPro obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.text = transform().ToString());
         public static void BindFont(this TMPro.TextMeshPro obj, IProperty<TMPro.TMP_FontAsset> property)
             => Bindings2._scope.Bind(property, v => obj.font = v);
@@ -8348,13 +8348,13 @@ namespace VirtualMaker.Bindings.Extensions
 
 
         #if UNITY_TMPRO
-        public static void BindText<T>(this TMPro.TextMeshProUGUI obj, IProperty<T> property)
+        public static void BindText<T2>(this TMPro.TextMeshProUGUI obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.text = v.ToString());
-        public static void BindText<T>(this TMPro.TextMeshProUGUI obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.text = transform(v));
-        public static void BindText<T>(this TMPro.TextMeshProUGUI obj, Func<T> transform)
+        public static void BindText<T, T2>(this TMPro.TextMeshProUGUI obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.text = transform(v).ToString());
+        public static void BindText<T2>(this TMPro.TextMeshProUGUI obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.text = transform().ToString());
-        public static void BindTextInterval<T>(this TMPro.TextMeshProUGUI obj, float seconds, Func<T> transform)
+        public static void BindTextInterval<T2>(this TMPro.TextMeshProUGUI obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.text = transform().ToString());
         public static void BindFont(this TMPro.TextMeshProUGUI obj, IProperty<TMPro.TMP_FontAsset> property)
             => Bindings2._scope.Bind(property, v => obj.font = v);
@@ -8940,13 +8940,13 @@ namespace VirtualMaker.Bindings.Extensions
             => Bindings2._scope.BindUpdate(() => obj.textComponent = transform());
         public static void BindTextComponentInterval(this TMPro.TMP_InputField obj, float seconds, Func<TMPro.TMP_Text> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.textComponent = transform());
-        public static void BindText<T>(this TMPro.TMP_InputField obj, IProperty<T> property)
+        public static void BindText<T2>(this TMPro.TMP_InputField obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.text = v.ToString());
-        public static void BindText<T>(this TMPro.TMP_InputField obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.text = transform(v));
-        public static void BindText<T>(this TMPro.TMP_InputField obj, Func<T> transform)
+        public static void BindText<T, T2>(this TMPro.TMP_InputField obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.text = transform(v).ToString());
+        public static void BindText<T2>(this TMPro.TMP_InputField obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.text = transform().ToString());
-        public static void BindTextInterval<T>(this TMPro.TMP_InputField obj, float seconds, Func<T> transform)
+        public static void BindTextInterval<T2>(this TMPro.TMP_InputField obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.text = transform().ToString());
         public static void BindFontAsset(this TMPro.TMP_InputField obj, IProperty<TMPro.TMP_FontAsset> property)
             => Bindings2._scope.Bind(property, v => obj.fontAsset = v);
@@ -9528,13 +9528,13 @@ namespace VirtualMaker.Bindings.Extensions
             => Bindings2._scope.BindUpdate(() => obj.clip = transform());
         public static void BindClipInterval(this UnityEngine.Video.VideoPlayer obj, float seconds, Func<UnityEngine.Video.VideoClip> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.clip = transform());
-        public static void BindUrl<T>(this UnityEngine.Video.VideoPlayer obj, IProperty<T> property)
+        public static void BindUrl<T2>(this UnityEngine.Video.VideoPlayer obj, IProperty<T2> property)
             => Bindings2._scope.Bind(property, v => obj.url = v.ToString());
-        public static void BindUrl<T>(this UnityEngine.Video.VideoPlayer obj, IProperty<T> property, Func<T, System.String> transform)
-            => Bindings2._scope.Bind(property, v => obj.url = transform(v));
-        public static void BindUrl<T>(this UnityEngine.Video.VideoPlayer obj, Func<T> transform)
+        public static void BindUrl<T, T2>(this UnityEngine.Video.VideoPlayer obj, IProperty<T> property, Func<T, T2> transform)
+            => Bindings2._scope.Bind(property, v => obj.url = transform(v).ToString());
+        public static void BindUrl<T2>(this UnityEngine.Video.VideoPlayer obj, Func<T2> transform)
             => Bindings2._scope.BindUpdate(() => obj.url = transform().ToString());
-        public static void BindUrlInterval<T>(this UnityEngine.Video.VideoPlayer obj, float seconds, Func<T> transform)
+        public static void BindUrlInterval<T2>(this UnityEngine.Video.VideoPlayer obj, float seconds, Func<T2> transform)
             => Bindings2._scope.BindInterval(seconds, () => obj.url = transform().ToString());
         public static void BindPlayOnAwake(this UnityEngine.Video.VideoPlayer obj, IProperty<System.Boolean> property)
             => Bindings2._scope.Bind(property, v => obj.playOnAwake = v);

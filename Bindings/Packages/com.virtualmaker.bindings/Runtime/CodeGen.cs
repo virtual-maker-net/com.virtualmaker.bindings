@@ -113,14 +113,15 @@ namespace VirtualMaker.Bindings
             var prettyProp = prop[0].ToString().ToUpper() + prop[1..];
             bool isString = typeName == "System.String";
             var suffix = isString ? ".ToString()" : "";
-            var generic = isString ? "<T>" : "";
-            var propType = isString ? "T" : typeName;
+            var generic = isString ? "<T2>" : "";
+            var propType = isString ? "T2" : typeName;
 
             s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, IProperty<{propType}> property)" + Environment.NewLine;
             s += tab +  $"    => Bindings2._scope.Bind(property, v => obj.{prop} = v{suffix});" + Environment.NewLine;
 
-            s += tab + $"public static void Bind{prettyProp}<T>(this {name} obj, IProperty<T> property, Func<T, {typeName}> transform)" + Environment.NewLine;
-            s += tab +  $"    => Bindings2._scope.Bind(property, v => obj.{prop} = transform(v));" + Environment.NewLine;
+            var transformGeneric = isString ? "<T, T2>" : "<T>";
+            s += tab + $"public static void Bind{prettyProp}{transformGeneric}(this {name} obj, IProperty<T> property, Func<T, {propType}> transform)" + Environment.NewLine;
+            s += tab +  $"    => Bindings2._scope.Bind(property, v => obj.{prop} = transform(v){suffix});" + Environment.NewLine;
 
             s += tab + $"public static void Bind{prettyProp}{generic}(this {name} obj, Func<{propType}> transform)" + Environment.NewLine;
             s += tab +  $"    => Bindings2._scope.BindUpdate(() => obj.{prop} = transform(){suffix});" + Environment.NewLine;
