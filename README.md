@@ -158,7 +158,7 @@ public class EditTimeBindingsExample : MonoBehaviour
 
     void OnEnable()
     {
-        var root = _uiDocument_.rootVisualElement;
+        var root = _uiDocument.rootVisualElement;
         _bindings = new Bindings(root);
         _bindings.BindText("my-label", _textProperty);
     }
