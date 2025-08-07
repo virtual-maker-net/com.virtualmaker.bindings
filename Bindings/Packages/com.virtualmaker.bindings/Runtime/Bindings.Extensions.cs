@@ -35,6 +35,18 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindEnabledInterval(this MonoBehaviour component, float seconds, Func<bool> func)
             => Bindings2._scope.BindInterval(seconds, () => component.enabled = func());
 
+        public static void BindEnabled(this Renderer component, IProperty<bool> property)
+            => Bindings2._scope.Bind(property, v => component.enabled = v);
+
+        public static void BindEnabled<T>(this Renderer component, IProperty<T> property, Func<T, bool> transform)
+            => Bindings2._scope.Bind(property, v => component.enabled = transform(v));
+
+        public static void BindEnabled(this Renderer component, Func<bool> func)
+            => Bindings2._scope.BindUpdate(() => component.enabled = func());
+
+        public static void BindEnabledInterval(this Renderer component, float seconds, Func<bool> func)
+            => Bindings2._scope.BindInterval(seconds, () => component.enabled = func());
+
         /// EVENTS
 
         public static void Bind(this UnityEvent evt, UnityAction action)
