@@ -203,7 +203,15 @@ namespace VirtualMaker.Bindings
             {
                 while (!_cancelled && (_doneFunc == null || !_doneFunc()))
                 {
-                    _updateFunc();
+                    try
+                    {
+                        _updateFunc();
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogException(e);
+                    }
+
                     await _awaitableFunc();
                 }
             }
