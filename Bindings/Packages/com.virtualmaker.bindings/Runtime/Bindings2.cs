@@ -50,17 +50,17 @@ namespace VirtualMaker.Bindings
             action();
         }
 
-        public void Bind<T>(IProperty<T> prop, Property<T> prop2)
+        public void Bind<T>(IProperty<T> prop, IPropertySet<T> prop2)
         {
             Bind(prop, v => prop2.Value = v);
         }
 
-        public void Bind<T1, T2>(IProperty<T1> prop, Property<T2> prop2, Func<T1, T2> transform)
+        public void Bind<T1, T2>(IProperty<T1> prop, IPropertySet<T2> prop2, Func<T1, T2> transform)
         {
             Bind(prop, v => prop2.Value = transform(v));
         }
 
-        public void Bind<T>(Property<T> prop, Property<T> prop2, bool twoWay)
+        public void Bind<T>(Property<T> prop, IPropertySet<T> prop2, bool twoWay)
         {
             Bind(prop, v => prop2.Value = v);
 
@@ -91,17 +91,17 @@ namespace VirtualMaker.Bindings
             }
         }
 
-        public void BindDeferred<T>(IProperty<T> prop, Property<T> prop2)
+        public void BindDeferred<T>(IProperty<T> prop, IPropertySet<T> prop2)
         {
             BindDeferred(prop, v => prop2.Value = v);
         }
 
-        public void BindDeferred<T1, T2>(IProperty<T1> prop, Property<T2> prop2, Func<T1, T2> transform)
+        public void BindDeferred<T1, T2>(IProperty<T1> prop, IPropertySet<T2> prop2, Func<T1, T2> transform)
         {
             BindDeferred(prop, v => prop2.Value = transform(v));
         }
 
-        public void BindDeferred<T>(Property<T> prop, Property<T> prop2, bool twoWay)
+        public void BindDeferred<T>(IPropertySet<T> prop, IPropertySet<T> prop2, bool twoWay)
         {
             BindDeferred(prop, v => prop2.Value = v);
 

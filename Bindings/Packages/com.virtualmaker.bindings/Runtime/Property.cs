@@ -21,8 +21,13 @@ namespace VirtualMaker.Bindings
         event Action<TValue> OnChangeWithValue;
     }
 
+    public interface IPropertySet<TValue> : IProperty<TValue>
+    {
+        new TValue Value { get; set; }
+    }
+
     [Serializable]
-    public class Property<TValue> : IProperty<TValue>, IPropertyNotify
+    public class Property<TValue> : IPropertySet<TValue>, IPropertyNotify
     {
         [SerializeField]
         private TValue _value;
@@ -84,6 +89,36 @@ namespace VirtualMaker.Bindings
 
         public void BindDeferred<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
             => Bindings2._scope.BindDeferred(prop, this, transform);
+    }
+
+    [Serializable]
+    public class ListProperty<TValue> : List<TValue>, IProperty<List<TValue>>, IPropertyNotify
+    {
+        public List<TValue> Value => this;
+
+        public event Action<List<TValue>> OnChangeWithValue;
+        public event Action OnChange;
+
+        public void NotifyChanged()
+        {
+            OnChangeWithValue?.Invoke(Value);
+            OnChange?.Invoke();
+        }
+    }
+
+    [Serializable]
+    public class DictionaryProperty<TKey, TValue> : Dictionary<TKey, TValue>, IProperty<Dictionary<TKey, TValue>>, IPropertyNotify
+    {
+        public Dictionary<TKey, TValue> Value => this;
+
+        public event Action<Dictionary<TKey, TValue>> OnChangeWithValue;
+        public event Action OnChange;
+
+        public void NotifyChanged()
+        {
+            OnChangeWithValue?.Invoke(Value);
+            OnChange?.Invoke();
+        }
     }
 
     public class Derived<TDerived> : IProperty<TDerived>
