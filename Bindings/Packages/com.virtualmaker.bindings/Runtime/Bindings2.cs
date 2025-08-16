@@ -111,11 +111,50 @@ namespace VirtualMaker.Bindings
             }
         }
 
+        public void Bind(BindableEvent evt, Func<Task> action)
+        {
+            var wrapper = new Action(async () => await action());
+            evt.AddListener(wrapper);
+            _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void Bind<T>(BindableEvent<T> evt, Func<T, Task> action)
+        {
+            var wrapper = new Action<T>(async (v) => await action(v));
+            evt.AddListener(wrapper);
+            _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void Bind<T1, T2>(BindableEvent<T1, T2> evt, Func<T1, T2, Task> action)
+        {
+            var wrapper = new Action<T1, T2>(async (v1, v2) => await action(v1, v2));
+            evt.AddListener(wrapper);
+            _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
         public void Bind(UnityEvent evt, Func<Task> action)
         {
             var wrapper = new UnityAction(async () => await action());
             evt.AddListener(wrapper);
             _unsubscribers.Add(() => evt.RemoveListener(wrapper));
+        }
+
+        public void Bind(BindableEvent evt, Action action)
+        {
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
+        }
+
+        public void Bind<T>(BindableEvent<T> evt, Action<T> action)
+        {
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
+        }
+
+        public void Bind<T1, T2>(BindableEvent<T1, T2> evt, Action<T1, T2> action)
+        {
+            evt.AddListener(action);
+            _unsubscribers.Add(() => evt.RemoveListener(action));
         }
 
         public void Bind(UnityEvent evt, UnityAction action)
