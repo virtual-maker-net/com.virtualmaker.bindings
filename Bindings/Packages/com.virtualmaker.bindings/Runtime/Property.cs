@@ -357,6 +357,16 @@ namespace VirtualMaker.Bindings
         {
             return Derived<bool>.From(property, value => value == null);
         }
+
+        public static Derived<bool> Is<TValue>(this IProperty<TValue> property, TValue value)
+        {
+            return Derived<bool>.From(property, v => EqualityComparer<TValue>.Default.Equals(v, value));
+        }
+
+        public static Derived<bool> IsNot<TValue>(this IProperty<TValue> property, TValue value)
+        {
+            return Derived<bool>.From(property, v => !EqualityComparer<TValue>.Default.Equals(v, value));
+        }
     }
 
     public class DerivedProperty<TDerived> : IProperty<TDerived>
