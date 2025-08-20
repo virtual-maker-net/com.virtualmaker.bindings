@@ -55,6 +55,7 @@ namespace VirtualMaker.Bindings
             {
                 Debug.LogError($"Failed to download image {url}: {webRequest.error}");
                 tcs.SetResult(null);
+                _downloadTasks.Remove(url);
                 return null;
             }
 
