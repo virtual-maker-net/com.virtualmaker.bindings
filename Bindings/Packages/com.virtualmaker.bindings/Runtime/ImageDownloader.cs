@@ -47,7 +47,7 @@ namespace VirtualMaker.Bindings
             var tcs = new TaskCompletionSource<Texture2D>();
             _downloadTasks[url] = tcs.Task;
 
-            using var webRequest = UnityWebRequestTexture.GetTexture(url);
+            using var webRequest = UnityWebRequestTexture.GetTexture(url, true);
 
             await webRequest.SendWebRequest();
 
