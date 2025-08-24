@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -230,7 +231,11 @@ namespace VirtualMaker.Bindings
             private Task _task;
             public Task Task => _task;
 
-            public PropertyUpdater(Action updateFunc, Func<Awaitable> awaitableFunc, Func<bool> doneFunc, CancellationToken cancellationToken)
+            public PropertyUpdater(
+                Action updateFunc,
+                Func<Awaitable> awaitableFunc,
+                Func<bool> doneFunc,
+                CancellationToken cancellationToken)
             {
                 _updateFunc = updateFunc;
                 _doneFunc = doneFunc;
@@ -271,17 +276,13 @@ namespace VirtualMaker.Bindings
             var updater = new PropertyUpdater(updateFunc, () => Awaitable.WaitForSecondsAsync(seconds), doneFunc, _cts.Token);
         }
 
-        public void Animate(AnimationCurve curve, Action<float> action)
-        {
-            var startTime = Time.time;
-            var updater = new PropertyUpdater(
-                () => action(curve.Evaluate(Time.time - startTime)),
-                () => Awaitable.NextFrameAsync(),
-                () => Time.time - startTime >= curve.keys[^1].time,
-                _cts.Token);
-        }
+        public async void Animate(AnimationCurve curve, Action<float> action, CancellationToken cancellationToken = default)
+            => await AnimateAsync(curve, action, cancellationToken);
 
-        public async Task AnimateAsync(AnimationCurve curve, Action<float> action, CancellationToken cancellationToken = default)
+        public async Task AnimateAsync(
+            AnimationCurve curve,
+            Action<float> action,
+            CancellationToken cancellationToken = default)
         {
             using var cts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, cancellationToken);
             var startTime = Time.time;
@@ -291,6 +292,32 @@ namespace VirtualMaker.Bindings
                 () => Time.time - startTime >= curve.keys[^1].time,
                 cts.Token);
             await updater.Task;
+        }
+
+        public IProperty<float> CreateTransition(IProperty<bool> prop, AnimationCurve curve)
+        {
+            Property<float> transition = new(prop.Value ? curve.keys[^1].value : curve.keys[0].value);
+            var reverseCurve = Easing.Reverse(curve);
+
+            CancellationTokenSource cancellationTokenSource = null;
+
+            CancellationToken GetCancellationToken()
+            {
+                cancellationTokenSource?.Cancel();
+                cancellationTokenSource?.Dispose();
+                cancellationTokenSource = new();
+                return cancellationTokenSource.Token;
+            }
+
+            BindDeferred(prop, value =>
+            {
+                Animate(
+                    value ? curve : reverseCurve,
+                    v => transition.Value = v,
+                    GetCancellationToken());
+            });
+
+            return transition;
         }
 
         public void AddUnsubscriber(Action unsubscribe)

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using VirtualMaker.Bindings;
 using VirtualMaker.Bindings.Extensions;
 
-public class BindingExamples : MonoBehaviour
+public class BindingExamples : BindingMonoBehaviour
 {
     [SerializeField]
     private Property<int> _number = new();
@@ -28,14 +28,13 @@ public class BindingExamples : MonoBehaviour
     [SerializeField]
     private Transform _animated;
 
-    private Bindings2 _bindings = new();
+    [SerializeField]
+    private Hoverable _hoverImage;
 
-    private void OnEnable()
+    protected override void Bind()
     {
-        using var scope = _bindings.Scope();
-
         // General binding
-        _bindings.Bind(_number, x => Debug.Log(x));
+        Bindings.Bind(_number, x => Debug.Log(x));
 
         // Binding a property (auto-generated function)
         _text.BindText(_number);
@@ -51,7 +50,7 @@ public class BindingExamples : MonoBehaviour
         _mouseFollower.BindPosition(() => Input.mousePosition);
 
         // Bind to do something every X seconds
-        _bindings.BindInterval(1.0f, () => _number.Value += 1);
+        Bindings.BindInterval(1.0f, () => _number.Value += 1);
 
         // Bind continuous lerp - shorthand for:
         // _follower2.BindPosition(() => Vector3.Lerp(_follower2.position, _mouseFollower.position, 10f * Time.smoothDeltaTime));
@@ -61,10 +60,9 @@ public class BindingExamples : MonoBehaviour
         // Shorthand for:
         // _animated.Animate(Easing.EaseInOut(5), t => _animated.transform.localPosition = Vector3.Lerp(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), t));
         _animated.AnimateLocalPosition(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), Easing.EaseInOut(5));
-    }
 
-    private void OnDisable()
-    {
-        _bindings.Clear();
+        // Transition colors on hover
+        var transition = Bindings.CreateTransition(_hoverImage.Hovering, Easing.EaseOut(0.2f));
+        _hoverImage.GetComponent<Image>().BindColor(transition, v => new Color(1, v, 1));
     }
 }

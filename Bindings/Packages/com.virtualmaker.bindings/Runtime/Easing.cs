@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using UnityEngine;
 
 namespace VirtualMaker.Bindings
@@ -41,6 +42,19 @@ namespace VirtualMaker.Bindings
             };
 
             return new AnimationCurve(array);
+        }
+
+        public static AnimationCurve Reverse(AnimationCurve curve)
+        {
+            var keys = new Keyframe[curve.keys.Length];
+            var totalTime = curve.keys[^1].time;
+            for (int i = 0; i < curve.keys.Length; i++)
+            {
+                var k = curve.keys[^(i + 1)];
+                keys[i] = new Keyframe(totalTime - k.time, k.value, k.outTangent, k.inTangent);
+            }
+
+            return new AnimationCurve(keys);
         }
     }
 }
