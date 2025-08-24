@@ -26,7 +26,9 @@ namespace VirtualMaker.Bindings
             Bind(prop, value => component.gameObject.SetActive(transformer(value)));
         }
 
-        public IReadOnlyDictionary<TItem, TComponent> BindList<TItem, TComponent>(Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded) where TComponent : Component
+        public IReadOnlyDictionary<TItem, TComponent> BindList<TItem, TComponent>(
+            Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded,
+            Action<TItem, TComponent> onListUpdated = null) where TComponent : Component
         {
             var childItems = new Dictionary<TItem, TComponent>();
 
@@ -63,13 +65,21 @@ namespace VirtualMaker.Bindings
 
                     toItem.transform.SetSiblingIndex(i);
                 }
+
+                if (onListUpdated != null)
+                {
+                    foreach (var (item, child) in childItems)
+                    {
+                        onListUpdated(item, child);
+                    }
+                }
             };
 
-            prop.OnChange += update;
+            prop.OnChangeWithValue += update;
 
             _unsubscribe.Add(() =>
             {
-                prop.OnChange -= update;
+                prop.OnChangeWithValue -= update;
 
                 foreach (var (_, toItem) in childItems)
                 {
@@ -119,11 +129,11 @@ namespace VirtualMaker.Bindings
                 }
             };
 
-            prop.OnChange += update;
+            prop.OnChangeWithValue += update;
 
             _unsubscribe.Add(() =>
             {
-                prop.OnChange -= update;
+                prop.OnChangeWithValue -= update;
 
                 foreach (var (_, toItem) in childItems)
                 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace VirtualMaker.Bindings
@@ -37,15 +38,15 @@ namespace VirtualMaker.Bindings
 
         public void BindDeferred<T>(IProperty<T> prop, Action<T> action)
         {
-            prop.OnChange += action;
-            _unsubscribe.Add(() => prop.OnChange -= action);
+            prop.OnChangeWithValue += action;
+            _unsubscribe.Add(() => prop.OnChangeWithValue -= action);
         }
 
         public void BindDeferred<T>(IProperty<T> prop, Action action)
         {
             var wrapper = new Action<T>(_ => action());
-            prop.OnChange += wrapper;
-            _unsubscribe.Add(() => prop.OnChange -= wrapper);
+            prop.OnChangeWithValue += wrapper;
+            _unsubscribe.Add(() => prop.OnChangeWithValue -= wrapper);
         }
 
         public void BindDeferred<T>(Property<T> prop, Property<T> prop2, bool twoWay)
