@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using UnityEngine;
 
 namespace VirtualMaker.Bindings
@@ -19,8 +18,8 @@ namespace VirtualMaker.Bindings
             float num = 1 / time;
             Keyframe[] array = new Keyframe[2]
             {
-                new Keyframe(0, 0, 0f, num),
-                new Keyframe(time, 1, 0f, 0f)
+                new(0, 0, 0f, num),
+                new(time, 1, 0f, 0f)
             };
 
             return new AnimationCurve(array);
@@ -37,8 +36,8 @@ namespace VirtualMaker.Bindings
             float num = 1 / time;
             Keyframe[] array = new Keyframe[2]
             {
-                new Keyframe(0, 0, 0, 0),
-                new Keyframe(time, 1, num, 0f)
+                new(0, 0, 0, 0),
+                new(time, 1, num, 0f)
             };
 
             return new AnimationCurve(array);
