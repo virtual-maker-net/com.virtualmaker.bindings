@@ -73,7 +73,10 @@ namespace VirtualMaker.Bindings
 
                 foreach (var (_, toItem) in childItems)
                 {
-                    toItem.gameObject.Destroy();
+                    if (toItem.gameObject)
+                    {
+                        toItem.gameObject.Destroy();
+                    }
                 }
             });
 
