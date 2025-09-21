@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace VirtualMaker.Bindings
@@ -155,6 +156,31 @@ namespace VirtualMaker.Bindings
 
     public static class Derived
     {
+        public static Derived<TDerived> From<TValue, TDerived>(IEnumerable<IProperty<TValue>> properties, Func<TValue, TDerived> func)
+        {
+            Derived<TDerived> derived = null;
+            var props = properties.ToList();
+
+            foreach (var prop in props)
+            {
+                if (prop == null)
+                {
+                    return null;
+                }
+
+                if (derived == null)
+                {
+                    derived = From(prop, func);
+                }
+                else
+                {
+                    derived = From(derived, prop, (_, v) => func(v));
+                }
+            }
+
+            return derived;
+        }
+
         public static Derived<TDerived> From<TValue, TDerived>(IProperty<TValue> property, Func<TValue, TDerived> func)
         {
             return Derived<TDerived>.From(property, func);
