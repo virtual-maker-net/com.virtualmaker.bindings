@@ -47,13 +47,13 @@ public class BindingExamples : MonoBehaviour
         this.Bind(_button.onClick, () => _number.Value += 1);
 
         // Bind to a non-property (runs on update) (auto-generated function)
-        this.BindUpdate(() => _mouseFollower.position = Input.mousePosition);
+        _mouseFollower.BindPositionUpdate(() => Input.mousePosition);
 
         // Bind to do something every X seconds
         this.BindInterval(1.0f, () => _number.Value += 1);
 
         // Bind continuous lerp
-        this.BindUpdate(() => _follower2.position = Vector3.Lerp(_follower2.position, _mouseFollower.position, 10f * Time.smoothDeltaTime));
+        _follower2.BindPositionLerp(_mouseFollower, 10f);
 
         // Animate between two points with a time curve
         this.Animate(Easing.EaseInOut(5), t => _animated.transform.localPosition = Vector3.Lerp(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), t));

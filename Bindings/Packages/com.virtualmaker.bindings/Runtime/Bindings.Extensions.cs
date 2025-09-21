@@ -119,42 +119,49 @@ namespace VirtualMaker.Bindings.Extensions
         public static async Task WaitUntilAsync(this UnityEngine.Object obj, IProperty<bool> prop, CancellationToken cancellationToken = default)
             => await BindingsInternal.WaitUntilAsync(new(obj, cancellationToken), prop);
 
-        /// GAMEOBJECT
+        /// GameObject.activeSelf
 
-        public static void BindActiveSelf(this GameObject obj, IProperty<bool> property)
-            => obj.Bind(property, v => obj.SetActive(v));
+        public static void BindActiveSelf(this GameObject obj, IProperty<bool> prop, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(obj, cancellationToken), prop, obj.SetActive);
 
-        public static void BindActiveSelf<T>(this GameObject obj, IProperty<T> property, Func<T, bool> transform)
-            => obj.Bind(property, v => obj.SetActive(transform(v)));
+        public static void BindActiveSelf<T>(this GameObject obj, IProperty<T> property, Func<T, bool> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.SetActive(transform(v)));
 
-        public static void BindActiveSelf(this GameObject obj, Func<bool> func)
-             => obj.BindUpdate(() => obj.SetActive(func()));
+        /// Component.enabled
 
-        public static void BindActiveSelfInterval(this GameObject obj, float seconds, Func<bool> func)
-            => obj.BindInterval(seconds, () => obj.SetActive(func()));
+        public static void BindEnabled(this MonoBehaviour component, IProperty<bool> prop, CancellationToken cancellationToken = default)
+            => component.Bind(prop, v => component.enabled = v, cancellationToken);
 
-        public static void BindActiveSelf(this GameObject obj, IProperty<bool> property, CancellationToken cancellationToken = default)
-            => obj.Bind(property, v => obj.SetActive(v), cancellationToken);
+        public static void BindEnabled<T>(this MonoBehaviour component, IProperty<T> prop, Func<T, bool> transform, CancellationToken cancellationToken = default)
+            => component.Bind(prop, v => component.enabled = transform(v), cancellationToken);
 
+        public static void BindEnabled(this Renderer component, IProperty<bool> prop, CancellationToken cancellationToken = default)
+            => component.Bind(prop, v => component.enabled = v, cancellationToken);
 
-        /// COMPONENT
+        public static void BindEnabled<T>(this Renderer component, IProperty<T> prop, Func<T, bool> transform, CancellationToken cancellationToken = default)
+            => component.Bind(prop, v => component.enabled = transform(v), cancellationToken);
 
-        public static void BindEnabled(this MonoBehaviour component, IProperty<bool> property)
-            => component.Bind(property, v => component.enabled = v);
+        public static void BindEnabled(this Collider component, IProperty<bool> prop, CancellationToken cancellationToken = default)
+            => component.Bind(prop, v => component.enabled = v, cancellationToken);
 
-        public static void BindEnabled<T>(this MonoBehaviour component, IProperty<T> property, Func<T, bool> transform)
-            => component.Bind(property, v => component.enabled = transform(v));
+        public static void BindEnabled<T>(this Collider component, IProperty<T> prop, Func<T, bool> transform, CancellationToken cancellationToken = default)
+            => component.Bind(prop, v => component.enabled = transform(v), cancellationToken);
 
-        public static void BindEnabled(this Renderer component, IProperty<bool> property)
-            => component.Bind(property, v => component.enabled = v);
+        /// Transform.position
 
-        public static void BindEnabled<T>(this Renderer component, IProperty<T> property, Func<T, bool> transform)
-            => component.Bind(property, v => component.enabled = transform(v));
+        public static void BindPositionUpdate(this Transform transform, Func<Vector3> func, Func<bool> doneFunc = null, CancellationToken cancellationToken = default)
+            => transform.BindUpdate(() => transform.position = func(), doneFunc, cancellationToken);
 
-        public static void BindEnabled(this Collider component, IProperty<bool> property)
-            => component.Bind(property, v => component.enabled = v);
+        public static void BindPositionLerp(this Transform transform, IProperty<Vector3> prop, float t, Func<bool> doneFunc = null, CancellationToken cancellationToken = default)
+            => transform.BindUpdate(() => transform.position = Vector3.Lerp(transform.position, prop.Value, t * Time.smoothDeltaTime), doneFunc, cancellationToken);
 
-        public static void BindEnabled<T>(this Collider component, IProperty<T> property, Func<T, bool> transform)
-            => component.Bind(property, v => component.enabled = transform(v));
+        public static void BindPositionLerp(this Transform transform, Transform target, float t, Func<bool> doneFunc = null, CancellationToken cancellationToken = default)
+            => transform.BindUpdate(() => transform.position = Vector3.Lerp(transform.position, target.position, t * Time.smoothDeltaTime), doneFunc, cancellationToken);
+
+        public static void BindPositionMoveTowards(this Transform transform, IProperty<Vector3> prop, float maxDistanceDelta, Func<bool> doneFunc = null, CancellationToken cancellationToken = default)
+            => transform.BindUpdate(() => transform.position = Vector3.MoveTowards(transform.position, prop.Value, maxDistanceDelta), doneFunc, cancellationToken);
+
+        public static void BindPositionMoveTowards(this Transform transform, Transform target, float maxDistanceDelta, Func<bool> doneFunc = null, CancellationToken cancellationToken = default)
+            => transform.BindUpdate(() => transform.position = Vector3.MoveTowards(transform.position, target.position, maxDistanceDelta), doneFunc, cancellationToken);
     }
 }

@@ -309,7 +309,7 @@ namespace VirtualMaker.Bindings
 
         public static IProperty<bool> All(params IProperty<bool>[] properties)
         {
-            return All(properties);
+            return All(properties.AsEnumerable());
         }
 
         public static IProperty<bool> All(IEnumerable<IProperty<bool>> properties)
@@ -332,7 +332,7 @@ namespace VirtualMaker.Bindings
 
         public static IProperty<bool> Any(params IProperty<bool>[] properties)
         {
-            return Any(properties);
+            return Any(properties.AsEnumerable());
         }
 
         public static IProperty<bool> Any(IEnumerable<IProperty<bool>> properties)
