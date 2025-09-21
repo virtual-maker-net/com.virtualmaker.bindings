@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using VirtualMaker.Bindings;
 using VirtualMaker.Bindings.Extensions;
 
-public class BindingExamples : BindingMonoBehaviour
+public class BindingExamples : MonoBehaviour
 {
     [SerializeField]
     private Property<int> _number = new();
@@ -31,10 +31,10 @@ public class BindingExamples : BindingMonoBehaviour
     [SerializeField]
     private Hoverable _hoverImage;
 
-    protected override void BindOld()
+    private void Start()
     {
         // General binding
-        Bindings.Bind(_number, x => Debug.Log(x));
+        this.Bind(_number, x => Debug.Log(x));
 
         // Binding a property (auto-generated function)
         _text.BindText(_number);
@@ -47,22 +47,19 @@ public class BindingExamples : BindingMonoBehaviour
         this.Bind(_button.onClick, () => _number.Value += 1);
 
         // Bind to a non-property (runs on update) (auto-generated function)
-        _mouseFollower.BindPosition(() => Input.mousePosition);
+        this.BindUpdate(() => _mouseFollower.position = Input.mousePosition);
 
         // Bind to do something every X seconds
-        Bindings.BindInterval(1.0f, () => _number.Value += 1);
+        this.BindInterval(1.0f, () => _number.Value += 1);
 
-        // Bind continuous lerp - shorthand for:
-        // _follower2.BindPosition(() => Vector3.Lerp(_follower2.position, _mouseFollower.position, 10f * Time.smoothDeltaTime));
-        _follower2.BindPositionLerp(10f, () => _mouseFollower.position);
+        // Bind continuous lerp
+        this.BindUpdate(() => _follower2.position = Vector3.Lerp(_follower2.position, _mouseFollower.position, 10f * Time.smoothDeltaTime));
 
         // Animate between two points with a time curve
-        // Shorthand for:
-        // _animated.Animate(Easing.EaseInOut(5), t => _animated.transform.localPosition = Vector3.Lerp(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), t));
-        _animated.AnimateLocalPosition(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), Easing.EaseInOut(5));
+        this.Animate(Easing.EaseInOut(5), t => _animated.transform.localPosition = Vector3.Lerp(new Vector3(-200, 0, 0), new Vector3(200, 0, 0), t));
 
         // Transition colors on hover
-        var transition = Bindings.CreateTransition(_hoverImage.Hovering, Easing.EaseOut(0.2f));
+        var transition = this.CreateTransition(_hoverImage.Hovering, Easing.EaseOut(0.2f));
         _hoverImage.GetComponent<Image>().BindColor(transition, v => new Color(1, v, 1));
     }
 }

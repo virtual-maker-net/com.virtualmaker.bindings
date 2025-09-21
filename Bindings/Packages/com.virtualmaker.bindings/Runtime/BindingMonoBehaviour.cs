@@ -10,11 +10,11 @@ namespace VirtualMaker.Bindings
         protected virtual void OnEnable()
         {
             using var scope = _bindings.Scope();
-            BindOld();
+            Bind();
         }
 
         protected virtual void OnDisable() => _bindings.Clear();
 
-        protected virtual void BindOld() {}
+        protected virtual void Bind() {}
     }
 }
