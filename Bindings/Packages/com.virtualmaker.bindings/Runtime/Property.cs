@@ -307,12 +307,12 @@ namespace VirtualMaker.Bindings
             return Derived<TDerived>.From(property1, property2, property3, property4, func);
         }
 
-        public static IProperty<bool> All(IEnumerable<IProperty<bool>> properties)
+        public static IProperty<bool> All(params IProperty<bool>[] properties)
         {
-            return All(properties.ToArray());
+            return All(properties);
         }
 
-        public static IProperty<bool> All(params IProperty<bool>[] properties)
+        public static IProperty<bool> All(IEnumerable<IProperty<bool>> properties)
         {
             var result = new Property<bool>();
 
@@ -330,12 +330,12 @@ namespace VirtualMaker.Bindings
             return result;
         }
 
-        public static IProperty<bool> Any(IEnumerable<IProperty<bool>> properties)
+        public static IProperty<bool> Any(params IProperty<bool>[] properties)
         {
-            return Any(properties.ToArray());
+            return Any(properties);
         }
 
-        public static IProperty<bool> Any(params IProperty<bool>[] properties)
+        public static IProperty<bool> Any(IEnumerable<IProperty<bool>> properties)
         {
             var result = new Property<bool>();
 

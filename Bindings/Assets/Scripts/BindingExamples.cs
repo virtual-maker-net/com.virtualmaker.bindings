@@ -31,7 +31,7 @@ public class BindingExamples : BindingMonoBehaviour
     [SerializeField]
     private Hoverable _hoverImage;
 
-    protected override void Bind()
+    protected override void BindOld()
     {
         // General binding
         Bindings.Bind(_number, x => Debug.Log(x));
@@ -44,7 +44,7 @@ public class BindingExamples : BindingMonoBehaviour
         _text.BindColor(color);
 
         // Binding a UnityEvent with lifetime context
-        _button.onClick.Bind(() => _number.Value += 1);
+        this.Bind(_button.onClick, () => _number.Value += 1);
 
         // Bind to a non-property (runs on update) (auto-generated function)
         _mouseFollower.BindPosition(() => Input.mousePosition);

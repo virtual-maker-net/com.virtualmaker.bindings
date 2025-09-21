@@ -52,26 +52,26 @@ namespace VirtualMaker.Bindings
         }
     }
 
-    public class BindableEvent<T1, T2>
+    public class BindableEvent<T0, T1>
     {
-        private event Action<T1, T2> _evt;
+        private event Action<T0, T1> _evt;
 
-        public void AddListener(Action<T1, T2> action)
+        public void AddListener(Action<T0, T1> action)
         {
             _evt += action;
         }
 
-        public void RemoveListener(Action<T1, T2> action)
+        public void RemoveListener(Action<T0, T1> action)
         {
             _evt -= action;
         }
 
-        public void Invoke(T1 value1, T2 value2)
+        public void Invoke(T0 value1, T1 value2)
         {
             _evt?.Invoke(value1, value2);
         }
 
-        public void Bind(Action<T1, T2> action)
+        public void Bind(Action<T0, T1> action)
         {
             Bindings2._scope.Bind(this, action);
         }
