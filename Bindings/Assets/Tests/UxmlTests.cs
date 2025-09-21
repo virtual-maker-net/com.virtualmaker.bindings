@@ -5,7 +5,7 @@ using VirtualMaker.Bindings;
 
 public class UxmlTests
 {
-    private Bindings _bindings;
+    private BindingsUI _bindings;
     private Property<int> _intProperty = new();
     private Property<string> _stringProperty = new();
     private IntegerField _integerField;

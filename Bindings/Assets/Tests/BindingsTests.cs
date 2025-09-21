@@ -16,39 +16,6 @@ public class BindingsTests
         }
     }
 
-    private Bindings _bindings;
-
-    [SetUp]
-    public void SetUp()
-    {
-        _bindings = new();
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _bindings.Reset();
-    }
-
-    [Test]
-    public void TestEventMemberSubscribing()
-    {
-        var pokeable = new Pokeable();
-        var pokeCount = 0;
-
-        _bindings.On(pokeable, nameof(Pokeable.OnPoked), () => pokeCount++);
-
-        pokeable.Poke();
-        pokeable.Poke();
-        pokeable.Poke();
-
-        _bindings.Reset();
-
-        pokeable.Poke();
-
-        Assert.AreEqual(3, pokeCount);
-    }
-
     private static async Task DoSomethingAsync(Action action)
     {
         await Task.Delay(100);
@@ -63,7 +30,7 @@ public class BindingsTests
 
         bool thingHappened = false;
 
-        _bindings.On(button.onClick, () => DoSomethingAsync(() => thingHappened = true));
+        Bindings.Bind(button.onClick, () => DoSomethingAsync(() => thingHappened = true));
 
         button.onClick.Invoke();
 

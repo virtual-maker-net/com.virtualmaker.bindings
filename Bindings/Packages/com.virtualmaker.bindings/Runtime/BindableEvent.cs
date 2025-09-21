@@ -20,11 +20,6 @@ namespace VirtualMaker.Bindings
         {
             _evt?.Invoke();
         }
-
-        public void Bind(Action action)
-        {
-            Bindings2._scope.Bind(this, action);
-        }
     }
 
     public class BindableEvent<T>
@@ -45,11 +40,6 @@ namespace VirtualMaker.Bindings
         {
             _evt?.Invoke(value);
         }
-
-        public void Bind(Action<T> action)
-        {
-            Bindings2._scope.Bind(this, action);
-        }
     }
 
     public class BindableEvent<T0, T1>
@@ -69,11 +59,6 @@ namespace VirtualMaker.Bindings
         public void Invoke(T0 value1, T1 value2)
         {
             _evt?.Invoke(value1, value2);
-        }
-
-        public void Bind(Action<T0, T1> action)
-        {
-            Bindings2._scope.Bind(this, action);
         }
     }
 }

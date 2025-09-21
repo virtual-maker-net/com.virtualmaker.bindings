@@ -9,14 +9,24 @@ using UnityEngine.UIElements;
 
 namespace VirtualMaker.Bindings
 {
-    public partial class Bindings
+    public partial class BindingsUI
     {
         private readonly VisualElement _root;
         public VisualElement Root => _root;
 
-        public Bindings(VisualElement root)
+        private List<Action> _unsubscribe = new();
+
+        public BindingsUI(VisualElement root)
         {
             _root = root;
+        }
+
+        public void Bind<T>(IProperty<T> prop, Action<T> action)
+        {
+            void Unsub() { prop.OnChangeWithValue -= action; }
+            prop.OnChangeWithValue += v => action(v);
+            _unsubscribe.Add(Unsub);
+            action(prop.Value);
         }
 
         public void BindText<T>(string name, IProperty<T> prop)
@@ -421,9 +431,9 @@ namespace VirtualMaker.Bindings
             BindDisplay(name, true, prop);
         }
 
-        public IReadOnlyDictionary<T, Bindings> BindList<T>(string containerName, VisualTreeAsset template, IProperty<List<T>> prop, Action<T, Bindings> onTemplateAdded)
+        public IReadOnlyDictionary<T, BindingsUI> BindList<T>(string containerName, VisualTreeAsset template, IProperty<List<T>> prop, Action<T, BindingsUI> onTemplateAdded)
         {
-            var childItems = new Dictionary<T, Bindings>();
+            var childItems = new Dictionary<T, BindingsUI>();
 
             if (!TryGetElement<VisualElement>(containerName, out var container))
             {
@@ -458,7 +468,7 @@ namespace VirtualMaker.Bindings
                     if (!childItems.TryGetValue(item, out var bindings))
                     {
                         var newItem = template.CloneTree();
-                        bindings = new Bindings(newItem);
+                        bindings = new BindingsUI(newItem);
                         childItems.Add(item, bindings);
                         onTemplateAdded(item, bindings);
                     }
@@ -483,9 +493,9 @@ namespace VirtualMaker.Bindings
             return childItems;
         }
 
-        public IReadOnlyDictionary<K, Bindings> BindDictionary<K, V>(string containerName, VisualTreeAsset template, IProperty<Dictionary<K, V>> prop, Action<K, V, Bindings> onTemplateAdded)
+        public IReadOnlyDictionary<K, BindingsUI> BindDictionary<K, V>(string containerName, VisualTreeAsset template, IProperty<Dictionary<K, V>> prop, Action<K, V, BindingsUI> onTemplateAdded)
         {
-            var childItems = new Dictionary<K, Bindings>();
+            var childItems = new Dictionary<K, BindingsUI>();
 
             if (!TryGetElement<VisualElement>(containerName, out var container))
             {
@@ -519,7 +529,7 @@ namespace VirtualMaker.Bindings
                     if (!childItems.TryGetValue(key, out var bindings))
                     {
                         var newItem = template.CloneTree();
-                        bindings = new Bindings(newItem);
+                        bindings = new BindingsUI(newItem);
                         childItems.Add(key, bindings);
                         onTemplateAdded(key, value, bindings);
                     }
@@ -711,6 +721,52 @@ namespace VirtualMaker.Bindings
         {
             element.RegisterCallback(callback, useTrickleDown);
             _unsubscribe.Add(() => element.UnregisterCallback(callback));
+        }
+
+        public void Reset()
+        {
+            foreach (var unsub in _unsubscribe)
+            {
+                unsub();
+            }
+
+            _unsubscribe.Clear();
+        }
+
+        public async Task<Texture2D> DownloadImageAsync(string url)
+        {
+            bool unsubscribed = false;
+            _unsubscribe.Add(() => unsubscribed = true);
+
+            var texture = await ImageDownloader.DownloadImageAsync(url);
+            if (unsubscribed)
+            {
+                ImageDownloader.ReleaseImage(texture);
+                return null;
+            }
+            else
+            {
+                _unsubscribe.Add(() => ImageDownloader.ReleaseImage(texture));
+                return texture;
+            }
+        }
+
+        public async Task<Sprite> DownloadSpriteAsync(string url)
+        {
+            bool unsubscribed = false;
+            _unsubscribe.Add(() => unsubscribed = true);
+
+            var sprite = await ImageDownloader.DownloadSpriteAsync(url);
+            if (unsubscribed)
+            {
+                ImageDownloader.ReleaseSprite(sprite);
+                return null;
+            }
+            else
+            {
+                _unsubscribe.Add(() => ImageDownloader.ReleaseSprite(sprite));
+                return sprite;
+            }
         }
     }
 }

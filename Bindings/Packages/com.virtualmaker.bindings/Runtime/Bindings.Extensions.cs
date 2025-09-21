@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -118,6 +119,16 @@ namespace VirtualMaker.Bindings.Extensions
 
         public static async Task WaitUntilAsync(this UnityEngine.Object obj, IProperty<bool> prop, CancellationToken cancellationToken = default)
             => await BindingsInternal.WaitUntilAsync(new(obj, cancellationToken), prop);
+
+        public static IReadOnlyDictionary<TItem, TComponent> BindList<TItem, TComponent>(this UnityEngine.Object obj,
+            Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded,
+            Action<TItem, TComponent> onListUpdated = null, CancellationToken cancellationToken = default) where TComponent : Component
+            => BindingsInternal.BindList(new(obj, cancellationToken), parent, prefab, prop, onPrefabAdded, onListUpdated);
+
+        public static IReadOnlyDictionary<TKey, TComponent> BindDictionary<TKey, TValue, TComponent>(
+            this UnityEngine.Object obj, Transform parent, TComponent prefab, IProperty<Dictionary<TKey, TValue>> prop,
+            Action<TKey, TValue, TComponent> onPrefabAdded, CancellationToken cancellationToken = default) where TComponent : Component
+            => BindingsInternal.BindDictionary(new(obj, cancellationToken), parent, prefab, prop, onPrefabAdded);
 
         /// GameObject.activeSelf
 

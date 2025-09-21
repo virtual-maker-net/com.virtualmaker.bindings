@@ -1,13 +1,37 @@
 #if UNITY_INPUT_SYSTEM
 using System;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace VirtualMaker.Bindings
 {
-    public partial class Bindings
+    public static partial class Bindings
     {
-        public void Bind<T>(InputActionReference inputActionReference,
+        public static void Bind<T>(
+            InputActionReference inputActionReference,
+            Property<T> performedProp = null, Action<T> onPerformed = null,
+            Property<T> startedProp = null, Action<T> onStarted = null,
+            Property<T> canceledProp = null, Action<T> onCanceled = null,
+            CancellationToken cancellationToken = default)
+            where T : struct
+            => Bind(new(cancellationToken), inputActionReference, performedProp, onPerformed,
+                startedProp, onStarted, canceledProp, onCanceled);
+
+        public static void Bind<T>(
+            this UnityEngine.Object obj,
+            InputActionReference inputActionReference,
+            Property<T> performedProp = null, Action<T> onPerformed = null,
+            Property<T> startedProp = null, Action<T> onStarted = null,
+            Property<T> canceledProp = null, Action<T> onCanceled = null,
+            CancellationToken cancellationToken = default)
+            where T : struct
+            => Bind(new(obj, cancellationToken), inputActionReference, performedProp, onPerformed,
+                startedProp, onStarted, canceledProp, onCanceled);
+
+        internal static void Bind<T>(
+            BindingContext context,
+            InputActionReference inputActionReference,
             Property<T> performedProp = null, Action<T> onPerformed = null,
             Property<T> startedProp = null, Action<T> onStarted = null,
             Property<T> canceledProp = null, Action<T> onCanceled = null)
@@ -28,13 +52,37 @@ namespace VirtualMaker.Bindings
                 onCanceled?.Invoke(canceledProp.Value);
             }
 
-            BindDeferred(inputActionReference,
+            BindDeferred(context,
+                inputActionReference,
                 performedProp, onPerformed,
                 startedProp, onStarted,
                 canceledProp, onCanceled);
         }
 
-        public void BindDeferred<T>(InputActionReference inputActionReference,
+        public static void BindDeferred<T>(
+            InputActionReference inputActionReference,
+            Property<T> performedProp = null, Action<T> onPerformed = null,
+            Property<T> startedProp = null, Action<T> onStarted = null,
+            Property<T> canceledProp = null, Action<T> onCanceled = null,
+            CancellationToken cancellationToken = default)
+            where T : struct
+            => BindDeferred(new(cancellationToken), inputActionReference, performedProp, onPerformed,
+                startedProp, onStarted, canceledProp, onCanceled);
+
+        public static void BindDeferred<T>(
+            this UnityEngine.Object obj,
+            InputActionReference inputActionReference,
+            Property<T> performedProp = null, Action<T> onPerformed = null,
+            Property<T> startedProp = null, Action<T> onStarted = null,
+            Property<T> canceledProp = null, Action<T> onCanceled = null,
+            CancellationToken cancellationToken = default)
+            where T : struct
+            => BindDeferred(new(obj, cancellationToken), inputActionReference, performedProp, onPerformed,
+                startedProp, onStarted, canceledProp, onCanceled);
+
+        internal static void BindDeferred<T>(
+            BindingContext context,
+            InputActionReference inputActionReference,
             Property<T> performedProp = null, Action<T> onPerformed = null,
             Property<T> startedProp = null, Action<T> onStarted = null,
             Property<T> canceledProp = null, Action<T> onCanceled = null)
@@ -79,58 +127,95 @@ namespace VirtualMaker.Bindings
                 }
             }
 
-            On<T>(inputActionReference, Performed, Started, Canceled);
+            Bind<T>(context, inputActionReference, Performed, Started, Canceled);
         }
 
-        public void On(InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null)
-            => On(inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
+        public static void Bind(InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null, CancellationToken cancellationToken = default)
+            => Bind(new(cancellationToken), inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
 
-        public void On<T>(InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCancelled = null)
+        public static void Bind(this UnityEngine.Object obj, InputActionReference inputActionReference, Action onPerformed = null, Action onStarted = null, Action onCanceled = null, CancellationToken cancellationToken = default)
+            => Bind(new(obj, cancellationToken), inputActionReference, _ => onPerformed?.Invoke(), _ => onStarted?.Invoke(), _ => onCanceled?.Invoke());
+
+        public static void Bind<T>(this UnityEngine.Object obj, InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCanceled = null, CancellationToken cancellationToken = default) where T : struct
+            => Bind(new(obj, cancellationToken), inputActionReference, onPerformed, onStarted, onCanceled);
+
+        internal static void Bind<T>(BindingContext context, InputActionReference inputActionReference, Action<T> onPerformed = null, Action<T> onStarted = null, Action<T> onCanceled = null)
             where T : struct
         {
             var inputAction = inputActionReference.GetAndCloneAction();
             inputAction.Enable();
 
-            // add first to make sure we disable input action
-            // before unsubscribing to callback events.
-            AddUnsubscriber(() => inputAction.Disable());
-
-            if (onPerformed != null)
+            void Unsubscribe()
             {
-                inputAction.performed += OnActionPerformed;
-            }
-
-            if (onStarted != null)
-            {
-                inputAction.started += OnActionStarted;
-                AddUnsubscriber(() => inputAction.started -= OnActionStarted);
-            }
-
-            if (onCancelled != null)
-            {
-                inputAction.canceled += OnActionCanceled;
-                AddUnsubscriber(() => inputAction.canceled -= OnActionCanceled);
-            }
-
-            // add last so make sure we unsubscribe to started/canceled callbacks
-            // before disposing of the input action.
-            AddUnsubscriber(() =>
-            {
-                if (onPerformed != null)
-                {
-                    inputAction.performed -= OnActionPerformed;
-                }
-
+                inputAction.performed -= OnActionPerformed;
+                inputAction.started -= OnActionStarted;
+                inputAction.canceled -= OnActionCanceled;
                 inputAction.Dispose();
-            });
+            }
 
-            return;
-            void OnActionPerformed(InputAction.CallbackContext ctx) => onPerformed(ctx.ReadValue<T>());
-            void OnActionStarted(InputAction.CallbackContext ctx) => onStarted(ctx.ReadValue<T>());
-            void OnActionCanceled(InputAction.CallbackContext ctx) => onCancelled(ctx.ReadValue<T>());
+            void OnActionPerformed(InputAction.CallbackContext ctx)
+            {
+                if (context.IsValid)
+                {
+                    onPerformed(ctx.ReadValue<T>());
+                }
+                else
+                {
+                    Unsubscribe();
+                }
+            }
+
+            inputAction.performed += OnActionPerformed;
+
+            void OnActionStarted(InputAction.CallbackContext ctx)
+            {
+                if (context.IsValid)
+                {
+                    onStarted(ctx.ReadValue<T>());
+                }
+                else
+                {
+                    Unsubscribe();
+                }
+            }
+
+            inputAction.started += OnActionStarted;
+
+            void OnActionCanceled(InputAction.CallbackContext ctx)
+            {
+                if (context.IsValid)
+                {
+                    onCanceled(ctx.ReadValue<T>());
+                }
+                else
+                {
+                    Unsubscribe();
+                }
+            }
+
+            inputAction.canceled += OnActionCanceled;
         }
 
-        public void On(InputActionReference inputActionReference,
+        public static void Bind(
+            InputActionReference inputActionReference,
+            Action<InputAction.CallbackContext> onPerformed = null,
+            Action<InputAction.CallbackContext> onStarted = null,
+            Action<InputAction.CallbackContext> onCanceled = null,
+            CancellationToken cancellationToken = default)
+            => Bind(new(cancellationToken), inputActionReference, onPerformed, onStarted, onCanceled);
+
+        public static void Bind(
+            UnityEngine.Object obj,
+            InputActionReference inputActionReference,
+            Action<InputAction.CallbackContext> onPerformed = null,
+            Action<InputAction.CallbackContext> onStarted = null,
+            Action<InputAction.CallbackContext> onCanceled = null,
+            CancellationToken cancellationToken = default)
+            => Bind(new(obj, cancellationToken), inputActionReference, onPerformed, onStarted, onCanceled);
+
+        internal static void Bind(
+            BindingContext context,
+            InputActionReference inputActionReference,
             Action<InputAction.CallbackContext> onPerformed = null,
             Action<InputAction.CallbackContext> onStarted = null,
             Action<InputAction.CallbackContext> onCanceled = null)
@@ -138,43 +223,55 @@ namespace VirtualMaker.Bindings
             var inputAction = inputActionReference.GetAndCloneAction();
             inputAction.Enable();
 
-            // add first to make sure we disable input action
-            // before unsubscribing to callback events.
-            AddUnsubscriber(() => inputAction.Disable());
-
-            if (onPerformed != null)
+            void Unsubscribe()
             {
-                inputAction.performed += OnActionPerformed;
-            }
-
-            if (onStarted != null)
-            {
-                inputAction.started += OnActionStarted;
-                AddUnsubscriber(() => inputAction.started -= OnActionStarted);
-            }
-
-            if (onCanceled != null)
-            {
-                inputAction.canceled += OnActionCanceled;
-                AddUnsubscriber(() => inputAction.canceled -= OnActionCanceled);
-            }
-
-            // add last so make sure we unsubscribe to started/canceled callbacks
-            // before disposing of the input action.
-            AddUnsubscriber(() =>
-            {
-                if (onPerformed != null)
-                {
-                    inputAction.performed -= OnActionPerformed;
-                }
-
+                inputAction.performed -= OnActionPerformed;
+                inputAction.started -= OnActionStarted;
+                inputAction.canceled -= OnActionCanceled;
                 inputAction.Dispose();
-            });
+            }
 
-            return;
-            void OnActionPerformed(InputAction.CallbackContext ctx) => onPerformed(ctx);
-            void OnActionStarted(InputAction.CallbackContext ctx) => onStarted(ctx);
-            void OnActionCanceled(InputAction.CallbackContext ctx) => onCanceled(ctx);
+            void OnActionPerformed(InputAction.CallbackContext ctx)
+            {
+                if (context.IsValid)
+                {
+                    onPerformed(ctx);
+                }
+                else
+                {
+                    Unsubscribe();
+                }
+            }
+
+            inputAction.performed += OnActionPerformed;
+
+            void OnActionStarted(InputAction.CallbackContext ctx)
+            {
+                if (context.IsValid)
+                {
+                    onStarted(ctx);
+                }
+                else
+                {
+                    Unsubscribe();
+                }
+            }
+
+            inputAction.started += OnActionStarted;
+
+            void OnActionCanceled(InputAction.CallbackContext ctx)
+            {
+                if (context.IsValid)
+                {
+                    onCanceled(ctx);
+                }
+                else
+                {
+                    Unsubscribe();
+                }
+            }
+
+            inputAction.canceled += OnActionCanceled;
         }
     }
 

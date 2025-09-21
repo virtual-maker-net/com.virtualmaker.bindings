@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -6,29 +7,6 @@ using UnityEngine.Events;
 
 namespace VirtualMaker.Bindings
 {
-    internal struct BindingContext
-    {
-        public bool HasUnityObject;
-        public UnityEngine.Object UnityObject;
-        public CancellationToken CancellationToken;
-
-        public BindingContext(UnityEngine.Object unityObject, bool hasUnityObject, CancellationToken cancellationToken)
-        {
-            HasUnityObject = hasUnityObject;
-            UnityObject = unityObject;
-            CancellationToken = cancellationToken;
-        }
-
-        public BindingContext(UnityEngine.Object unityObject, CancellationToken cancellationToken) :
-            this(unityObject, true, cancellationToken) {}
-
-        public BindingContext(CancellationToken cancellationToken) :
-            this(null, false, cancellationToken) {}
-
-        public readonly bool IsValid
-            => !CancellationToken.IsCancellationRequested && (!HasUnityObject || UnityObject);
-    }
-
     internal static class BindingsInternal
     {
         private static void BindAsync(BindingContext context, Action<Action> subscribe, Action<Action> unsubscribe, Func<Task> action)
@@ -569,6 +547,133 @@ namespace VirtualMaker.Bindings
 
             prop.OnChangeWithValue += Update;
             await tcs.Task;
+        }
+
+        public static IReadOnlyDictionary<TItem, TComponent> BindList<TItem, TComponent>(BindingContext context,
+            Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded,
+            Action<TItem, TComponent> onListUpdated = null) where TComponent : Component
+        {
+            var childItems = new Dictionary<TItem, TComponent>();
+
+            Action<List<TItem>> update = list =>
+            {
+                // Remove items that are no longer in the list.
+                var removed = new List<TItem>();
+
+                foreach (var (fromItem, toItem) in childItems)
+                {
+                    // In edit mode remove everything, so we can test data changes
+                    if (!list.Contains(fromItem) || !Application.isPlaying)
+                    {
+                        toItem.gameObject.Destroy();
+                        removed.Add(fromItem);
+                    }
+                }
+
+                foreach (var item in removed)
+                {
+                    childItems.Remove(item);
+                }
+
+                // Add items that are new to the list.
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var item = list[i];
+                    if (!childItems.TryGetValue(item, out var toItem))
+                    {
+                        toItem = UnityEngine.Object.Instantiate(prefab, parent);
+                        childItems.Add(item, toItem);
+                        onPrefabAdded(item, toItem);
+                    }
+
+                    toItem.transform.SetSiblingIndex(i);
+                }
+
+                if (onListUpdated != null)
+                {
+                    foreach (var (item, child) in childItems)
+                    {
+                        onListUpdated(item, child);
+                    }
+                }
+            };
+
+            void Subscribe(Action<List<TItem>> action)
+            {
+                prop.OnChangeWithValue += action;
+            }
+
+            void Unsubscribe(Action<List<TItem>> action)
+            {
+                prop.OnChangeWithValue -= action;
+
+                foreach (var (_, toItem) in childItems)
+                {
+                    toItem.gameObject.Destroy();
+                }
+            }
+
+            Bind(context, Subscribe, Unsubscribe, update);
+            update(prop.Value);
+            return childItems;
+        }
+
+        public static IReadOnlyDictionary<TKey, TComponent> BindDictionary<TKey, TValue, TComponent>(
+            BindingContext context, Transform parent, TComponent prefab, IProperty<Dictionary<TKey, TValue>> prop,
+            Action<TKey, TValue, TComponent> onPrefabAdded) where TComponent : Component
+        {
+            var childItems = new Dictionary<TKey, TComponent>();
+
+            Action<Dictionary<TKey, TValue>> update = dict =>
+            {
+                // Remove items that are no longer in the list.
+                var removed = new List<TKey>();
+
+                foreach (var (fromItem, toItem) in childItems)
+                {
+                    // In edit mode remove everything, so we can test data changes
+                    if (!dict.ContainsKey(fromItem) || !Application.isPlaying)
+                    {
+                        toItem.gameObject.Destroy();
+                        removed.Add(fromItem);
+                    }
+                }
+
+                foreach (var item in removed)
+                {
+                    childItems.Remove(item);
+                }
+
+                // Add items that are new to the list.
+                foreach (var (key, value) in dict)
+                {
+                    if (!childItems.TryGetValue(key, out var toItem))
+                    {
+                        toItem = UnityEngine.Object.Instantiate(prefab, parent);
+                        childItems.Add(key, toItem);
+                        onPrefabAdded(key, value, toItem);
+                    }
+                }
+            };
+
+            void Subscribe(Action<Dictionary<TKey, TValue>> action)
+            {
+                prop.OnChangeWithValue += action;
+            }
+
+            void Unsubscribe(Action<Dictionary<TKey, TValue>> action)
+            {
+                prop.OnChangeWithValue -= action;
+
+                foreach (var (_, toItem) in childItems)
+                {
+                    toItem.gameObject.Destroy();
+                }
+            }
+
+            Bind(context, Subscribe, Unsubscribe, update);
+            update(prop.Value);
+            return childItems;
         }
     }
 }

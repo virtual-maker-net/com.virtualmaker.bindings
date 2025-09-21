@@ -73,22 +73,22 @@ namespace VirtualMaker.Bindings
         }
 
         public void Bind(IProperty<TValue> prop)
-            => Bindings2._scope.Bind(prop, this);
+            => BindingsInternal.Bind(new(), prop, this);
 
         public void Bind(Property<TValue> prop, bool twoWay)
-            => Bindings2._scope.Bind(prop, this, twoWay);
+            => BindingsInternal.Bind(new(), prop, this, twoWay);
 
         public void Bind<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
-            => Bindings2._scope.Bind(prop, this, transform);
+            => BindingsInternal.Bind(new(), prop, this, transform);
 
         public void BindDeferred(IProperty<TValue> prop)
-            => Bindings2._scope.BindDeferred(prop, this);
+            => BindingsInternal.BindDeferred(new(), prop, this);
 
         public void BindDeferred(Property<TValue> prop, bool twoWay)
-            => Bindings2._scope.BindDeferred(prop, this, twoWay);
+            => BindingsInternal.BindDeferred(new(), prop, this, twoWay);
 
         public void BindDeferred<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
-            => Bindings2._scope.BindDeferred(prop, this, transform);
+            => BindingsInternal.BindDeferred(new(), prop, this, transform);
     }
 
     [Serializable]
