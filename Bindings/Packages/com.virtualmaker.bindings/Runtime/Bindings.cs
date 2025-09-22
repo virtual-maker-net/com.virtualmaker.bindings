@@ -21,14 +21,14 @@ namespace VirtualMaker.Bindings
         public static void BindDeferred(Action action, CancellationToken cancellationToken, params IPropertyChange[] props)
             => BindingsInternal.BindDeferred(new(cancellationToken), action, props);
 
-        public static void BindDeferred<T>(IProperty<T> prop, IPropertySet<T> prop2, CancellationToken cancellationToken = default)
-            => BindingsInternal.BindDeferred(new(cancellationToken), prop, prop2);
+        public static void BindDeferred<T>(IProperty<T> fromProp, IPropertySet<T> toProp, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(cancellationToken), fromProp, toProp);
 
-        public static void BindDeferred<T0, T1>(IProperty<T0> prop, IPropertySet<T1> prop2, Func<T0, T1> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.BindDeferred(new(cancellationToken), prop, prop2, transform);
+        public static void BindDeferred<T0, T1>(IProperty<T0> fromProp, IPropertySet<T1> toProp, Func<T0, T1> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(cancellationToken), fromProp, toProp, transform);
 
-        public static void BindDeferred<T>(IPropertySet<T> prop, IPropertySet<T> prop2, bool twoWay, CancellationToken cancellationToken = default)
-            => BindingsInternal.BindDeferred(new(cancellationToken), prop, prop2, twoWay);
+        public static void BindDeferred<T>(IPropertySet<T> fromProp, IPropertySet<T> toProp, bool twoWay, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(cancellationToken), fromProp, toProp, twoWay);
 
         public static void Bind<T>(IProperty<T> prop, Action<T> action, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(cancellationToken), prop, action);
@@ -42,14 +42,14 @@ namespace VirtualMaker.Bindings
         public static void Bind(Action action, CancellationToken cancellationToken, params IPropertyChange[] props)
             => BindingsInternal.Bind(new(cancellationToken), action, props);
 
-        public static void Bind<T>(IProperty<T> prop, IPropertySet<T> prop2, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(cancellationToken), prop, prop2);
+        public static void Bind<T>(IProperty<T> fromProp, IPropertySet<T> toProp, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(cancellationToken), fromProp, toProp);
 
-        public static void Bind<T1, T2>(IProperty<T1> prop, IPropertySet<T2> prop2, Func<T1, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(cancellationToken), prop, prop2, transform);
+        public static void Bind<T1, T2>(IProperty<T1> fromProp, IPropertySet<T2> toProp, Func<T1, T2> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(cancellationToken), fromProp, toProp, transform);
 
-        public static void Bind<T>(Property<T> prop, IPropertySet<T> prop2, bool twoWay, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(cancellationToken), prop, prop2, twoWay);
+        public static void Bind<T>(IPropertySet<T> fromProp, IPropertySet<T> toProp, bool twoWay, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(cancellationToken), fromProp, toProp, twoWay);
 
         public static void Bind(BindableEvent evt, Func<Task> action, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(cancellationToken), evt, action);

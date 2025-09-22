@@ -21,14 +21,14 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindDeferred(this UnityEngine.Object obj, Action action, CancellationToken cancellationToken, params IPropertyChange[] props)
             => BindingsInternal.BindDeferred(new(obj, cancellationToken), action, props);
 
-        public static void BindDeferred<T>(this UnityEngine.Object obj, IProperty<T> prop, IPropertySet<T> prop2, CancellationToken cancellationToken = default)
-            => BindingsInternal.BindDeferred(new(obj, cancellationToken), prop, prop2);
+        public static void BindDeferred<T>(this UnityEngine.Object obj, IProperty<T> fromProp, IPropertySet<T> toProp, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(obj, cancellationToken), fromProp, toProp);
 
-        public static void BindDeferred<T0, T1>(this UnityEngine.Object obj, IProperty<T0> prop, IPropertySet<T1> prop2, Func<T0, T1> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.BindDeferred(new(obj, cancellationToken), prop, prop2, transform);
+        public static void BindDeferred<T0, T1>(this UnityEngine.Object obj, IProperty<T0> fromProp, IPropertySet<T1> toProp, Func<T0, T1> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(obj, cancellationToken), fromProp, toProp, transform);
 
-        public static void BindDeferred<T>(this UnityEngine.Object obj, IPropertySet<T> prop, IPropertySet<T> prop2, bool twoWay, CancellationToken cancellationToken = default)
-            => BindingsInternal.BindDeferred(new(obj, cancellationToken), prop, prop2, twoWay);
+        public static void BindDeferred<T>(this UnityEngine.Object obj, IPropertySet<T> fromProp, IPropertySet<T> toProp, bool twoWay, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(obj, cancellationToken), fromProp, toProp, twoWay);
 
         public static void Bind<T>(this UnityEngine.Object obj, IProperty<T> prop, Action<T> action, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), prop, action);
@@ -42,14 +42,14 @@ namespace VirtualMaker.Bindings.Extensions
         public static void Bind(this UnityEngine.Object obj, Action action, CancellationToken cancellationToken, params IPropertyChange[] props)
             => BindingsInternal.Bind(new(obj, cancellationToken), action, props);
 
-        public static void Bind<T>(this UnityEngine.Object obj, IProperty<T> prop, IPropertySet<T> prop2, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), prop, prop2);
+        public static void Bind<T>(this UnityEngine.Object obj, IProperty<T> fromProp, IPropertySet<T> toProp, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(obj, cancellationToken), fromProp, toProp);
 
-        public static void Bind<T1, T2>(this UnityEngine.Object obj, IProperty<T1> prop, IPropertySet<T2> prop2, Func<T1, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), prop, prop2, transform);
+        public static void Bind<T1, T2>(this UnityEngine.Object obj, IProperty<T1> fromProp, IPropertySet<T2> toProp, Func<T1, T2> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(obj, cancellationToken), fromProp, toProp, transform);
 
-        public static void Bind<T>(this UnityEngine.Object obj, Property<T> prop, IPropertySet<T> prop2, bool twoWay, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), prop, prop2, twoWay);
+        public static void Bind<T>(this UnityEngine.Object obj, IPropertySet<T> fromProp, IPropertySet<T> toProp, bool twoWay, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(obj, cancellationToken), fromProp, toProp, twoWay);
 
         public static void Bind(this UnityEngine.Object obj, BindableEvent evt, Func<Task> action, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), evt, action);

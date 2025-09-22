@@ -366,19 +366,19 @@ namespace VirtualMaker.Bindings
             }
         }
 
-        internal static void BindDeferred<T>(BindingContext context, IProperty<T> prop, IPropertySet<T> prop2)
-            => BindDeferred(context, prop, v => prop2.Value = v);
+        internal static void BindDeferred<T>(BindingContext context, IProperty<T> fromProp, IPropertySet<T> toProp)
+            => BindDeferred(context, fromProp, v => toProp.Value = v);
 
-        internal static void BindDeferred<T0, T1>(BindingContext context, IProperty<T0> prop, IPropertySet<T1> prop2, Func<T0, T1> transform)
-            => BindDeferred(context, prop, v => prop2.Value = transform(v));
+        internal static void BindDeferred<T0, T1>(BindingContext context, IProperty<T0> fromProp, IPropertySet<T1> toProp, Func<T0, T1> transform)
+            => BindDeferred(context, fromProp, v => toProp.Value = transform(v));
 
-        internal static void BindDeferred<T>(BindingContext context, IPropertySet<T> prop, IPropertySet<T> prop2, bool twoWay)
+        internal static void BindDeferred<T>(BindingContext context, IPropertySet<T> fromProp, IPropertySet<T> toProp, bool twoWay)
         {
-            BindDeferred(context, prop, v => prop2.Value = v);
+            BindDeferred(context, fromProp, v => toProp.Value = v);
 
             if (twoWay)
             {
-                BindDeferred(context, prop2, v => prop.Value = v);
+                BindDeferred(context, toProp, v => fromProp.Value = v);
             }
         }
 
@@ -400,23 +400,23 @@ namespace VirtualMaker.Bindings
             action();
         }
 
-        internal static void Bind<T>(BindingContext context, IProperty<T> prop, IPropertySet<T> prop2)
+        internal static void Bind<T>(BindingContext context, IProperty<T> fromProp, IPropertySet<T> toProp)
         {
-            Bind(context, prop, v => prop2.Value = v);
+            Bind(context, fromProp, v => toProp.Value = v);
         }
 
-        internal static void Bind<T1, T2>(BindingContext context, IProperty<T1> prop, IPropertySet<T2> prop2, Func<T1, T2> transform)
+        internal static void Bind<T1, T2>(BindingContext context, IProperty<T1> fromProp, IPropertySet<T2> toProp, Func<T1, T2> transform)
         {
-            Bind(context, prop, v => prop2.Value = transform(v));
+            Bind(context, fromProp, v => toProp.Value = transform(v));
         }
 
-        internal static void Bind<T>(BindingContext context, Property<T> prop, IPropertySet<T> prop2, bool twoWay)
+        internal static void Bind<T>(BindingContext context, IPropertySet<T> fromProp, IPropertySet<T> toProp, bool twoWay)
         {
-            Bind(context, prop, v => prop2.Value = v);
+            Bind(context, fromProp, v => toProp.Value = v);
 
             if (twoWay)
             {
-                BindDeferred(context, prop2, v => prop.Value = v);
+                BindDeferred(context, toProp, v => fromProp.Value = v);
             }
         }
 
