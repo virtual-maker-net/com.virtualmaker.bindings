@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 namespace VirtualMaker.Bindings
 {
@@ -72,23 +73,23 @@ namespace VirtualMaker.Bindings
             OnChange?.Invoke();
         }
 
-        public void Bind(IProperty<TValue> prop)
-            => BindingsInternal.Bind(new(), prop, this);
+        public void Bind(IProperty<TValue> prop, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(cancellationToken), prop, this);
 
-        public void Bind(Property<TValue> prop, bool twoWay)
-            => BindingsInternal.Bind(new(), prop, this, twoWay);
+        public void Bind(Property<TValue> prop, bool twoWay, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(cancellationToken), prop, this, twoWay);
 
-        public void Bind<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
-            => BindingsInternal.Bind(new(), prop, this, transform);
+        public void Bind<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.Bind(new(cancellationToken), prop, this, transform);
 
-        public void BindDeferred(IProperty<TValue> prop)
-            => BindingsInternal.BindDeferred(new(), prop, this);
+        public void BindDeferred(IProperty<TValue> prop, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(cancellationToken), prop, this);
 
-        public void BindDeferred(Property<TValue> prop, bool twoWay)
-            => BindingsInternal.BindDeferred(new(), prop, this, twoWay);
+        public void BindDeferred(Property<TValue> prop, bool twoWay, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(cancellationToken), prop, this, twoWay);
 
-        public void BindDeferred<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform)
-            => BindingsInternal.BindDeferred(new(), prop, this, transform);
+        public void BindDeferred<TOther>(IProperty<TOther> prop, Func<TOther, TValue> transform, CancellationToken cancellationToken = default)
+            => BindingsInternal.BindDeferred(new(cancellationToken), prop, this, transform);
     }
 
     [Serializable]
