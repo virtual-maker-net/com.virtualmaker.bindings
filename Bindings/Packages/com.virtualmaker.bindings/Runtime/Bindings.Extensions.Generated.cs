@@ -1944,9 +1944,9 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindTextComponent<T>(this UnityEngine.UI.InputField obj, IProperty<T> property, Func<T, UnityEngine.UI.Text> transform, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.textComponent = transform(v));
         public static void BindText<T2>(this UnityEngine.UI.InputField obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v?.ToString());
         public static void BindText<T, T2>(this UnityEngine.UI.InputField obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v)?.ToString());
         public static void BindCharacterLimit(this UnityEngine.UI.InputField obj, IProperty<System.Int32> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.characterLimit = v);
         public static void BindCharacterLimit<T>(this UnityEngine.UI.InputField obj, IProperty<T> property, Func<T, System.Int32> transform, CancellationToken cancellationToken = default)
@@ -3700,21 +3700,21 @@ namespace VirtualMaker.Bindings.Extensions
 
         #if UNITY_GUI
         public static void BindHorizontalAxis<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.horizontalAxis = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.horizontalAxis = v?.ToString());
         public static void BindHorizontalAxis<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.horizontalAxis = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.horizontalAxis = transform(v)?.ToString());
         public static void BindVerticalAxis<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.verticalAxis = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.verticalAxis = v?.ToString());
         public static void BindVerticalAxis<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.verticalAxis = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.verticalAxis = transform(v)?.ToString());
         public static void BindSubmitButton<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.submitButton = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.submitButton = v?.ToString());
         public static void BindSubmitButton<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.submitButton = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.submitButton = transform(v)?.ToString());
         public static void BindCancelButton<T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.cancelButton = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.cancelButton = v?.ToString());
         public static void BindCancelButton<T, T2>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.cancelButton = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.cancelButton = transform(v)?.ToString());
         public static void BindInputActionsPerSecond(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<System.Single> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.inputActionsPerSecond = v);
         public static void BindInputActionsPerSecond<T>(this UnityEngine.EventSystems.StandaloneInputModule obj, IProperty<T> property, Func<T, System.Single> transform, CancellationToken cancellationToken = default)
@@ -3826,9 +3826,9 @@ namespace VirtualMaker.Bindings.Extensions
 
         #if UNITY_GUI
         public static void BindText<T2>(this UnityEngine.UI.Text obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v?.ToString());
         public static void BindText<T, T2>(this UnityEngine.UI.Text obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v)?.ToString());
         public static void BindFont(this UnityEngine.UI.Text obj, IProperty<UnityEngine.Font> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.font = v);
         public static void BindFont<T>(this UnityEngine.UI.Text obj, IProperty<T> property, Func<T, UnityEngine.Font> transform, CancellationToken cancellationToken = default)
@@ -3911,9 +3911,9 @@ namespace VirtualMaker.Bindings.Extensions
 
 
         public static void BindText<T2>(this TextMesh obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v?.ToString());
         public static void BindText<T, T2>(this TextMesh obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v)?.ToString());
         public static void BindOffsetZ(this TextMesh obj, IProperty<System.Single> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.offsetZ = v);
         public static void BindOffsetZ<T>(this TextMesh obj, IProperty<T> property, Func<T, System.Single> transform, CancellationToken cancellationToken = default)
@@ -3962,9 +3962,9 @@ namespace VirtualMaker.Bindings.Extensions
 
         #if UNITY_TMPRO
         public static void BindText<T2>(this TMPro.TextMeshPro obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v?.ToString());
         public static void BindText<T, T2>(this TMPro.TextMeshPro obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v)?.ToString());
         public static void BindFont(this TMPro.TextMeshPro obj, IProperty<TMPro.TMP_FontAsset> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.font = v);
         public static void BindFont<T>(this TMPro.TextMeshPro obj, IProperty<T> property, Func<T, TMPro.TMP_FontAsset> transform, CancellationToken cancellationToken = default)
@@ -4106,9 +4106,9 @@ namespace VirtualMaker.Bindings.Extensions
 
         #if UNITY_TMPRO
         public static void BindText<T2>(this TMPro.TextMeshProUGUI obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v?.ToString());
         public static void BindText<T, T2>(this TMPro.TextMeshProUGUI obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v)?.ToString());
         public static void BindFont(this TMPro.TextMeshProUGUI obj, IProperty<TMPro.TMP_FontAsset> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.font = v);
         public static void BindFont<T>(this TMPro.TextMeshProUGUI obj, IProperty<T> property, Func<T, TMPro.TMP_FontAsset> transform, CancellationToken cancellationToken = default)
@@ -4406,9 +4406,9 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindTextComponent<T>(this TMPro.TMP_InputField obj, IProperty<T> property, Func<T, TMPro.TMP_Text> transform, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.textComponent = transform(v));
         public static void BindText<T2>(this TMPro.TMP_InputField obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = v?.ToString());
         public static void BindText<T, T2>(this TMPro.TMP_InputField obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.text = transform(v)?.ToString());
         public static void BindFontAsset(this TMPro.TMP_InputField obj, IProperty<TMPro.TMP_FontAsset> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.fontAsset = v);
         public static void BindFontAsset<T>(this TMPro.TMP_InputField obj, IProperty<T> property, Func<T, TMPro.TMP_FontAsset> transform, CancellationToken cancellationToken = default)
@@ -4698,9 +4698,9 @@ namespace VirtualMaker.Bindings.Extensions
         public static void BindClip<T>(this UnityEngine.Video.VideoPlayer obj, IProperty<T> property, Func<T, UnityEngine.Video.VideoClip> transform, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.clip = transform(v));
         public static void BindUrl<T2>(this UnityEngine.Video.VideoPlayer obj, IProperty<T2> property, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.url = v.ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.url = v?.ToString());
         public static void BindUrl<T, T2>(this UnityEngine.Video.VideoPlayer obj, IProperty<T> property, Func<T, T2> transform, CancellationToken cancellationToken = default)
-            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.url = transform(v).ToString());
+            => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.url = transform(v)?.ToString());
         public static void BindPlayOnAwake(this UnityEngine.Video.VideoPlayer obj, IProperty<System.Boolean> property, CancellationToken cancellationToken = default)
             => BindingsInternal.Bind(new(obj, cancellationToken), property, v => obj.playOnAwake = v);
         public static void BindPlayOnAwake<T>(this UnityEngine.Video.VideoPlayer obj, IProperty<T> property, Func<T, System.Boolean> transform, CancellationToken cancellationToken = default)

@@ -112,7 +112,7 @@ namespace VirtualMaker.Bindings
 
             var prettyProp = prop[0].ToString().ToUpper() + prop[1..];
             bool isString = typeName == "System.String";
-            var suffix = isString ? ".ToString()" : "";
+            var suffix = isString ? "?.ToString()" : "";
             var generic = isString ? "<T2>" : "";
             var propType = isString ? "T2" : typeName;
 
