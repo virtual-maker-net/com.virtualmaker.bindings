@@ -489,8 +489,7 @@ namespace VirtualMaker.Bindings
         internal static async Task AnimateAsync(
             BindingContext context,
             AnimationCurve curve,
-            Action<float> action,
-            CancellationToken cancellationToken = default)
+            Action<float> action)
         {
             var startTime = Time.time;
             var updater = new PropertyUpdater(
@@ -499,7 +498,6 @@ namespace VirtualMaker.Bindings
                 () => Awaitable.NextFrameAsync(),
                 () => Time.time - startTime >= curve.keys[^1].time);
             await updater.Task;
-            cancellationToken.ThrowIfCancellationRequested();
         }
 
         internal static IProperty<float> CreateTransition(BindingContext context, IProperty<bool> prop, AnimationCurve curve)

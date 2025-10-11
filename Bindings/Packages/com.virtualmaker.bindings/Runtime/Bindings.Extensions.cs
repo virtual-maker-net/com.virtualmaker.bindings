@@ -16,7 +16,7 @@ namespace VirtualMaker.Bindings.Extensions
             => BindingsInternal.BindDeferred(new(obj, cancellationToken), property, action);
 
         public static void BindDeferred(this UnityEngine.Object obj, Action action, params IPropertyChange[] props)
-            => BindingsInternal.BindDeferred(new(), action, props);
+            => BindingsInternal.BindDeferred(new(obj, default), action, props);
 
         public static void BindDeferred(this UnityEngine.Object obj, Action action, CancellationToken cancellationToken, params IPropertyChange[] props)
             => BindingsInternal.BindDeferred(new(obj, cancellationToken), action, props);
@@ -37,7 +37,7 @@ namespace VirtualMaker.Bindings.Extensions
             => BindingsInternal.Bind(new(obj, cancellationToken), prop, action);
 
         public static void Bind(this UnityEngine.Object obj, Action action, params IPropertyChange[] props)
-            => BindingsInternal.Bind(new(), action, props);
+            => BindingsInternal.Bind(new(obj, default), action, props);
 
         public static void Bind(this UnityEngine.Object obj, Action action, CancellationToken cancellationToken, params IPropertyChange[] props)
             => BindingsInternal.Bind(new(obj, cancellationToken), action, props);
@@ -119,6 +119,9 @@ namespace VirtualMaker.Bindings.Extensions
 
         public static async Task WaitUntilAsync(this UnityEngine.Object obj, IProperty<bool> prop, CancellationToken cancellationToken = default)
             => await BindingsInternal.WaitUntilAsync(new(obj, cancellationToken), prop);
+
+        public static async Task WaitUntilAsync<T>(this UnityEngine.Object obj, IProperty<T> prop, Func<T, bool> eval, CancellationToken cancellationToken = default)
+            => await BindingsInternal.WaitUntilAsync(new(obj, cancellationToken), Derived.From(prop, eval));
 
         public static IReadOnlyDictionary<TItem, TComponent> BindList<TItem, TComponent>(this UnityEngine.Object obj,
             Transform parent, TComponent prefab, IProperty<List<TItem>> prop, Action<TItem, TComponent> onPrefabAdded,

@@ -1,5 +1,5 @@
 // Enable this to add editor menu items that can generate
-#if true
+#if false
 
 using System;
 using System.IO;
