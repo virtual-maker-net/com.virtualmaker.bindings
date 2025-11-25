@@ -1,3 +1,6 @@
+> [!Warning]
+> This repository is deprectated. Pleaes consider using the new Bindables package, which has many new features and dedicated support: https://www.bindables.dev
+
 # VirtualMaker Bindings
 
 The VirtualMaker Bindings library provides a robust system for creating and managing properties in Unity. It allows for easy data binding between properties and UI elements, supports derived properties, and integrates seamlessly with both UGUI and UI Toolkit.
